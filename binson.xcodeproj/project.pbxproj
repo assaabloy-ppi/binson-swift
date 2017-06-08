@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B50286A1EE996BF00E342D9 /* OperatorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5028691EE996BF00E342D9 /* OperatorsTests.swift */; };
 		5BB284A51EE8079D001D06D2 /* binson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB2849B1EE8079D001D06D2 /* binson.framework */; };
 		5BB284AA1EE8079D001D06D2 /* binsonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB284A91EE8079D001D06D2 /* binsonTests.swift */; };
 		5BB284AC1EE8079D001D06D2 /* binson.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BB2849E1EE8079D001D06D2 /* binson.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -30,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5B5028691EE996BF00E342D9 /* OperatorsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorsTests.swift; sourceTree = "<group>"; };
 		5BB2849B1EE8079D001D06D2 /* binson.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = binson.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BB2849E1EE8079D001D06D2 /* binson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = binson.h; sourceTree = "<group>"; };
 		5BB2849F1EE8079D001D06D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				5BB284A91EE8079D001D06D2 /* binsonTests.swift */,
+				5B5028691EE996BF00E342D9 /* OperatorsTests.swift */,
 				5BB284AB1EE8079D001D06D2 /* Info.plist */,
 			);
 			path = binsonTests;
@@ -235,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5BB284AA1EE8079D001D06D2 /* binsonTests.swift in Sources */,
+				5B50286A1EE996BF00E342D9 /* OperatorsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,6 +440,7 @@
 				5BB284B11EE8079D001D06D2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5BB284B21EE8079D001D06D2 /* Build configuration list for PBXNativeTarget "binsonTests" */ = {
 			isa = XCConfigurationList;
@@ -444,6 +449,7 @@
 				5BB284B41EE8079D001D06D2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

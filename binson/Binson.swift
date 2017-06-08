@@ -19,6 +19,10 @@ public class Binson {
     public init(data: Data) {
         self.unpack(data: data)
     }
+    
+    public init(stream: InputStream) {
+        self.unpack(data: Data(input: stream))
+    }
 
     public func append(key: String, value: Value) -> Binson {
         dict[key] = value
@@ -26,10 +30,9 @@ public class Binson {
     }
 
     public func append(values: [String: Value]) -> Binson {
-        values.forEach { dict[$0] = $1 }
+        values.forEach { dict.updateValue($1, forKey: $0) }
         return self
     }
-    
 
     public func value(key: String) -> Value? {
         return dict[key]
@@ -48,7 +51,6 @@ public class Binson {
         }
 
         return raw + Data(bytes: [Mark.endByte])
-
     }
 
     /// Hex version of Self
@@ -76,6 +78,7 @@ public class Binson {
     }
 }
 
+/// Mark: - Operators
 func += (lhs: inout Binson, rhs: (String, Value)) {
     _ = lhs.append(key: rhs.0, value: rhs.1)
 }
@@ -93,16 +96,13 @@ extension Binson: CustomStringConvertible {
     public var description: String {
 
         var result = "BEGIN "
-        defer {
-            result += " END"
-        }
 
         for key in dict.keys.sorted() {
             result += " (\"\(key)\" : "
             result += "\(dict[key]!))"
         }
 
-        return result
+        return result + " END"
     }
 }
 

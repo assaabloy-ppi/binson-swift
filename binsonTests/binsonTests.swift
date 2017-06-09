@@ -23,7 +23,7 @@ class binsonTests: XCTestCase {
         var binson = Binson()
         binson += ("c", "u")
 
-        let str = binson.pack().hex
+        let str = binson.hex
         XCTAssertEqual(str, "4014016314017541")
     }
 
@@ -32,7 +32,7 @@ class binsonTests: XCTestCase {
         var binson = Binson()
         binson += ("i", 1)
         
-        let str = binson.pack().hex
+        let str = binson.hex
         XCTAssertEqual(str, "40140169100141")
     }
 
@@ -44,7 +44,7 @@ class binsonTests: XCTestCase {
         var binson = Binson()
         binson += ("t", Value.bytes([0x02, 0x02]))
         
-        let str = binson.pack().hex
+        let str = binson.hex
         XCTAssertEqual(str, "401401741802020241")
     }
     
@@ -53,7 +53,7 @@ class binsonTests: XCTestCase {
         var binson = Binson()
         binson += ("z", Value.object(Binson()))
         
-        let str = binson.pack().hex
+        let str = binson.hex
         XCTAssertEqual(str, "4014017a404141")
     }
 
@@ -106,25 +106,5 @@ class binsonTests: XCTestCase {
         
         XCTAssertEqual(expected_hex, actual_hex)
         XCTAssertEqual(expected_data, actual_data)
-    }
-    
-    func testUnpackUnlock() {
-        let input_hex = "4014016314017514016910011401741802020214017a404141"
-        let input_data = Data([0x40, 0x14, 0x01, 0x63, 0x14, 0x01, 0x75, 0x14,
-                                  0x01, 0x69, 0x10, 0x01, 0x14, 0x01, 0x74, 0x18,
-                                  0x02, 0x02, 0x02, 0x14, 0x01, 0x7a, 0x40, 0x41,
-                                  0x41])
-        
-        let unlock1 = Builder.unpack(hex: input_hex)!
-        let unlock2 = Builder.unpack(data: input_data)!
-
-        XCTAssertEqual(unlock1.value(key: "c"), "u")
-        XCTAssertEqual(unlock2.value(key: "c"), "u")
-            
-        XCTAssertEqual(unlock1.value(key: "i"), 1)
-        XCTAssertEqual(unlock2.value(key: "i"), 1)
-
-        XCTAssertEqual(unlock1.value(key: "t"), [0x02,0x02])
-        XCTAssertEqual(unlock2.value(key: "z"), Value.object(Binson()))
     }
 }

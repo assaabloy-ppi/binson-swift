@@ -8,16 +8,11 @@ import Foundation
 public class Binson {
     var dict: [String: Value] = [:]
 
-    // Created empty for testing
     public init() {
     }
 
     public init(values: [String: Value]) {
         dict = values
-    }
-
-    public init(data: Data) {
-        self.unpack(data: data)
     }
 
     public func append(key: String, value: Value) -> Binson {
@@ -55,24 +50,6 @@ public class Binson {
     
     public var hex: String {
         return self.pack().hex
-    }
-    
-    /// Building the Binson object from binary Data
-    private func unpack(data: Data) {
-        /// Start fresh
-        if !dict.isEmpty {
-            return
-        }
-
-        let value = data.first!
-        let data = data.subdata(in: 1 ..< data.endIndex)
-
-        if value != Mark.beginByte {
-           return
-        } else {
-
-        }
-
     }
 }
 

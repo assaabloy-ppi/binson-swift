@@ -29,37 +29,38 @@ public class Builder {
     /// - returns: Binson object
     public class func unpack(data: Data) -> Binson? {
         
-        guard let (binson, _) = try? unpackBinson(data) else {
+        guard let (byte, rest) = try? unpackByte(data), byte == Mark.beginByte else {
+            print("Failed to unpack, no starting MARK")
             return nil
+        }
+        
+        guard let (binson, rest2) = try? unpackBinsonObject(rest) else {
+            print("Failed to unpack and create a good Binson object")
+            return nil
+        }
+        
+        if !rest2.isEmpty {
+            print("Handle trailing garbage")
+            // Not really an Error, is it?
         }
         
         return binson
     }
     
-    /// Unpack from Data
+    /// Unpack from Data expecting a full Binson object
     /// - parameter data: The input data to unpack
-    /// - returns: Binson object
-    private class func unpackBinson(_ data: Data) throws -> (value: Binson, remainder: Data) {
-
-        guard !data.isEmpty else {
-            throw BinsonError.insufficientData
-        }
-        
-        let byte = data.first!
-        let rest = data.subdata(in: 1 ..< data.endIndex)
-        
-        guard byte == Mark.beginByte else {
-            throw BinsonError.invalidData
-        }
+    /// - returns: Binson object and possibly a non-empty trailing remainder
+    private class func unpackBinsonObject(_ data: Data) throws -> (value: Binson, remainder: Data) {
         
         var binson = Binson()
-        var data = rest
+        var data = data
         
         while !data.isEmpty {
             var name: String
             var value: Value
             (name, value, data) = try unpackPair(data)
             
+            /// Special ending MARK for a Binson object
             if (name == "Mark.endByte") {
                 break
             }
@@ -68,6 +69,7 @@ public class Builder {
             }
         }
         
+        /// Return the Binson and if nested remaining data is non-empty
         return (binson, data)
     }
     
@@ -114,74 +116,122 @@ public class Builder {
     /// - parameter length: The length of the string.
     ///
     /// - returns: A string representation of `size` bytes of data.
-    private class func unpackString(_ data: Data, count: Int) throws -> (value: String, remainder: Data) {
-        guard count > 0 else {
-            return ("", data)
+    private class func unpackString(_ data: Data, value: Byte) throws -> (value: String, remainder: Data) {
+        
+        let count = { () -> Int in 
+            switch value {
+            case Mark.string1Byte:
+                return 1
+            case Mark.string2Byte:
+                return 2
+            default:
+                return 4
+            }
+        }()
+        
+        guard let (size, rest) = try? unpackInteger(data, count: count) else {
+            throw BinsonError.invalidData
         }
         
-        guard data.count >= count else {
+        guard size > 0 else {
+            throw BinsonError.invalidData
+        }
+        
+        guard rest.count >= Int(size) else {
             throw BinsonError.insufficientData
         }
         
-        let subdata = data.subdata(in: 0 ..< count)
+        let subdata = rest.subdata(in: 0 ..< count)
         guard let result = String(data: subdata, encoding: .utf8) else {
             throw BinsonError.invalidData
         }
         
-        return (result, data.subdata(in: count ..< data.count))
+        return (result, rest.subdata(in: count ..< rest.count))
     }
     
     /// Parse bytes to form an array of Binson Values.
     ///
     /// TODO: [Byte]
-    private class func unpackBytes(_ data: Data, count: Int) throws -> (value: [Byte], remainder: Data) {
+    private class func unpackBytes(_ data: Data, value: Byte) throws -> (value: [Byte], remainder: Data) {
+        
+        let n = { () -> Int in
+            switch value {
+            case Mark.bytes1Byte:
+                return 1
+            case Mark.bytes2Byte:
+                return 2
+            default:
+                return 4
+            }
+        }()
+        
+        guard let (count, rest) = try? unpackInteger(data, count: n) else {
+            throw BinsonError.invalidData
+        }
+        
+        let length = Int(count)
+        
+        guard length > 0 else {
+            throw BinsonError.invalidData
+        }
+        
+        guard rest.count >= length else {
+            throw BinsonError.insufficientData
+        }
+        
         var values = [Byte]()
-        var rest = data
+        var rest2 = rest
         
         var byte: Byte
         
-        for _ in 0 ..< count {
-            (byte, rest) = try unpackByte(rest)
+        for _ in 0 ..< length {
+            (byte, rest2) = try unpackByte(rest2)
             values.append(byte)
         }
         
-        return (values, rest)
+        return (values, rest2.subdata(in: 0 ..< rest2.count))
     }
     
     /// Parse bytes to form an array of Binson Values.
     ///
     /// - parameter data: The input data to unpack.
-    /// - parameter count: The number of elements to unpack.
-    ///
-    /// - returns: An array of `count` elements + remainder.
-    private class func unpackArray(_ data: Data, count: Int) throws -> (value: [Value], remainder: Data) {
-        var values = [Value]()
-        var rest = data
+    /// - returns: An array of Values + remainder.
+    private class func unpackArray(_ data: Data) throws -> (value: [Value], remainder: Data) {
+        let values = [Value]()
+        let rest = data
         
-        var newValue: Value
-        
-        for _ in 0 ..< count {
-            (newValue, rest) = try unpackValue(rest)
-            values.append(newValue)
-        }
+        /// TODO
         
         return (values, rest)
     }
     
-    
-    /// Unpacks data into a Binson Value and returns the remaining data for further scanning.
+    /// Unpacks Key, Value Pair and returns the remaining data for further scanning.
     ///
     /// - parameter data: The input data to unpack.
-    ///
-    /// - returns: A Value + remainder.
+    /// - returns: A Key, a Value + remainder.
     private class func unpackPair(_ data: Data) throws -> (name: String, value: Value, remainder: Data) {
-        var name: String = "TODO"
-        var value: Value = "HEPP"
-        var rest = data
         
-        // TODO
+        guard let (name, rest) = try? unpackValue(data) else {
+            throw BinsonError.invalidData
+        }
         
-        return (name, value, rest)
+        guard name != Value.nil else {
+            // We found the end MARK and value will be Value.nil
+            return ("Mark.endByte", Value.nil, rest)
+        }
+
+        guard let key: String = name.stringValue else {
+            // We found a BinsonValue for Key but it is not a String
+            throw BinsonError.invalidData
+        }
+            
+        guard let (value, rest2) = try? unpackValue(rest) else {
+            // We got an exception while parsing for BinsonValue
+            throw BinsonError.invalidData
+        }
+        
+        // We parsed key and value correctly
+        return (key, value, rest2)
     }
     
     /// Unpacks data into a Binson Value and returns the remaining data for further scanning.
@@ -201,85 +251,65 @@ public class Builder {
         switch value {
             
         case Mark.beginByte:
-            return (Value.nil, data)
-
+            let (binson, remainder) = try unpackBinsonObject(data)
+            return (Value.object(binson), remainder)
+        
+        // TODO: Improve the parsing later
         case Mark.endByte:
             return (Value.nil, data)
             
-        // fixarray
-        case 0x90 ... 0x9f:
-            let count = Int(value - 0x90)
-            let (array, remainder) = try unpackArray(data, count: count)
-            return (.array(array), remainder)
-            
-        // fixstr
-        case 0xa0 ... 0xbf:
-            let count = Int(value - 0xa0)
-            let (string, remainder) = try unpackString(data, count: count)
-            return (.string(string), remainder)
-            
-        // false
+        // False
         case Mark.falseByte:
-            return (.bool(false), data)
+            return (Value.bool(false), data)
             
-        // true
+        // True
         case Mark.trueByte:
-            return (.bool(true), data)
+            return (Value.bool(true), data)
             
-        // bytes 8, 16, 32
-        case 0xc4 ... 0xc6:
-            //let intCount = 1 << Int(value - 0xc4)
-            //let (dataCount, remainder1) = try unpackInteger(data, count: intCount)
-            //let (subdata, remainder2) = try unpackData(remainder1, count: Int(dataCount))
-            //return (.bytes(subdata), remainder2)
-            return (.bytes([]), data)
+        // String
+        case Mark.string1Byte ... Mark.string4Byte:
+            let (string, remainder) = try unpackString(data, value: value)
+            return (Value.string(string), remainder)
             
-        // float 64
-        case 0xcb:
+        // Bytes
+        case Mark.bytes1Byte ... Mark.bytes4Byte:
+            let (bytes, rest) = try unpackBytes(data, value: value)
+            return (Value.bytes(bytes), rest)
+
+        // Double
+        case Mark.doubleByte:
             let (intValue, remainder) = try unpackInteger(data, count: 8)
             let double = Double(bitPattern: intValue)
             return (.double(double), remainder)
             
-        // int 8
-        case 0xd0:
-            guard !data.isEmpty else {
-                throw BinsonError.insufficientData
-            }
+        // Int 8
+        case Mark.integer1Byte:
+            let (number, rest) = try unpackInteger(data, count: 1)
+            let integer = Int16(bitPattern: UInt16(truncatingBitPattern: number))
+            return (.int(Int64(integer)), rest)
             
-            let byte = Int8(bitPattern: data[0])
-            return (.int(Int64(byte)), data.subdata(in: 1 ..< data.count))
+        // Int 16
+        case Mark.integer2Byte:
+            let (number, rest) = try unpackInteger(data, count: 2)
+            let integer = Int16(bitPattern: UInt16(truncatingBitPattern: number))
+            return (.int(Int64(integer)), rest)
             
-        // int 16
-        case 0xd1:
-            let (bytes, remainder) = try unpackInteger(data, count: 2)
-            let integer = Int16(bitPattern: UInt16(truncatingBitPattern: bytes))
-            return (.int(Int64(integer)), remainder)
+        // Int 32
+        case Mark.integer4Byte:
+            let (number, rest) = try unpackInteger(data, count: 4)
+            let integer = Int32(bitPattern: UInt32(truncatingBitPattern: number))
+            return (.int(Int64(integer)), rest)
             
-        // int 32
-        case 0xd2:
-            let (bytes, remainder) = try unpackInteger(data, count: 4)
-            let integer = Int32(bitPattern: UInt32(truncatingBitPattern: bytes))
-            return (.int(Int64(integer)), remainder)
+        // Int 64
+        case Mark.integer8Byte:
+            let (number, rest) = try unpackInteger(data, count: 8)
+            let integer = Int64(bitPattern: number)
+            return (.int(integer), rest)
             
-        // int 64
-        case 0xd3:
-            let (bytes, remainder) = try unpackInteger(data, count: 8)
-            let integer = Int64(bitPattern: bytes)
-            return (.int(integer), remainder)
-            
-        // str 8, 16, 32
-        case 0xd9 ... 0xdb:
-            let countSize = 1 << Int(value - 0xd9)
-            let (count, remainder1) = try unpackInteger(data, count: countSize)
-            let (string, remainder2) = try unpackString(remainder1, count: Int(count))
-            return (.string(string), remainder2)
-            
-        // array 16, 32
-        case 0xdc ... 0xdd:
-            let countSize = 1 << Int(value - 0xdb)
-            let (count, remainder1) = try unpackInteger(data, count: countSize)
-            let (array, remainder2) = try unpackArray(remainder1, count: Int(count))
-            return (.array(array), remainder2)
+        // Array
+        case Mark.beginArrayByte:
+            let (array, rest) = try unpackArray(data)
+            return (.array(array), rest)
             
         default:
             throw BinsonError.invalidData

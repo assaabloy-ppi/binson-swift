@@ -177,15 +177,6 @@ extension Value {
         }
     }
     
-    public subscript (i: Int) -> Value? {
-        switch self {
-        case .array(let array):
-            return i < array.count ? array[i] : Optional.none
-        default:
-            return nil
-        }
-    }
-    
     public var integerValue: Int64? {
         switch self {
         case .int(let value):
@@ -231,7 +222,7 @@ extension Value {
         }
     }
     
-    public var dataValue: [Byte]? {
+    public var bytesValue: [Byte]? {
         switch self {
         case .bytes(let bytes):
             return bytes

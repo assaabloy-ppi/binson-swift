@@ -26,7 +26,27 @@ class binsonTests: XCTestCase {
         let str = binson.hex
         XCTAssertEqual(str, "4014016314017541")
     }
-
+    
+    func testLongerTagBinson() {
+        
+        var binson = Binson()
+        binson += ("co", "u")
+        
+        let str = binson.hex
+        XCTAssertEqual(str, "401402636f14017541")
+    }
+    
+    func testArrayBinson() {
+        
+        
+        let value: Value = Value(["co", "u"])
+        var binson = Binson()
+        binson += ("co", value)
+        print(binson.description)
+        let str = binson.hex
+        XCTAssertEqual(str, "401402636f421402636f1401754341")
+    }
+    
     func testIntegerBinson() {
         
         var binson = Binson()
@@ -34,6 +54,15 @@ class binsonTests: XCTestCase {
         
         let str = binson.hex
         XCTAssertEqual(str, "40140169100141")
+    }
+    
+    func testIntegerLongBinson() {
+        
+        var binson = Binson()
+        binson += ("i", 230)
+        
+        let str = binson.hex
+        XCTAssertEqual(str, "4014016911e60041")
     }
 
     func testByteArrayBinson() {

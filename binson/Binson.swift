@@ -100,3 +100,45 @@ extension Mark: CustomStringConvertible {
         }
     }
 }
+
+private func printValues(value: Value, indentation: Int) -> String{
+    if let object = value.objectValue{
+        return printBinson(binson: object, indentation: indentation)
+    }
+    else if let array = value.arrayValue{
+        return printArray(array: array, indentation: indentation)
+    }
+    else{
+        return "\(value.description)\n"
+    }
+}
+
+private func printArray(array: [Value], indentation: Int) -> String{
+    var result: String = "[\n"
+    for value in array {
+        result += String(repeating: " ", count: indentation+2) +
+            printValues(value: value, indentation: indentation+2)
+    }
+    result += String(repeating: " ", count: indentation) + "]\n"
+    return result
+    
+}
+
+private func printBinson(binson: Binson, indentation: Int) -> String{
+    var result: String = "{\n"
+    let dict = binson.dict
+    for key in dict.keys.sorted() {
+        result += String(repeating: " ", count: indentation+2) +
+            "\"\(key)\": " +
+            printValues(value: dict[key]!, indentation: indentation+2)
+    }
+    result += String(repeating: " ", count: indentation) + "}\n"
+    return result
+}
+
+extension Binson: CustomStringConvertible {
+    public var description: String {
+
+        return "Binson " + printBinson(binson:self, indentation: 0)
+    }
+}

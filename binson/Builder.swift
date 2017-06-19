@@ -34,8 +34,12 @@ public class Builder {
             return nil
         }
         
-        guard let (binson, rest2) = try? unpackBinsonObject(rest) else {
-            print("Failed to unpack and create a good Binson object")
+        let binson: Binson
+        let rest2: Data
+        do {
+            (binson, rest2) = try unpackBinsonObject(rest)
+        } catch {
+            print("caught: \(error)")
             return nil
         }
         
@@ -102,7 +106,7 @@ public class Builder {
         }
         
         var value: UInt64 = 0
-        for i in 0 ..< count {
+        for i in (0 ..< count).reversed() {
             let byte = data[i]
             value = value << 8 | UInt64(byte)
         }
@@ -118,7 +122,7 @@ public class Builder {
     /// - returns: A string representation of `size` bytes of data.
     private class func unpackString(_ data: Data, value: Byte) throws -> (value: String, remainder: Data) {
         
-        let count = { () -> Int in 
+        let count: Int = { () -> Int in
             switch value {
             case Mark.string1Byte:
                 return 1
@@ -129,11 +133,13 @@ public class Builder {
             }
         }()
         
+        print(data.hex)
+        
         guard let (size, rest) = try? unpackInteger(data, count: count) else {
             throw BinsonError.invalidData
         }
         
-        guard size > 0 else {
+        guard size >= 0 else {
             throw BinsonError.invalidData
         }
         
@@ -141,12 +147,13 @@ public class Builder {
             throw BinsonError.insufficientData
         }
         
-        let subdata = rest.subdata(in: 0 ..< count)
+        let endIndex: Int = count+Int(size)-1
+        let subdata = rest.subdata(in: 0 ..< endIndex)
         guard let result = String(data: subdata, encoding: .utf8) else {
             throw BinsonError.invalidData
         }
-        
-        return (result, rest.subdata(in: count ..< rest.count))
+
+        return (result, rest.subdata(in: endIndex ..< rest.count))
     }
     
     /// Parse bytes to form an array of Binson Values.
@@ -197,10 +204,16 @@ public class Builder {
     /// - parameter data: The input data to unpack.
     /// - returns: An array of Values + remainder.
     private class func unpackArray(_ data: Data) throws -> (value: [Value], remainder: Data) {
-        let values = [Value]()
-        let rest = data
+        var values = [Value]()
+        var rest = data
+
+        while (rest.first != Mark.endArrayByte){
+            let (tempValue, tempRest) = try unpackValue(rest)
+            rest = tempRest
+            values.append(tempValue)
+        }
         
-        /// TODO
+        rest = rest.subdata(in: 1 ..< rest.count)
         
         return (values, rest)
     }

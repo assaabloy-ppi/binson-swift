@@ -230,6 +230,16 @@ extension Value {
             return nil
         }
     }
+    
+    public var objectValue: Binson? {
+        switch self {
+        case .object(let object):
+            return object
+        default:
+            return nil
+        }
+    }
+
 }
 
 func packBytes(_ value: UInt64, parts: Int) -> Data {
@@ -256,13 +266,13 @@ func packPositive(_ v: UInt64) -> Data {
         return Data([Mark.integer1Byte, Byte(truncatingBitPattern: v)])
         
     } else if v <= Constant.twoto15 {
-        return Data([Mark.integer2Byte]) + packBytes(v, parts: 2)
+        return Data([Mark.integer2Byte]) + packBytes(v, parts: 2).reversed()
         
     } else if v <= Constant.twoto31 {
-        return Data([Mark.integer4Byte]) + packBytes(v, parts: 4)
+        return Data([Mark.integer4Byte]) + packBytes(v, parts: 4).reversed()
         
     } else {
-        return Data([Mark.integer8Byte]) + packBytes(v, parts: 8)
+        return Data([Mark.integer8Byte]) + packBytes(v, parts: 8).reversed()
     }
 }
 
@@ -303,12 +313,12 @@ extension Value {
             precondition(count <= 0xffff_ffff)
             
             let prefix: Data
-            if count <= 0x19 {
+            if count <= UInt32(Int8.max) {
                 prefix = Data([Mark.string1Byte, Byte(count)])
-            } else if count <= 0xff {
-                prefix = Data([Mark.string2Byte, Byte(count)])
+            } else if count <= UInt32(Int16.max){
+                prefix = Data([Mark.string2Byte]) + packBytes(UInt64(count), parts: 2).reversed()
             } else {
-                prefix = Data([Mark.string4Byte, Byte(count)])
+                prefix = Data([Mark.string4Byte]) + packBytes(UInt64(count), parts: 4).reversed()
             }
             
             return prefix + utf8
@@ -318,12 +328,12 @@ extension Value {
             precondition(count <= 0xffff_ffff)
             
             let prefix: Data
-            if count <= 0xff {
-                prefix = Data([Mark.bytes1Byte, UInt8(count)])
-            } else if count <= 0xffff {
-                prefix = Data([Mark.bytes2Byte]) + packBytes(UInt64(count), parts: 2)
+            if count <= UInt32(Int8.max) {
+                prefix = Data([Mark.bytes1Byte, Byte(count)])
+            } else if count <= UInt32(Int16.max) {
+                prefix = Data([Mark.bytes2Byte]) + packBytes(UInt64(count), parts: 2).reversed()
             } else {
-                prefix = Data([Mark.bytes4Byte]) + packBytes(UInt64(count), parts: 4)
+                prefix = Data([Mark.bytes4Byte]) + packBytes(UInt64(count), parts: 4).reversed()
             }
             
             return prefix + bytes

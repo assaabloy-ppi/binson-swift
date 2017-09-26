@@ -6,13 +6,13 @@
 
 public typealias Byte = UInt8
 
-extension Array where Element: Integer, Element.IntegerLiteralType == Byte {
+extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte {
 
-    public init(hex: String) {
-        self = Array<Element>()
+    public init?(hex: String) {
+        self = [Element]()
         self.reserveCapacity(hex.unicodeScalars.lazy.underestimatedCount)
         
-        var buffer:Byte?
+        var buffer: Byte?
         var skip = hex.hasPrefix("0x") ? 2 : 0
         
         for char in hex.unicodeScalars.lazy {
@@ -22,11 +22,11 @@ extension Array where Element: Integer, Element.IntegerLiteralType == Byte {
             }
             guard char.value >= 48 && char.value <= 102 else {
                 self.removeAll()
-                return
+                return nil
             }
             
-            let v:Byte
-            let c:Byte = Byte(char.value)
+            let v: Byte
+            let c: Byte = Byte(char.value)
             
             switch c {
             case let c where c <= 57:
@@ -37,7 +37,7 @@ extension Array where Element: Integer, Element.IntegerLiteralType == Byte {
                 v = c - 87
             default:
                 self.removeAll()
-                return
+                return nil
             }
             
             if let b = buffer {
@@ -94,7 +94,7 @@ public func toHexString(_ value: [Byte]) -> String {
     return toHexArray(value).joined()
 }
 
-func rotateLeft(_ value: UInt8, by: UInt8) -> UInt8 {
+func rotateLeft(_ value: Byte, by: Byte) -> Byte {
     return ((value << by) & 0xFF) | (value >> (8 - by))
 }
 
@@ -122,8 +122,8 @@ func rotateRight(_ value: UInt64, by: UInt64) -> UInt64 {
     return ((value >> by) | (value << (64 - by)))
 }
 
-public func reversed(_ uint8: UInt8) -> UInt8 {
-    var v = uint8
+public func reversed(_ byte: Byte) -> Byte {
+    var v = byte
     
     v = (v & 0xF0) >> 4 | (v & 0x0F) << 4
     v = (v & 0xCC) >> 2 | (v & 0x33) << 2
@@ -140,25 +140,3 @@ public func reversed(_ uint32: UInt32) -> UInt32 {
     v = ((v >> 16) & 0xffff) | ((v & 0xffff) << 16)
     return v
 }
-
-func xor(_ a: Array<UInt8>, _ b: Array<UInt8>) -> Array<UInt8> {
-    return xor(a.suffix(from: a.startIndex), b.suffix(from: b.startIndex))
-}
-
-func xor(_ a: Array<UInt8>, _ b: ArraySlice<UInt8>) -> Array<UInt8> {
-    return xor(a.suffix(from: a.startIndex), b.suffix(from: b.startIndex))
-}
-
-func xor(_ a: ArraySlice<UInt8>, _ b: Array<UInt8>) -> Array<UInt8> {
-    return xor(a.suffix(from: a.startIndex), b.suffix(from: b.startIndex))
-}
-
-func xor(_ a: ArraySlice<UInt8>, _ b: ArraySlice<UInt8>) -> Array<UInt8> {
-    var xored = Array<UInt8>(repeating: 0, count: min(a.count, b.count))
-    for i in 0 ..< xored.count {
-        xored[xored.startIndex.advanced(by: i)] = a[a.startIndex.advanced(by: i)] ^ b[b.startIndex.advanced(by: i)]
-    }
-    return xored
-}
-
-

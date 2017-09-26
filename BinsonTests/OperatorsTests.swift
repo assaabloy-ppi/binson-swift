@@ -7,11 +7,9 @@
 //
 
 import XCTest
-@testable import binson
+@testable import Binson
 
 class OperatorsTests: XCTestCase {
-    
-    
     func testBinsonPlus() {
         
         var a = Binson()

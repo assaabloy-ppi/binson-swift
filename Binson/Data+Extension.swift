@@ -6,7 +6,6 @@
 import Foundation
 
 extension Data {
-
     public var bytes: [Byte] {
         return Array(self)
     }
@@ -15,16 +14,16 @@ extension Data {
         return self.bytes.toHexString()
     }
     
+    public var string: String {
+        return self.toString() ?? ""
+    }
+    
     public func toHexString(_ separator: String = "") -> String {
         return self.bytes.toHexString(separator)
     }
     
     public func toString() -> String? {
         return String(data: self, encoding: .utf8)
-    }
-    
-    func toDictionary() -> [String: AnyObject]? {
-        return NSKeyedUnarchiver.unarchiveObject(with: self) as? [String: AnyObject]
     }
     
     public init(input: InputStream) {
@@ -43,4 +42,3 @@ extension Data {
         buffer.deallocate(capacity: bufferSize)
     }
 }
-

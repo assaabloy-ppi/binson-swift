@@ -12,8 +12,12 @@ public class Builder {
     /// - parameter data: The Hex string to unpack.
     /// - returns: Binson object.
     public class func unpack(hex: String) -> Binson? {
-        let raw = Data(bytes: Array<Byte>(hex: hex))
-        return Builder.unpack(data: raw)
+        if let bytes = [Byte](hex: hex) {
+            let raw = Data(bytes: bytes)
+            return Builder.unpack(data: raw)
+        } else {
+            return nil
+        }
     }
 
     /// Unpack from InputStream
@@ -30,7 +34,7 @@ public class Builder {
     public class func unpack(data: Data) -> Binson? {
         
         guard let (byte, rest) = try? unpackByte(data), byte == Mark.beginByte else {
-            print("Failed to unpack, no starting MARK")
+            // DDLogError("Failed to unpack, no starting MARK")
             return nil
         }
         
@@ -39,23 +43,61 @@ public class Builder {
         do {
             (binson, rest2) = try unpackBinsonObject(rest)
         } catch {
-            print("caught: \(error)")
+            // DDLogError("caught: \(error)")
             return nil
         }
         
         if !rest2.isEmpty {
-            print("Handle trailing garbage")
+            // DDLogWarn("Handle trailing garbage")
             // Not really an Error, is it?
         }
         
         return binson
     }
     
+    /// Unpack from JSON params
+    /// - parameter data: The input JSON Dictionary to unpack
+    /// - returns: Binson object
+    public class func unpack(jsonparams: [String: Any]) -> Binson? {
+        var values = [String: Value]()
+        
+        for key in jsonparams.keys.sorted() {
+            let any = jsonparams[key]!
+            if any is [String: Any] {
+                let annie = any as! [String: Any]
+                values[key] = Value.object(Builder.unpack(jsonparams: annie)!)
+            } else {
+                values[key] = Value(any)
+            }
+        }
+        return Binson(values: values)
+    }
+    
+    /// Unpack from JSON string
+    /// - parameter data: The input JSON string to unpack
+    /// - returns: Binson object
+    public class func unpack(jsondata: Data) -> Binson? {
+        if  let json = try? JSONSerialization.jsonObject(with: jsondata),
+            let params = json as? [String: Any] {
+            return unpack(jsonparams: params)
+        } else {
+            return nil
+        }
+    }
+    
+    /// Unpack from JSON data
+    /// - parameter data: The input JSON data to unpack
+    /// - returns: Binson object
+    public class func unpack(jsonstring: String) -> Binson? {
+        return unpack(jsondata: Data(jsonstring.utf8))
+    }
+    
+    //------------ Helpers
+    
     /// Unpack from Data expecting a full Binson object
     /// - parameter data: The input data to unpack
     /// - returns: Binson object and possibly a non-empty trailing remainder
     private class func unpackBinsonObject(_ data: Data) throws -> (value: Binson, remainder: Data) {
-        
         var binson = Binson()
         var data = data
         
@@ -65,10 +107,9 @@ public class Builder {
             (name, value, data) = try unpackPair(data)
             
             /// Special ending MARK for a Binson object
-            if (name == "Mark.endByte") {
+            if name == "Mark.endByte" {
                 break
-            }
-            else {
+            } else {
                 binson += (name, value)
             }
         }
@@ -132,17 +173,11 @@ public class Builder {
                 return 4
             }
         }()
-        
-        print(data.hex)
-        
+
         guard let (size, rest) = try? unpackInteger(data, count: count) else {
             throw BinsonError.invalidData
         }
-        
-        guard size >= 0 else {
-            throw BinsonError.invalidData
-        }
-        
+
         guard rest.count >= Int(size) else {
             throw BinsonError.insufficientData
         }
@@ -207,7 +242,7 @@ public class Builder {
         var values = [Value]()
         var rest = data
 
-        while (rest.first != Mark.endArrayByte){
+        while rest.first != Mark.endArrayByte {
             let (tempValue, tempRest) = try unpackValue(rest)
             rest = tempRest
             values.append(tempValue)
@@ -252,7 +287,8 @@ public class Builder {
     /// - parameter data: The input data to unpack.
     ///
     /// - returns: A Value + remainder.
-    private class func unpackValue(_ data: Data) throws -> (value: Value, remainder: Data) {
+    private class func unpackValue(_ data: Data)
+        throws -> (value: Value, remainder: Data) {
         
         guard !data.isEmpty else {
             throw BinsonError.insufficientData
@@ -267,7 +303,6 @@ public class Builder {
             let (binson, remainder) = try unpackBinsonObject(data)
             return (Value.object(binson), remainder)
         
-        // TODO: Improve the parsing later
         case Mark.endByte:
             return (Value.nil, data)
             
@@ -298,19 +333,19 @@ public class Builder {
         // Int 8
         case Mark.integer1Byte:
             let (number, rest) = try unpackInteger(data, count: 1)
-            let integer = Int16(bitPattern: UInt16(truncatingBitPattern: number))
+            let integer = Int16(bitPattern: UInt16(truncatingIfNeeded: number))
             return (.int(Int64(integer)), rest)
             
         // Int 16
         case Mark.integer2Byte:
             let (number, rest) = try unpackInteger(data, count: 2)
-            let integer = Int16(bitPattern: UInt16(truncatingBitPattern: number))
+            let integer = Int16(bitPattern: UInt16(truncatingIfNeeded: number))
             return (.int(Int64(integer)), rest)
             
         // Int 32
         case Mark.integer4Byte:
             let (number, rest) = try unpackInteger(data, count: 4)
-            let integer = Int32(bitPattern: UInt32(truncatingBitPattern: number))
+            let integer = Int32(bitPattern: UInt32(truncatingIfNeeded: number))
             return (.int(Int64(integer)), rest)
             
         // Int 64

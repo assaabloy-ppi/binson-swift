@@ -11,4 +11,3 @@ extension Dictionary {
         return NSKeyedArchiver.archivedData(withRootObject: self) as Data?
     }
 }
-

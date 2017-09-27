@@ -335,7 +335,7 @@ extension Value {
         case .string(let string):
             let utf8 = string.utf8
             let count = UInt32(utf8.count)
-            precondition(count <= 0xffff_ffff)
+            // precondition(count <= 0xffff_ffff)
             
             let prefix: Data
             if count <= UInt32(Int8.max) {
@@ -350,7 +350,7 @@ extension Value {
             
         case .bytes(let bytes):
             let count = UInt32(bytes.count)
-            precondition(count <= 0xffff_ffff)
+            // precondition(count <= 0xffff_ffff)
             
             let prefix: Data
             if count <= UInt32(Int8.max) {
@@ -364,9 +364,6 @@ extension Value {
             return prefix + bytes
             
         case .array(let array):
-            let count = UInt32(array.count)
-            precondition(count <= 0xffff_ffff)
-            
             let prefix = Data([Mark.beginArrayByte])
             let payload = array.flatMap { $0.pack() }
             let suffix = Data([Mark.endArrayByte])

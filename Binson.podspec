@@ -15,11 +15,11 @@ Pod::Spec.new do |s|
 
   s.homepage         = 'http://binson.org'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'kpernyer' => 'kenneth@assaabloy.com' }
-  s.source           = { :git => 'https://github.com/assaabloy-ppi/binson-swift.git', :tag => s.version.to_s }
+  s.author           = { 'kpernyer' => 'kenneth.pernyer@assaabloy.com' }
+  s.source           = { :git => 'https://github.com/assaabloy-ppi/binson-swift.git', :tag => "1.0.0"}
 
   s.ios.deployment_target = '9.0'
   s.osx.deployment_target = '10.10'
 
-  s.source_files = 'Binson//**/*.{swift,h}'
+  s.source_files = 'Binson/*.{swift}'
 end

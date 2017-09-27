@@ -66,7 +66,7 @@ public class Binson {
         }
     }
 
-    func jsonParams() -> [String: Any] {
+    public func jsonParams() -> [String: Any] {
         var params = [String: Any]()
         
         for key in dict.keys.sorted() {
@@ -78,15 +78,15 @@ public class Binson {
 }
 
 /// Mark: - Operators
-func += (lhs: inout Binson, rhs: (String, Value)) {
+public func += (lhs: inout Binson, rhs: (String, Value)) {
     _ = lhs.append(rhs.0, rhs.1)
 }
 
-func + (lhs: Binson, rhs: Binson) -> Binson {
+public func + (lhs: Binson, rhs: Binson) -> Binson {
     return lhs.append(values: rhs.values())
 }
 
-func + (lhs: Binson, rhs: (String, Value)) -> Binson {
+public func + (lhs: Binson, rhs: (String, Value)) -> Binson {
     return lhs.append(rhs.0, rhs.1)
 }
 

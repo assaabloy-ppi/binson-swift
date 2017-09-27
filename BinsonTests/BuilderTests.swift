@@ -55,27 +55,65 @@ class BuilderTests: XCTestCase {
         }
     }
 
-    func testUnpackBinson() {
-        let empty_hex = ""
-        let input_hex = "4041"
+    func testUnpackBinsonUnlock() {
+        let bn = Binson()
+            .append("c", "u")
+            .append("i", 1)
+            .append("z", .object(Binson()))
+            .append("t", Value.bytes([0x02, 0x02]))
+    
+        let input_hex_b1 = "4014016314017514016910011401741802020214017a404141"
+        let input_hex_b2 = "0x4014016314017514016910011401741802020214017a404141"
         
+        if let b4 = Builder.unpack(hex: input_hex_b1) {
+            XCTAssertEqual(b4.hex, bn.hex)
+        } else {
+            XCTAssert(false, "Hepp")
+        }
+        
+        if let b5 = Builder.unpack(hex: input_hex_b2) {
+            XCTAssertEqual(b5.hex, bn.hex)
+        } else {
+            XCTAssert(false, "Hepp")
+        }
+    }
+
+    func testUnpackBinson() {
+        let empty_hex_a1 = ""
+        let empty_hex_a2 = "0x"
+
+        let input_hex_a1 = "4041"
+        let input_hex_a2 = "0x4041"
+
         let empty_data = Data()
         let input_data = Data([0x40, 0x41])
 
-        if let b1 = Builder.unpack(hex: empty_hex) {
+        if let b1 = Builder.unpack(hex: empty_hex_a1) {
             XCTAssert(false, "\(b1) - Should have been empty")
         } else {
             XCTAssert(true, "Hepp")
         }
         
-        if let b2 = Builder.unpack(data: empty_data) {
+        if let b2 = Builder.unpack(hex: empty_hex_a2) {
             XCTAssert(false, "\(b2) - Should have been empty")
         } else {
             XCTAssert(true, "Hepp")
         }
         
-        if let b3 = Builder.unpack(hex: input_hex) {
-            XCTAssertEqual(b3.hex, Binson().hex)
+        if let b3 = Builder.unpack(data: empty_data) {
+            XCTAssert(false, "\(b3) - Should have been empty")
+        } else {
+            XCTAssert(true, "Hepp")
+        }
+        
+        if let b4 = Builder.unpack(hex: input_hex_a1) {
+            XCTAssertEqual(b4.hex, Binson().hex)
+        } else {
+            XCTAssert(false, "Hepp")
+        }
+        
+        if let b5 = Builder.unpack(hex: input_hex_a2) {
+            XCTAssertEqual(b5.hex, Binson().hex)
         } else {
             XCTAssert(false, "Hepp")
         }
@@ -138,10 +176,17 @@ class BuilderTests: XCTestCase {
                                0x02, 0x02, 0x02, 0x14, 0x01, 0x7a, 0x40, 0x41,
                                0x41])
         
+        let bn = Binson()
+            .append("c", "u")
+            .append("i", 1)
+            .append("z", .object(Binson()))
+            .append("t", Value.bytes([0x02, 0x02]))
+        
         if let unlock = Builder.unpack(data: input_data) {
-            XCTAssertEqual(unlock.value(key: "c"), "u")
-            XCTAssertEqual(unlock.value(key: "i"), 1)
+            XCTAssertEqual(unlock["c"], "u")
+            XCTAssertEqual(unlock["i"], 1)
             
+            XCTAssertEqual(bn, unlock)
             XCTAssertEqual(expected, unlock.hex)
         } else {
             XCTAssert(false, "Hepp")

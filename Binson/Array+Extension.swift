@@ -40,16 +40,16 @@ extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte
                 return nil
             }
             
-            if let b = buffer {
-                self.append(b << 4 | v as! Element)
+            if let b = buffer as? Element, let v = v as? Element {
+                self.append(b << 4 | v)
                 buffer = nil
             } else {
                 buffer = v
             }
         }
         
-        if let b = buffer {
-            self.append(b as! Element)
+        if let b = buffer as? Element {
+            self.append(b)
         }
     }
 }

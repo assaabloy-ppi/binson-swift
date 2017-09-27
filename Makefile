@@ -23,4 +23,6 @@ tag:
 
 pushtag: tag
 	git push origin --tags
-	
+
+verify:
+	pod spec lint Binson.podspec

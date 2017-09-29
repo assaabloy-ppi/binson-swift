@@ -1,7 +1,5 @@
-//
 //  Data+Extension.swift
 //  Binson
-//
 
 import Foundation
 

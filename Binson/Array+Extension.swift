@@ -1,4 +1,3 @@
-//
 //  Array+Extension.swift
 //  Binson Utils
 //

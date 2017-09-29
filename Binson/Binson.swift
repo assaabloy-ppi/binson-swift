@@ -1,7 +1,7 @@
-//
 //  File: Binson.swift
 //  Package: Binson
 //
+//  Created by Kenneth Pernyer on 2017-05-30.
 
 import Foundation
 

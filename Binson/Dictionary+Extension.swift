@@ -1,6 +1,4 @@
-//
 //  Dictionary+Extension.swift
-//  PotLock
 //
 //  Created by Kenneth Pernyer on 2017-05-30.
 

@@ -1,4 +1,5 @@
 disabled_rules:
+  - line_length
 
 included:
   - Binson
@@ -24,8 +25,6 @@ trailing_whitespace:
 force_cast: warning # implicitly
 force_try:
   severity: warning # explicitly
-
-line_length: 110
 
 type_body_length:
   - 300 # warning

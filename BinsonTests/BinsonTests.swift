@@ -62,7 +62,6 @@ class BinsonTests: XCTestCase {
         // bytes      = bytesLen raw
         // bytesLen   = %x18 int8 / %x19 int16 / %x1a int32
 
-        // TODO: check initializers for Array and Bytes
         var binson = Binson()
         binson += ("t", Value.bytes([0x02, 0x02]))
         

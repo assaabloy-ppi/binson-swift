@@ -10,6 +10,39 @@ import XCTest
 @testable import Binson
 
 class OperatorsTests: XCTestCase {
+    
+    func testSubscripts() {
+        var a = Binson()
+        a += ("i", 1)
+        
+        XCTAssertEqual(a["i"], 1)
+        
+        a["olle"] = 4711
+        XCTAssertEqual(a["olle"], 4711)
+        XCTAssertEqual(a["i"], 1)
+
+        a["olle"] = 4712
+        XCTAssertEqual(a["olle"], 4712)
+        XCTAssertEqual(a["i"], 1)
+
+        a["ollon"] = 4711
+        a["i"] = 4711
+        XCTAssertEqual(a["olle"], 4712)
+        XCTAssertEqual(a["i"], 4711)
+    }
+    
+    func testSubscriptsTwoLevel() {
+        var a = Binson()
+        a += ("i", 1)
+        
+        var b = Binson()
+        b += ("i", 1)
+        b += ("o", "Abba")
+        b += ("z", .object(a))
+
+        XCTAssertEqual(b["z"]["i"], 1)
+    }
+    
     func testBinsonPlus() {
         
         var a = Binson()

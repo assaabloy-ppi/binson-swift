@@ -25,8 +25,13 @@ public class Binson {
         return self
     }
 
-    public subscript(key: String) -> Value? {
-        return dict[key]
+    public subscript(key: String) -> Value {
+        get {
+            return dict[key] ?? .nil
+        }
+        set {
+            dict[key] = newValue
+        }
     }
     
     public func value(key: String) -> Value? {

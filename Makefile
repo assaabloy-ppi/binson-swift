@@ -1,4 +1,4 @@
-VERSION = $(shell grep s.version Binson.podspec | cut -f2 -d=)
+VERSION = $(shell grep s.version Binson.podspec | cut -f2 -d= | cut -f1 -d{)
 
 lint:
 	swiftlint

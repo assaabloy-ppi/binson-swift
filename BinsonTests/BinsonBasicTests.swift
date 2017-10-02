@@ -8,11 +8,6 @@ import XCTest
 @testable import Binson
 
 class BinsonBasicTests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-    }
-    
     func testBasicBinson() {
         let bn = Binson()
         let str = bn.pack().toHexString("\\x")
@@ -85,7 +80,7 @@ class BinsonBasicTests: XCTestCase {
         XCTAssertNotEqual(bn2["e"], 23.09922)
         XCTAssertNotEqual(bn2["e"], [ "co", "u" ])
         
-        if let binson = bn2["z"]?.objectValue {
+        if let binson = bn2["z"].objectValue {
             XCTAssertEqual(binson.value(key: "i"), "Happy birthday")
             XCTAssertEqual(binson.value(key: "r"), false)
         } else {
@@ -107,7 +102,7 @@ class BinsonBasicTests: XCTestCase {
         XCTAssertNotEqual(bn3["e"], 23.09922)
         XCTAssertNotEqual(bn3["e"], [ "co", "u" ])
         
-        if let binson2 = bn3["z"]?.objectValue {
+        if let binson2 = bn3["z"].objectValue {
             XCTAssertEqual(binson2["i"], "Happy birthday")
             XCTAssertEqual(binson2["r"], false)
         } else {
@@ -131,7 +126,6 @@ class BinsonBasicTests: XCTestCase {
         // bytes      = bytesLen raw
         // bytesLen   = %x18 int8 / %x19 int16 / %x1a int32
 
-        // TODO: check initializers for Array and Bytes
         var binson = Binson()
         binson += ("t", Value.bytes([0x02, 0x02]))
         

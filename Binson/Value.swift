@@ -257,7 +257,17 @@ extension Value {
             return nil
         }
     }
-
+    
+    public subscript(key: String) -> Value {
+        get {
+            switch self {
+            case .object(let binson):
+                return binson[key]
+            default:
+                return nil
+            }
+        }
+    }
 }
 
 func packBytes(_ value: UInt64, parts: Int) -> Data {

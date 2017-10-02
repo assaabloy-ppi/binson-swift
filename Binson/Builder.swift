@@ -191,8 +191,6 @@ public class Builder {
     }
     
     /// Parse bytes to form an array of Binson Values.
-    ///
-    /// TODO: [Byte]
     private class func unpackBytes(_ data: Data, value: Byte) throws -> (value: [Byte], remainder: Data) {
         
         let n = { () -> Int in

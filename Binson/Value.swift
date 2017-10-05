@@ -103,7 +103,7 @@ extension Value: Hashable {
         case .int(let value): return value.hashValue
         case .double(let value): return value.hashValue
         case .string(let string): return string.hashValue
-        case .bytes(let bytes): return bytes.count
+        case .bytes(let bytes): return bytes.reduce(5381) { ($0 << 5) &+ $0 &+ Int($1) }
         case .array(let array): return array.count
         case .object(let object): return object.hashValue
         }

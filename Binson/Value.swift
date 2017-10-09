@@ -62,7 +62,7 @@ extension Value {
         self = .object(value)
     }
     public init(_ value: Any) {
-        self = toValue(from: value)
+        self = fromJson(jsonObject: value)
     }
 }
 
@@ -326,7 +326,7 @@ extension Value {
     }
     
     public var json: Any {
-        return self.tojson()
+        return self.toJson()
     }
     
     public func pack() -> Data {
@@ -388,7 +388,7 @@ extension Value {
         }
     }
     
-    public func tojson() -> Any {
+    public func toJson() -> Any {
         switch self {
         case let .bool(value):
             return value
@@ -411,30 +411,26 @@ extension Value {
     }
 }
 
-func toValue(from any: Any) -> Value {
-    switch any {
+func fromJson(jsonObject: Any) -> Value {
+    switch jsonObject {
     case let value as Bool:
         return Value(value)
-        
     case let value as Int:
         return Value(Int64(value))
-        
     case let value as Int64:
         return Value(value)
-        
     case let value as Double:
         return Value(value)
-        
     case let value as String:
         if value.hasPrefix("0x"), let bytes = [Byte](hex: value) {
             return Value(bytes)
         } else {
             return Value(value)
         }
-        
     case let array as [Any]:
-        return Value(array.map {Value($0)})
-
+        return Value(array.map {fromJson(jsonObject: $0)})
+    case let objects as [String: Any]:
+        return Value(Builder.unpack(jsonparams: objects)!)
     default:
         return nil
     }

@@ -60,14 +60,9 @@ public class Builder {
     public class func unpack(jsonparams: [String: Any]) -> Binson? {
         var values = [String: Value]()
         
-        for key in jsonparams.keys.sorted() {
+        for key in jsonparams.keys {
             let any = jsonparams[key]!
-            if any is [String: Any] {
-                let annie = any as! [String: Any]
-                values[key] = Value.object(Builder.unpack(jsonparams: annie)!)
-            } else {
-                values[key] = Value(any)
-            }
+            values[key] = Value(any)
         }
         return Binson(values: values)
     }

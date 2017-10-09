@@ -113,6 +113,32 @@ class BinsonBasicTests: XCTestCase {
         XCTAssertEqual(bn, bn3)
     }
     
+    func testJSON2Binson(){
+        let json =
+"""
+{
+  "b" : true,
+  "e" : 23.099229999999999,
+  "i" : 230,
+  "array" : [
+    "co",
+    {
+      "r" : false,
+      "i" : "Happy birthday"
+    }
+  ],
+  "t" : "0x020204",
+  "z" : {
+    "r" : false,
+    "i" : "Happy birthday"
+  }
+}
+"""
+        
+        let binson = Builder.unpack(jsonstring: json)!
+        XCTAssertEqual(json, binson.json)
+    }
+    
     func testIntegerLongBinson() {
         
         var binson = Binson()

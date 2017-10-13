@@ -5,6 +5,9 @@
 
 import Foundation
 
+import os.log
+let log = OSLog(subsystem: "binson.aa.st", category: "Builder")
+
 public class Builder {
 
     /// Unpack from Hex
@@ -33,7 +36,7 @@ public class Builder {
     public class func unpack(data: Data) -> Binson? {
         
         guard let (byte, rest) = try? unpackByte(data), byte == Mark.beginByte else {
-            // DDLogError("Failed to unpack, no starting MARK")
+            os_log("Failed to unpack, no starting MARK", log: log, type: .debug)
             return nil
         }
         
@@ -42,12 +45,12 @@ public class Builder {
         do {
             (binson, rest2) = try unpackBinsonObject(rest)
         } catch {
-            // DDLogError("caught: \(error)")
+            os_log("Failed to unpack Binson object: %{public}s", log: log, type: .debug, error as CVarArg)
             return nil
         }
         
         if !rest2.isEmpty {
-            // DDLogWarn("Handle trailing garbage")
+            os_log("Not handling trailing garbage", log: log, type: .debug)
             // Not really an Error, is it?
         }
         

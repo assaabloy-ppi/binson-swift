@@ -36,7 +36,7 @@ public class Builder {
     public class func unpack(data: Data) -> Binson? {
         
         guard let (byte, rest) = try? unpackByte(data), byte == Mark.beginByte else {
-            os_log("Failed to unpack, no starting MARK", log: log, type: .debug)
+            os_log("Failed to unpack, no starting MARK", log: log, type: .error)
             return nil
         }
         
@@ -45,12 +45,12 @@ public class Builder {
         do {
             (binson, rest2) = try unpackBinsonObject(rest)
         } catch {
-            os_log("Failed to unpack Binson object: %{public}s", log: log, type: .debug, error as CVarArg)
+            os_log("Failed to unpack Binson object: %{public}s", log: log, type: .error, error as CVarArg)
             return nil
         }
         
         if !rest2.isEmpty {
-            os_log("Not handling trailing garbage", log: log, type: .debug)
+            os_log("Not handling trailing garbage", log: log)
             // Not really an Error, is it?
         }
         

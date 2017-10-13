@@ -13,12 +13,12 @@ class BinsonBasicTests: XCTestCase {
         let str = bn.pack().toHexString("\\x")
         XCTAssertEqual(str, "\\x40\\x41")
     }
-    
+
     func testDictionaryBinson() {
         let bn = Binson(values: ["Olle": 4711])
         XCTAssertEqual(bn.value(key: "Olle"), 4711)
     }
-    
+
     func testStringBinson() {
         var bn = Binson()
         bn += ("c", "u")
@@ -26,15 +26,15 @@ class BinsonBasicTests: XCTestCase {
         let str = bn.hex
         XCTAssertEqual(str, "4014016314017541")
     }
-    
+
     func testLongerTagBinson() {
         var bn = Binson()
         bn += ("co", "u")
-        
+
         let str = bn.hex
         XCTAssertEqual(str, "401402636f14017541")
     }
-    
+
     func testArrayBinson() {
         let value: Value = Value(["co", "u"])
         var binson = Binson()
@@ -42,15 +42,15 @@ class BinsonBasicTests: XCTestCase {
         let str = binson.hex
         XCTAssertEqual(str, "401402636f421402636f1401754341")
     }
-    
+
     func testIntegerBinson() {
         var binson = Binson()
         binson += ("i", 1)
-        
+
         let str = binson.hex
         XCTAssertEqual(str, "40140169100141")
     }
-    
+
     func testBinson2JSON() {
         var a = Binson()
         a += ("i", "Happy birthday")
@@ -67,26 +67,26 @@ class BinsonBasicTests: XCTestCase {
 
         let params = bn.jsonParams()
         print(params)
-        
+
         let bn2 = Builder.unpack(jsonparams: params)!
-        
+
         XCTAssertEqual(bn2["b"], true)
         XCTAssertEqual(bn2["i"], 230)
         XCTAssertEqual(bn2["array"], [ "co", "u" ])
         XCTAssertEqual(bn2["e"], 23.099229999999999)
         XCTAssertEqual(bn2["t"], Value.bytes([0x02, 0x02, 0x04]))
-        
+
         XCTAssertNotEqual(bn2["d"], 23.09)
         XCTAssertNotEqual(bn2["e"], 23.09922)
         XCTAssertNotEqual(bn2["e"], [ "co", "u" ])
-        
+
         if let binson = bn2["z"].objectValue {
             XCTAssertEqual(binson.value(key: "i"), "Happy birthday")
             XCTAssertEqual(binson.value(key: "r"), false)
         } else {
             XCTAssert(false)
         }
-        
+
         let string = bn.json
         print(bn.json)
 
@@ -97,23 +97,23 @@ class BinsonBasicTests: XCTestCase {
         XCTAssertEqual(bn3["array"], [ "co", "u" ])
         XCTAssertEqual(bn3["e"], 23.099229999999999)
         XCTAssertEqual(bn3["t"], Value.bytes([0x02, 0x02, 0x04]))
-        
+
         XCTAssertNotEqual(bn3["d"], 23.09)
         XCTAssertNotEqual(bn3["e"], 23.09922)
         XCTAssertNotEqual(bn3["e"], [ "co", "u" ])
-        
+
         if let binson2 = bn3["z"].objectValue {
             XCTAssertEqual(binson2["i"], "Happy birthday")
             XCTAssertEqual(binson2["r"], false)
         } else {
             XCTAssert(false)
         }
-        
+
         XCTAssertEqual(bn, bn2)
         XCTAssertEqual(bn, bn3)
     }
-    
-    func testJSON2Binson(){
+
+    func testJSON2Binson() {
         let json =
 """
 {
@@ -134,16 +134,15 @@ class BinsonBasicTests: XCTestCase {
   }
 }
 """
-        
         let binson = Builder.unpack(jsonstring: json)!
         XCTAssertEqual(json, binson.json)
     }
-    
+
     func testIntegerLongBinson() {
-        
+
         var binson = Binson()
         binson += ("i", 230)
-        
+
         let str = binson.hex
         XCTAssertEqual(str, "4014016911e60041")
     }
@@ -154,16 +153,16 @@ class BinsonBasicTests: XCTestCase {
 
         var binson = Binson()
         binson += ("t", Value.bytes([0x02, 0x02]))
-        
+
         let str = binson.hex
         XCTAssertEqual(str, "401401741802020241")
     }
-    
+
     func testBinsonInBinson() {
-        
+
         var binson = Binson()
         binson += ("z", Value.object(Binson()))
-        
+
         let str = binson.hex
         XCTAssertEqual(str, "4014017a404141")
     }
@@ -175,7 +174,7 @@ class BinsonBasicTests: XCTestCase {
      0x01, 0x69, 0x10, 0x01, 0x14, 0x01, 0x74, 0x18,
      0x02, 0x02, 0x02, 0x14, 0x01, 0x7a, 0x40, 0x41,
      0x41
-     
+
      * {
      *   "c": "u",          // Conversation "u" (String)
      *   "i": 1,            // Converstation instance ID (Integer)
@@ -185,54 +184,54 @@ class BinsonBasicTests: XCTestCase {
      */
 
     func testOperator() {
-        
+
         var unlock = Binson()
         unlock += ("c", "u")
         unlock += ("i", 1)
         unlock += ("t", Value.bytes([0x02, 0x02]))
         unlock += ("z", Value.object(Binson()))
-        
+
         XCTAssertEqual(unlock.value(key: "c"), "u")
         XCTAssertEqual(unlock.value(key: "i"), 1)
         XCTAssertEqual(unlock.value(key: "t"), Value.bytes([0x02, 0x02]))
     }
-    
+
     func testPackUnlock() {
         let expected_hex = "4014016314017514016910011401741802020214017a404141"
         let expected_data = Data([0x40, 0x14, 0x01, 0x63, 0x14, 0x01, 0x75, 0x14,
                                   0x01, 0x69, 0x10, 0x01, 0x14, 0x01, 0x74, 0x18,
                                   0x02, 0x02, 0x02, 0x14, 0x01, 0x7a, 0x40, 0x41,
                                   0x41])
-        
+
         var unlock = Binson()
         unlock += ("c", "u")
         unlock += ("i", 1)
         unlock += ("t", Value.bytes([0x02, 0x02]))
         unlock += ("z", Value.object(Binson()))
-        
+
         let actual_data = unlock.pack()
         let actual_hex = actual_data.hex
-        
+
         XCTAssertEqual(expected_hex, actual_hex)
         XCTAssertEqual(expected_data, actual_data)
     }
-    
+
     func testBinsonAppend() {
         let a = Binson()
             .append("i", "Happy birthday")
             .append("r", false)
-        
+
         var b = Binson()
         b += ("i", "Happy birthday")
         b += ("r", false)
-        
+
         XCTAssertEqual(a, b)
     }
-    
+
     func testCompareDoubleInt() {
         let a: Value = 4711
         let b: Value = 4711.0000
-        
+
         XCTAssertEqual(a, b)
         XCTAssertEqual(a, a)
         XCTAssertEqual(b, a)

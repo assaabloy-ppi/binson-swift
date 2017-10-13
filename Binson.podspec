@@ -19,8 +19,8 @@ Pod::Spec.new do |s|
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.author = { 'kpernyer' => 'kenneth.pernyer@assaabloy.com' }
 
-  s.ios.deployment_target = '9.0'
-  s.osx.deployment_target = '10.10'
+  s.ios.deployment_target = '10.0'
+  s.osx.deployment_target = '10.12'
 
   s.source = { :git => 'https://github.com/assaabloy-ppi/binson-swift.git', :tag => s.version.to_s }
 

@@ -1,19 +1,19 @@
 VERSION = $(shell grep s.version Binson.podspec | cut -f2 -d= | cut -f1 -d{)
+FLAGS = -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12"
+
+all: lint build test
+
+test:
+	swift test ${FLAGS}
+
+build:
+	swift build ${FLAGS}
 
 lint:
 	swiftlint
 
-pod-install:
-	pod install
-
-pod-update:
-	pod update
-
 clean:
 	rm -rf .build *~ .*~ *.log
-
-cleaner: clean
-	rm -rf Pods
 
 version:
 	@echo ${VERSION}
@@ -26,3 +26,6 @@ pushtag: tag
 
 verify:
 	pod spec lint Binson.podspec
+
+format:
+	swiftformat --hexliteralcase lowercase --hexgrouping none --ranges nospace --wrapelements beforefirst --self remove Package.swift

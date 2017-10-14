@@ -295,5 +295,13 @@ class BuilderTests: XCTestCase {
         } else {
             XCTAssert(false)
         }
+        
+        if let i: Int64 = bn["d"].integerValue {
+            print(i)
+        }
+        
+        if let i2 = bn.value(key: "d") {
+            print(i2)
+        }
     }
 }

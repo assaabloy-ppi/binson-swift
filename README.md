@@ -1,8 +1,8 @@
 # Binson Swift
-Binson implementation in the Swift language, for iOS, MacOS and Linux.
+A Binson implementation in the Swift language. Can be used for iOS, MacOS and Linux projects.
 
 ## Howto use
-Binson is managed in Github. Download or clone using this link:
+Binson is Open Source and managed in Github. Download or clone using this link:
 [github.com/assaabloy-ppi/binson-swift](
 https://github.com/assaabloy-ppi/binson-swift.git)
 
@@ -24,6 +24,9 @@ end
 Binson is an exceptionally simple binary data serialization format. It is similar in scope to JSON, but it is faster, more compact, and significantly easier to understand.
 
 Binson has full support for double precision floating point numbers (including NaN, inf). There is a one-to-one mapping between a Binson object and its serialized bytes. This is useful for cryptographic signatures, hash codes and equals operations.
+
+Read more about [Binson](
+http://binson.org)
 
 ## Format
 
@@ -83,7 +86,7 @@ All Binson objects and Value types support the properties .hex, .json and .data.
 ### binson.hex
 ```swift
 print(binson.hex)
-4014016314017514016910011401741802020214017a404141
+"0x4014016314017514016910011401741802020214017a404141"
 ```
 
 ### binson.json
@@ -108,7 +111,6 @@ Data(25 bytes)
 ### from serialized Data
 ```swift
 let binson_data = Data([0x40, 0x14, 0x01, 0x7a, 0x40, 0x41, 0x41])
-
 if let binson = Builder.unpack(data: binson_data) {}
 ```
 
@@ -120,4 +122,20 @@ if let binson = Builder.unpack(hex: "0x4014016314017541") {}
 ### from a JSON string
 ```swift
 if let binson = Builder.unpack(jsonstring: json) {}
+```
+
+## Subscripts
+You are allowed to access properties inside a Binson object using the subscript approach.
+
+Instead of
+```swift
+if let i2 = binson.value(key: "d") {
+    print(i2)
+}
+```
+using subscripts allow for cleaner code
+```swift
+if let i: Int64 = binson["d"].integerValue {
+    print(i)
+}
 ```

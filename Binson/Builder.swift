@@ -40,21 +40,18 @@ public class Builder {
             return nil
         }
         
-        let binson: Binson
-        let rest2: Data
         do {
-            (binson, rest2) = try unpackBinsonObject(rest)
+            let (binson, rest2) = try unpackBinsonObject(rest)
+            
+            if !rest2.isEmpty {
+                os_log("Not handling trailing garbage", log: log)
+                // Not really an Error, is it?
+            }
+            return binson
         } catch {
             os_log("Failed to unpack Binson object: %{public}s", log: log, type: .error, error as CVarArg)
             return nil
         }
-        
-        if !rest2.isEmpty {
-            os_log("Not handling trailing garbage", log: log)
-            // Not really an Error, is it?
-        }
-        
-        return binson
     }
     
     /// Unpack from JSON params

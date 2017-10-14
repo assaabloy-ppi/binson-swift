@@ -81,6 +81,12 @@ class BuilderTests: XCTestCase {
         } else {
             XCTAssert(false, "Hepp")
         }
+        
+        /*
+        print(bn.hex)
+        print(bn.json)
+        print(bn.data)
+         */
     }
 
     func testUnpackBinson() {
@@ -248,7 +254,7 @@ class BuilderTests: XCTestCase {
             // print(binsonDelegation.description)
             XCTAssertEqual(delegation.hex, binsonDelegation.hex)
         } else {
-            XCTAssert(false, "Hepp")
+            XCTFail("Unpack failed")
         }
     }
     

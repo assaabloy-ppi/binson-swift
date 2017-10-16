@@ -3,7 +3,7 @@ FLAGS = -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12"
 
 all: lint build test
 
-test:
+test: build
 	swift test ${FLAGS}
 
 build:

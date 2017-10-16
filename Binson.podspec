@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Binson'
-  s.version          = '1.0.5'
+  s.version          = '1.0.6'
   s.summary          = 'Binson is a binary format for efficient IoT cases.'
 
   s.description      = <<-DESC
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.author = { 'kpernyer' => 'kenneth.pernyer@assaabloy.com' }
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '10.3'
   s.osx.deployment_target = '10.12'
 
   s.source = { :git => 'https://github.com/assaabloy-ppi/binson-swift.git', :tag => s.version.to_s }

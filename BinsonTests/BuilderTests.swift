@@ -12,8 +12,6 @@ let log = OSLog(subsystem: "binson.aa.st", category: "Test")
 class BuilderTests: XCTestCase {
     
     func testUnpackEmptyDataBinson() {
-        // os_log("--- HEPP ---", log: log, type: .debug)
-
         let empty_data = Data()
         
         if let b1 = Builder.unpack(data: empty_data) {
@@ -45,7 +43,6 @@ class BuilderTests: XCTestCase {
     }
     
     func testUnpackBinsonInBinson() {
-        
         /// Correct Binson in Binson "Empty"
         /// {
         ///  "z": { }           // Parameters (Empty binson object)

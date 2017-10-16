@@ -1,15 +1,14 @@
+language: swift
 os: osx
 osx_image: xcode9.1
-
-install:
-  - eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
+xcode_project: Binson.xcodeproj
+xcode_scheme: BinsonTests
 
 script:
   - make all
 
 env:
   - SWIFT_VERSION=4.0
-  - SWIFT_VERSION=4.1
 
 notifications:
   email:

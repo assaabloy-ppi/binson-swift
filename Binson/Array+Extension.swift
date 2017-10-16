@@ -10,10 +10,10 @@ extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte
     public init?(hex: String) {
         self = [Element]()
         self.reserveCapacity(hex.unicodeScalars.lazy.underestimatedCount)
-        
+
         var buffer: Byte?
         var skip = hex.hasPrefix("0x") ? 2 : 0
-        
+
         for char in hex.unicodeScalars.lazy {
             guard skip == 0 else {
                 skip -= 1
@@ -23,10 +23,10 @@ extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte
                 self.removeAll()
                 return nil
             }
-            
+
             let v: Byte
             let c: Byte = Byte(char.value)
-            
+
             switch c {
             case let c where c <= 57:
                 v = c - 48
@@ -38,7 +38,7 @@ extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte
                 self.removeAll()
                 return nil
             }
-            
+
             if let b = buffer as? Element, let v = v as? Element {
                 self.append(b << 4 | v)
                 buffer = nil
@@ -46,7 +46,7 @@ extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte
                 buffer = v
             }
         }
-        
+
         if let b = buffer as? Element {
             self.append(b)
         }
@@ -54,11 +54,11 @@ extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte
 }
 
 extension Array where Iterator.Element == Byte {
-    
+
     public func toHexString(_ separator: String = "") -> String {
         return self.lazy.reduce("") {
             var str = String($1, radix: 16)
-            if str.characters.count == 1 {
+            if str.count == 1 {
                 str = "0" + str
             }
             return $0 + "\(separator)\(str)"
@@ -123,7 +123,7 @@ func rotateRight(_ value: UInt64, by: UInt64) -> UInt64 {
 
 public func reversed(_ byte: Byte) -> Byte {
     var v = byte
-    
+
     v = (v & 0xF0) >> 4 | (v & 0x0F) << 4
     v = (v & 0xCC) >> 2 | (v & 0x33) << 2
     v = (v & 0xAA) >> 1 | (v & 0x55) << 1

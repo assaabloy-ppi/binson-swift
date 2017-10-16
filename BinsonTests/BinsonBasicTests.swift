@@ -66,8 +66,6 @@ class BinsonBasicTests: XCTestCase {
         bn += ("z", Value.object(a))
 
         let params = bn.jsonParams()
-        print(params)
-
         let bn2 = Builder.unpack(jsonparams: params)!
 
         XCTAssertEqual(bn2["b"], true)
@@ -84,12 +82,10 @@ class BinsonBasicTests: XCTestCase {
             XCTAssertEqual(binson.value(key: "i"), "Happy birthday")
             XCTAssertEqual(binson.value(key: "r"), false)
         } else {
-            XCTAssert(false)
+            XCTFail("Unpack JSON failed")
         }
 
         let string = bn.json
-        print(bn.json)
-
         let bn3 = Builder.unpack(jsonstring: string)!
 
         XCTAssertEqual(bn3["b"], true)
@@ -139,7 +135,6 @@ class BinsonBasicTests: XCTestCase {
     }
 
     func testIntegerLongBinson() {
-
         var binson = Binson()
         binson += ("i", 230)
 
@@ -159,7 +154,6 @@ class BinsonBasicTests: XCTestCase {
     }
 
     func testBinsonInBinson() {
-
         var binson = Binson()
         binson += ("z", Value.object(Binson()))
 
@@ -184,7 +178,6 @@ class BinsonBasicTests: XCTestCase {
      */
 
     func testOperator() {
-
         var unlock = Binson()
         unlock += ("c", "u")
         unlock += ("i", 1)

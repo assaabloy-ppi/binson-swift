@@ -1,34 +1,18 @@
-# Binson Swift
+Binson Swift
+============
+
 A Binson implementation in the Swift language. Can be used for iOS, MacOS and Linux projects.
+Read more about [Binson](http://binson.org)
 
-## Howto use
-Binson is Open Source and managed in Github. Download or clone using this link:
-[github.com/assaabloy-ppi/binson-swift](
-https://github.com/assaabloy-ppi/binson-swift.git)
+Binson
+------
 
-You can also use various Package managers, e.g. Cocoapods
-```
-platform :ios, '10.0'
-
-target 'YourProject' do
-  use_frameworks!
-  pod 'Binson', :git => 'https://github.com/assaabloy-ppi/binson-swift.git'
-
-  target 'YourProjet-tests' do
-    inherit! :search_paths
-  end
-end
-```
-
-##  Binson
 Binson is an exceptionally simple binary data serialization format. It is similar in scope to JSON, but it is faster, more compact, and significantly easier to understand.
 
 Binson has full support for double precision floating point numbers (including NaN, inf). There is a one-to-one mapping between a Binson object and its serialized bytes. This is useful for cryptographic signatures, hash codes and equals operations.
 
-Read more about [Binson](
-http://binson.org)
-
-## Format
+Format
+------
 
 The bytes of a serialized Binson object follow this [ABNF] syntax.
 ```
@@ -60,9 +44,40 @@ utf        = *OCTET ; stringLen number of [UTF-8] bytes
 raw        = *OCTET ; any sequence of bytesLen bytes
 ```
 
-## Examples
+Howto use
+---------
 
-### Create
+Binson is Open Source and managed in Github. Download or clone using this link:
+[github.com/assaabloy-ppi/binson-swift](
+https://github.com/assaabloy-ppi/binson-swift.git)
+
+You can also use various Package managers, e.g. Cocoapods
+### Podfile
+
+```
+platform :ios, '10.3'
+
+target 'YourProject' do
+  use_frameworks!
+  pod 'Binson', :git => 'https://github.com/assaabloy-ppi/binson-swift.git'
+
+  target 'YourProjet-tests' do
+    inherit! :search_paths
+  end
+end
+```
+
+### Pod install
+```shell
+% pod install
+```
+
+Examples
+--------
+
+Create
+------
+
 The append function returns self, so that you can chain append commands.
 ```swift
 let binson = Binson()
@@ -79,7 +94,9 @@ binson += ("c", "u")
 print(binson.hex)
 "0x4014016314017541"
 ```
-### Useful Binson object properties
+
+Useful Binson object properties
+-------------------------------
 
 All Binson objects and Value types support the properties .hex, .json and .data. Data is used for binary serialization e.g. for communication with devices.
 
@@ -106,7 +123,8 @@ print(binson.data)
 Data(25 bytes)
 ```
 
-## Unpack
+Unpack
+------
 
 ### from serialized Data
 ```swift
@@ -124,7 +142,9 @@ if let binson = Builder.unpack(hex: "0x4014016314017541") {}
 if let binson = Builder.unpack(jsonstring: json) {}
 ```
 
-## Subscripts
+Subscripts
+----------
+
 You are allowed to access properties inside a Binson object using the subscript approach.
 
 Instead of

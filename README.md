@@ -1,6 +1,8 @@
 Binson Swift
 ============
 
+[![Build Status](https://travis-ci.org/assaabloy-ppi/binson-swift.svg?branch=master)](https://travis-ci.org/assaabloy-ppi/binson-swift)
+
 A Binson implementation in the Swift language. Can be used for iOS, MacOS and Linux projects.
 Read more about [Binson](http://binson.org)
 

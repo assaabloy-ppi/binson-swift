@@ -29,3 +29,6 @@ verify:
 
 format:
 	swiftformat --hexliteralcase lowercase --hexgrouping none --ranges nospace --wrapelements beforefirst --self remove Package.swift
+
+list:
+	xcodebuild -project Binson.xcodeproj  -list

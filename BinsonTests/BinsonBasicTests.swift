@@ -58,7 +58,7 @@ class BinsonBasicTests: XCTestCase {
 
         var bn = Binson()
         bn += ("i", 230)
-        bn += ("e", 23.09923)
+        bn += ("e", 23.0992)
         bn += ("b", true)
 
         bn += ("t", Value.bytes([0x02, 0x02, 0x04]))
@@ -71,7 +71,7 @@ class BinsonBasicTests: XCTestCase {
         XCTAssertEqual(bn2["b"], true)
         XCTAssertEqual(bn2["i"], 230)
         XCTAssertEqual(bn2["array"], [ "co", "u" ])
-        XCTAssertEqual(bn2["e"], 23.099229999999999)
+        XCTAssertEqual(bn2["e"], 23.0992)
         XCTAssertEqual(bn2["t"], Value.bytes([0x02, 0x02, 0x04]))
 
         XCTAssertNotEqual(bn2["d"], 23.09)
@@ -91,7 +91,7 @@ class BinsonBasicTests: XCTestCase {
         XCTAssertEqual(bn3["b"], true)
         XCTAssertEqual(bn3["i"], 230)
         XCTAssertEqual(bn3["array"], [ "co", "u" ])
-        XCTAssertEqual(bn3["e"], 23.099229999999999)
+        XCTAssertEqual(bn3["e"], 23.0992)
         XCTAssertEqual(bn3["t"], Value.bytes([0x02, 0x02, 0x04]))
 
         XCTAssertNotEqual(bn3["d"], 23.09)
@@ -114,7 +114,7 @@ class BinsonBasicTests: XCTestCase {
 """
 {
   "b" : true,
-  "e" : 23.099229999999999,
+  "e" : 23.0992,
   "i" : 230,
   "array" : [
     "co",

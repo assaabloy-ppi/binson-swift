@@ -2,8 +2,8 @@ disabled_rules:
   - line_length
 
 included:
-  - Binson
-  - BinsonTests
+  - Sources
+  - Tests
 
 excluded:
   - Carthage

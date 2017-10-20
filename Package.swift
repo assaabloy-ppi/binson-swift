@@ -9,8 +9,8 @@ _ = Package(
     ],
 
     targets: [
-            .target(name: "Binson", path: "Binson"),
-            .testTarget(name: "Binson-test", dependencies: ["Binson"], path: "BinsonTests")
+            .target(name: "Binson", path: "Sources"),
+            .testTarget(name: "Binson-test", dependencies: ["Binson"], path: "Tests")
     ],
 
     swiftLanguageVersions: [4]

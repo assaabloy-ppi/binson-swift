@@ -1,7 +1,8 @@
 VERSION = $(shell grep s.version Binson.podspec | cut -f2 -d= | cut -f1 -d{)
 FLAGS = -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12"
+BUILD_TOOL?=xcodebuild
 
-all: lint build test
+all: lint test
 
 test: build
 	swift test ${FLAGS}
@@ -12,17 +13,23 @@ build:
 lint:
 	swiftlint
 
+docs:
+	jazzy --theme fullwidth
+
 clean:
-	rm -rf .build *~ .*~ *.log
+	rm -rf .build *~ .*~ *.
+	$(BUILD_TOOL) $(XCODEFLAGS) -configuration Debug clean
+	$(BUILD_TOOL) $(XCODEFLAGS) -configuration Release clean
+	$(BUILD_TOOL) $(XCODEFLAGS) -configuration Test clean
 
 version:
 	@echo ${VERSION}
 
 tag:
-	git tag ${VERSION}
+	git tag -a ${VERSION} -m "New Binson release: ${VERSION}"
 
-pushtag: tag
-	git push origin --tags
+pushtag:
+	git push --follow-tags
 
 verify:
 	pod spec lint Binson.podspec

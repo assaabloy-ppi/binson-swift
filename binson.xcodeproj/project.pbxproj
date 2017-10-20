@@ -21,7 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		5BFE5C5F1F9A4C260053884E /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 5BFE5C5E1F9A4C260053884E /* Makefile */; };
 		OBJ_40 /* BinsonBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* BinsonBasicTests.swift */; };
 		OBJ_41 /* BinsonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* BinsonTests.swift */; };
 		OBJ_42 /* BuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* BuilderTests.swift */; };
@@ -228,7 +227,6 @@
 				OBJ_42 /* BuilderTests.swift in Sources */,
 				OBJ_43 /* ExtensionsTests.swift in Sources */,
 				OBJ_44 /* OperatorsTests.swift in Sources */,
-				5BFE5C5F1F9A4C260053884E /* Makefile in Sources */,
 				OBJ_45 /* WhiteBoxTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

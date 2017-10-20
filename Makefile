@@ -1,18 +1,22 @@
-VERSION = $(shell grep s.version Binson.podspec | cut -f2 -d= | cut -f1 -d{)
-FLAGS = -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12"
-BUILD_TOOL?=xcodebuild
-SWIFT?=swift
+VERSION       = $(shell grep s.version Binson.podspec | cut -f2 -d= | cut -f1 -d{)
 
-XCODE_PROJECT?=Binson.xcodeproj
-XCODE_SCHEME?=Binson-Package
+SWIFT         = swift
+SWIFT_FLAGS   = -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12"
 
-all: lint test
+BUILD_TOOL    = xcodebuild
+XCODE_PROJECT = Binson.xcodeproj
+XCODE_SCHEME  = Binson-Package
+XCODE         = $(BUILD_TOOL) -project $(XCODE_PROJECT) $(XCODE_FLAGS)
+IOS_FLAGS     = -destination "platform=iOS Simulator,name=iPhone 6"
+OSX_FLAGS     =
+
+all: lint xcodebuild-ios xcodebuild-osx
 
 test: build
-	swift test ${FLAGS}
+	swift test $(SWIFT_FLAGS)
 
 build:
-	swift build ${FLAGS}
+	swift build $(SWIFT_FLAGS)
 
 lint:
 	swiftlint
@@ -22,15 +26,15 @@ docs:
 
 clean:
 	rm -rf .build *~ .*~ *.
-	$(BUILD_TOOL) $(XCODEFLAGS) -configuration Debug clean
-	$(BUILD_TOOL) $(XCODEFLAGS) -configuration Release clean
-	$(BUILD_TOOL) $(XCODEFLAGS) -configuration Test clean
+	$(XCODE) -configuration Debug clean
+	$(XCODE) -configuration Release clean
+	$(XCODE) -configuration Test clean
 
 version:
-	@echo ${VERSION}
+	@echo $(VERSION)
 
 tag:
-	git tag -a ${VERSION} -m "New Binson release: ${VERSION}"
+	git tag -a $(VERSION) -m "New Binson release: $(VERSION)"
 
 pushtag:
 	git push --follow-tags
@@ -39,13 +43,13 @@ verify:
 	pod spec lint Binson.podspec
 
 list:
-	$(BUILD_TOOL) -project Binson.xcodeproj  -list
+	$(XCODE) -list
 
 xcodebuild-ios:
-	$(BUILD_TOOL) -project $(XCODE_PROJECT) -scheme $(XCODE_SCHEME) -destination "platform=iOS Simulator,name=iPhone 6" build-for-testing test
+	$(XCODE) -scheme $(XCODE_SCHEME) $(IOS_FLAGS) build-for-testing test  | xcpretty && exit ${PIPESTATUS[0]}
 
 xcodebuild-osx:
-	$(BUILD_TOOL) -project $(XCODE_PROJECT) -scheme $(XCODE_SCHEME) build-for-testing test
+	$(XCODE) -scheme $(XCODE_SCHEME) $(OSX_FLAGS) build-for-testing test | xcpretty && exit ${PIPESTATUS[0]}
 
 dependencies:
 	$(SWIFT) package show-dependencies

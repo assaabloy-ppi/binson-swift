@@ -5,7 +5,7 @@
 //  Copyright © 2017 Assa Abloy. All rights reserved.
 
 import XCTest
-@testable import Binson
+import Binson
 
 class ExtensionsTests: XCTestCase {
     
@@ -16,13 +16,5 @@ class ExtensionsTests: XCTestCase {
         XCTAssertEqual(str.base64, enc64)
         XCTAssertEqual(String(base64: enc64), str)
         XCTAssertNotEqual(String(base64: str), enc64)
-    }
-    
-    func testData() {
-        let data = "Hallon".data ?? Data()
-        let str = "Hallon"
-        
-        XCTAssertEqual(data.string, str)
-        XCTAssertEqual(str.data, data)
     }
 }

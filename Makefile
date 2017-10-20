@@ -1,6 +1,10 @@
 VERSION = $(shell grep s.version Binson.podspec | cut -f2 -d= | cut -f1 -d{)
 FLAGS = -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12"
 BUILD_TOOL?=xcodebuild
+SWIFT?=swift
+
+XCODE_PROJECT?=Binson.xcodeproj
+XCODE_SCHEME?=Binson-Package
 
 all: lint test
 
@@ -34,8 +38,17 @@ pushtag:
 verify:
 	pod spec lint Binson.podspec
 
-format:
-	swiftformat --hexliteralcase lowercase --hexgrouping none --ranges nospace --wrapelements beforefirst --self remove Package.swift
-
 list:
-	xcodebuild -project Binson.xcodeproj  -list
+	$(BUILD_TOOL) -project Binson.xcodeproj  -list
+
+xcodebuild-ios:
+	$(BUILD_TOOL) -project $(XCODE_PROJECT) -scheme $(XCODE_SCHEME) -destination "platform=iOS Simulator,name=iPhone 6" build-for-testing test
+
+xcodebuild-osx:
+	$(BUILD_TOOL) -project $(XCODE_PROJECT) -scheme $(XCODE_SCHEME) build-for-testing test
+
+dependencies:
+	$(SWIFT) package show-dependencies
+
+describe: list dependencies
+	$(SWIFT) package describe

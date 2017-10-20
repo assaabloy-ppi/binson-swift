@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5B6A93901F796A8B005E3943"
-               BuildableName = "Binson.framework"
-               BlueprintName = "Binson"
+               BlueprintIdentifier = "Binson::binson::ProductTarget"
+               BuildableName = "binson"
+               BlueprintName = "binson"
                ReferencedContainer = "container:Binson.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,26 +29,7 @@
       language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5B6A93991F796A8B005E3943"
-               BuildableName = "BinsonTests.xctest"
-               BlueprintName = "BinsonTests"
-               ReferencedContainer = "container:Binson.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5B6A93901F796A8B005E3943"
-            BuildableName = "Binson.framework"
-            BlueprintName = "Binson"
-            ReferencedContainer = "container:Binson.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -66,9 +47,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5B6A93901F796A8B005E3943"
-            BuildableName = "Binson.framework"
-            BlueprintName = "Binson"
+            BlueprintIdentifier = "Binson::binson::ProductTarget"
+            BuildableName = "binson"
+            BlueprintName = "binson"
             ReferencedContainer = "container:Binson.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -84,9 +65,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5B6A93901F796A8B005E3943"
-            BuildableName = "Binson.framework"
-            BlueprintName = "Binson"
+            BlueprintIdentifier = "Binson::binson::ProductTarget"
+            BuildableName = "binson"
+            BlueprintName = "binson"
             ReferencedContainer = "container:Binson.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

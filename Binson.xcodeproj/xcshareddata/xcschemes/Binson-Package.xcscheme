@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0900"
+   LastUpgradeVersion = "9999"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5B6A93901F796A8B005E3943"
+               BlueprintIdentifier = "Binson::Binson"
                BuildableName = "Binson.framework"
                BlueprintName = "Binson"
                ReferencedContainer = "container:Binson.xcodeproj">
@@ -33,9 +33,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5B6A93991F796A8B005E3943"
-               BuildableName = "BinsonTests.xctest"
-               BlueprintName = "BinsonTests"
+               BlueprintIdentifier = "Binson::Binson-test"
+               BuildableName = "Binson-test.xctest"
+               BlueprintName = "Binson-test"
                ReferencedContainer = "container:Binson.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -57,7 +57,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5B6A93901F796A8B005E3943"
+            BlueprintIdentifier = "Binson::Binson"
             BuildableName = "Binson.framework"
             BlueprintName = "Binson"
             ReferencedContainer = "container:Binson.xcodeproj">
@@ -72,15 +72,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5B6A93901F796A8B005E3943"
-            BuildableName = "Binson.framework"
-            BlueprintName = "Binson"
-            ReferencedContainer = "container:Binson.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

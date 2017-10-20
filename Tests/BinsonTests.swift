@@ -1,13 +1,11 @@
-//
 //  binsonTests.swift
 //  binsonTests
 //
 //  Created by Kenneth Pernyer on 2017-06-07.
 //  Copyright © 2017 Assa Abloy. All rights reserved.
-//
 
 import XCTest
-@testable import Binson
+import Binson
 
 class BinsonTests: XCTestCase {
 

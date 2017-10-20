@@ -1,13 +1,11 @@
-//
 //  OperatorsTests.swift
 //  binson
 //
 //  Created by Kenneth Pernyer on 2017-06-08.
 //  Copyright © 2017 Assa Abloy. All rights reserved.
-//
 
 import XCTest
-@testable import Binson
+import Binson
 
 class OperatorsTests: XCTestCase {
     

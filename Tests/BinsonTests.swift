@@ -13,6 +13,15 @@ class BinsonTests: XCTestCase {
         let binson = Binson()
         let str = binson.pack().toHexString("\\x")
         XCTAssertEqual(str, "\\x40\\x41")
+        
+        let desc = binson.description
+        XCTAssert(desc.starts(with: "Binson {"))
+    }
+    
+    func testBasicBinsonHash() {
+        let i = Binson().hashValue
+        let j = Binson(values: ["a": 4711]).hashValue
+        XCTAssertNotEqual(i, j)
     }
 
     func testStringBinson() {
@@ -45,6 +54,15 @@ class BinsonTests: XCTestCase {
 
         let str = binson.hex
         XCTAssertEqual(str, "40140169100141")
+        
+        let binson2 = Binson()
+        binson2["q"] = 32111
+        
+        if binson == binson2 { XCTFail("Should not have been Equal") }
+        if binson != binson { XCTFail("Should not have been Equal") }
+        
+        XCTAssertEqual(binson["i"], 1)
+        XCTAssertEqual(binson2["q"], 32111)
     }
 
     func testIntegerLongBinson() {

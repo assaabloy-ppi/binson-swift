@@ -7,11 +7,16 @@ xcode_scheme: BinsonTests
 script:
   - make all
 
+script:
+  - swiftlint
+  - xcodebuild -version
+  - xcodebuild -project Binson.xcodeproj -scheme Binson-Package -sdk macosx -configuration Debug -enableCodeCoverage YES test | xcpretty
+  - bash <(curl -s https://codecov.io/bash) -J Binson -cF osx
+  - xcodebuild -project Binson.xcodeproj -scheme Binson-Package -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 6" -configuration Debug ONLY_ACTIVE_ARCH=YES -enableCodeCoverage YES test | xcpretty
+  - bash <(curl -s https://codecov.io/bash) -J Binson -cF ios
+
 env:
   - SWIFT_VERSION=4.0
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash) -J 'Binson'
 
 notifications:
   email:

@@ -8,6 +8,14 @@ import XCTest
 import Binson
 
 class BinsonBasicTests: XCTestCase {
+    
+    func testBinson2data() {
+        var bn = Binson()
+        bn += ("c", "u")
+
+        XCTAssertEqual(bn.data, Data([0x40, 0x14, 0x01, 0x63, 0x14, 0x01, 0x75, 0x41]))
+    }
+    
     func testBasicBinson() {
         let bn = Binson()
         let str = bn.pack().toHexString("\\x")
@@ -219,6 +227,37 @@ class BinsonBasicTests: XCTestCase {
         b += ("r", false)
 
         XCTAssertEqual(a, b)
+    }
+    
+    func testBinsonAppendDictionary() {
+        let b: [String : Value] = ["u": "Monster", "sant": 4711]
+
+        let a = Binson()
+            .append("i", "Happy birthday")
+            .append("falskt", false)
+            .append(values: b)
+            .append("ung", 32.0)
+
+        XCTAssertEqual(a["i"], "Happy birthday")
+        XCTAssertEqual(a["falskt"], false)
+        XCTAssertEqual(a["u"], "Monster")
+        XCTAssertEqual(a["sant"], 4711)
+        XCTAssertEqual(a["ung"], 32.0)
+    }
+    
+    func testBinsonInitDictionary() {
+        let b: [String : Value] = ["u": "Monster", "sant": 4711]
+        
+        let a = Binson(values: b)
+            .append("i", "Happy birthday")
+            .append("falskt", false)
+            .append("ung", 32.0)
+        
+        XCTAssertEqual(a["i"], "Happy birthday")
+        XCTAssertEqual(a["falskt"], false)
+        XCTAssertEqual(a["u"], "Monster")
+        XCTAssertEqual(a["sant"], 4711)
+        XCTAssertEqual(a["ung"], 32.0)
     }
 
     func testCompareDoubleInt() {

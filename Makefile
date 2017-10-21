@@ -58,3 +58,7 @@ dependencies:
 
 describe: list dependencies
 	$(SWIFT_CMD) package describe
+
+coverage:
+	$(XCODE_CMD) -scheme $(XCODE_SCHEME) $(OSX_FLAGS) -configuration Debug -enableCodeCoverage YES test
+	slather coverage --scheme $(XCODE_SCHEME) --show $(XCODE_PROJECT)

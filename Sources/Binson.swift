@@ -62,13 +62,12 @@ public class Binson {
     }
     
     public var json: String {
-        do {
-            let params = self.jsonParams()
-            let data = try JSONSerialization.data(withJSONObject: params, options: .prettyPrinted)
-            return data.toString()!
-        } catch {
-            return "{}"
+        var returnValue = ""
+        let params = self.jsonParams()
+        if let data = try? JSONSerialization.data(withJSONObject: params, options: .prettyPrinted) {
+            returnValue = data.toString()!
         }
+        return returnValue
     }
 
     public func jsonParams() -> [String: Any] {
@@ -139,13 +138,10 @@ extension Binson: CustomStringConvertible {
 
 extension Binson: Equatable {
     public static func == (lhs: Binson, rhs: Binson) -> Bool {
-        
         if lhs.dict.keys != rhs.dict.keys { return false }
-        
         for key in lhs.dict.keys where lhs.dict[key] != rhs.dict[key] {
             return false
         }
-
         return true
     }
 }

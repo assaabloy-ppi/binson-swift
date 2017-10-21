@@ -2,16 +2,20 @@ Binson Swift
 ============
 
 [![Build Status](https://travis-ci.org/assaabloy-ppi/binson-swift.svg?branch=master)](https://travis-ci.org/assaabloy-ppi/binson-swift)
+[![Code coverage](https://codecov.io/gh/assaabloy-ppi/binson-swift/branch/master/graph/badge.svg)](https://codecov.io/gh/assaabloy-ppi/binson-swift)
 
-A Binson implementation in the Swift language. Can be used for iOS, MacOS and Linux projects.
-Read more about [Binson](http://binson.org)
+A Binson implementation in the Swift language. To be used for iOS, MacOS and Linux projects.
+Read more about [Binson](http://binson.org) ...
 
 Binson
 ------
 
-Binson is an exceptionally simple binary data serialization format. It is similar in scope to JSON, but it is faster, more compact, and significantly easier to understand.
+Binson is an exceptionally simple binary data serialization format. It is similar in scope to JSON,
+but it is faster, more compact, and significantly easier to understand.
 
-Binson has full support for double precision floating point numbers (including NaN, inf). There is a one-to-one mapping between a Binson object and its serialized bytes. This is useful for cryptographic signatures, hash codes and equals operations.
+For example Binson has full support for double precision floating point numbers (including NaN, inf).
+There is a one-to-one mapping between a Binson object and its serialized bytes. Useful for cryptographic
+signatures, hash codes and equals operations.
 
 Format
 ------

@@ -3,20 +3,22 @@ VERSION       = $(shell grep s.version Binson.podspec | cut -f2 -d= | cut -f1 -d
 SWIFT         = swift
 SWIFT_FLAGS   = -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12"
 
-BUILD_TOOL    = xcodebuild
+IOS_FLAGS     = -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6S'
+OSX_FLAGS     = -sdk macosx
+
+XCODE         = xcodebuild
 XCODE_PROJECT = Binson.xcodeproj
 XCODE_SCHEME  = Binson-Package
-XCODE         = $(BUILD_TOOL) -project $(XCODE_PROJECT) $(XCODE_FLAGS)
-IOS_FLAGS     = -destination "platform=iOS Simulator,name=iPhone 6"
-OSX_FLAGS     =
+XCODE_FLAGS   =
+XCODE_CMD     = $(XCODE) -project $(XCODE_PROJECT) $(XCODE_FLAGS)
 
 all: lint xcodebuild-ios xcodebuild-osx
 
 test: build
-	swift test $(SWIFT_FLAGS)
+	$(SWIFT) test $(SWIFT_FLAGS)
 
 build:
-	swift build $(SWIFT_FLAGS)
+	$(SWIFT) build $(SWIFT_FLAGS)
 
 lint:
 	swiftlint
@@ -26,9 +28,9 @@ docs:
 
 clean:
 	rm -rf .build *~ .*~ *.
-	$(XCODE) -configuration Debug clean
-	$(XCODE) -configuration Release clean
-	$(XCODE) -configuration Test clean
+	$(XCODE_CMD) -configuration Debug clean
+	$(XCODE_CMD) -configuration Release clean
+	$(XCODE_CMD) -configuration Test clean
 
 version:
 	@echo $(VERSION)
@@ -43,16 +45,16 @@ verify:
 	pod spec lint Binson.podspec
 
 list:
-	$(XCODE) -list
+	$(XCODE_CMD) -list
 
 xcodebuild-ios:
-	$(XCODE) -scheme $(XCODE_SCHEME) $(IOS_FLAGS) build-for-testing test  | xcpretty && exit ${PIPESTATUS[0]}
+	$(XCODE_CMD) -scheme $(XCODE_SCHEME) $(IOS_FLAGS) build-for-testing test  | xcpretty && exit $(PIPESTATUS[0])
 
 xcodebuild-osx:
-	$(XCODE) -scheme $(XCODE_SCHEME) $(OSX_FLAGS) build-for-testing test | xcpretty && exit ${PIPESTATUS[0]}
+	$(XCODE_CMD) -scheme $(XCODE_SCHEME) $(OSX_FLAGS) build-for-testing test | xcpretty && exit $(PIPESTATUS[0])
 
 dependencies:
-	$(SWIFT) package show-dependencies
+	$(SWIFT_CMD) package show-dependencies
 
 describe: list dependencies
-	$(SWIFT) package describe
+	$(SWIFT_CMD) package describe

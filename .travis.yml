@@ -1,7 +1,6 @@
 language: swift
 os: osx
 osx_image: xcode9.1
-xcode_sdk: iphonesimulator10.0
 xcode_project: Binson.xcodeproj
 xcode_scheme: BinsonTests
 
@@ -10,6 +9,9 @@ script:
 
 env:
   - SWIFT_VERSION=4.0
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -J 'Binson'
 
 notifications:
   email:

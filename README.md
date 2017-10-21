@@ -2,7 +2,8 @@ Binson Swift
 ============
 
 [![Build Status](https://travis-ci.org/assaabloy-ppi/binson-swift.svg?branch=master)](https://travis-ci.org/assaabloy-ppi/binson-swift)
-[![Code coverage](https://codecov.io/gh/assaabloy-ppi/binson-swift/branch/master/graph/badge.svg)](https://codecov.io/gh/assaabloy-ppi/binson-swift)
+[![Codebeat Quality](https://codebeat.co/badges/82efe8db-c3e8-4817-b263-032199150179)](https://codebeat.co/projects/github-com-assaabloy-ppi-binson-swift-master)
+[![Code Coverage](https://codecov.io/gh/assaabloy-ppi/binson-swift/branch/master/graph/badge.svg)](https://codecov.io/gh/assaabloy-ppi/binson-swift)
 
 A Binson implementation in the Swift language. To be used for iOS, MacOS and Linux projects.
 Read more about [Binson](http://binson.org) ...

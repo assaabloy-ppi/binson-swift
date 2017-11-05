@@ -62,7 +62,7 @@ You can also use various Package managers, e.g. Cocoapods
 ### Podfile
 
 ```
-platform :ios, '10.3'
+platform :ios, '11.0'
 
 target 'YourProject' do
   use_frameworks!

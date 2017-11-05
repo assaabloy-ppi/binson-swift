@@ -58,6 +58,14 @@ class BinsonBasicTests: XCTestCase {
         let str = binson.hex
         XCTAssertEqual(str, "40140169100141")
     }
+    
+    func testNegIntegerBinson() {
+        var binson = Binson()
+        binson += ("i", -1)
+        
+        let str = binson.hex
+        XCTAssertEqual(str, "4014016910ff41")
+    }
 
     func testBinson2JSON() {
         var a = Binson()

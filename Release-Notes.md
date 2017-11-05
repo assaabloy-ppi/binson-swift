@@ -10,7 +10,7 @@ Binson Swift 1.1, 2017-11-22
 We're pleased to present Binson Swift 1.1.
 
 ### Highlights
-  *
+  * Better packing
 
 ### Issues Resolved
   *

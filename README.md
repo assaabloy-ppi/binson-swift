@@ -18,8 +18,8 @@ For example Binson has full support for double precision floating point numbers 
 There is a one-to-one mapping between a Binson object and its serialized bytes. Useful for cryptographic
 signatures, hash codes and equals operations.
 
-Format
-------
+Serialization Format
+--------------------
 
 The bytes of a serialized Binson object follow this [ABNF] syntax.
 ```

@@ -5,10 +5,6 @@ included:
   - Sources
   - Tests
 
-excluded:
-  - Carthage
-  - Pods
-
 large_tuple:
   warning: 3
   error: 5

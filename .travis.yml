@@ -5,9 +5,6 @@ xcode_project: Binson.xcodeproj
 xcode_scheme: BinsonTests
 
 script:
-  - make all
-
-script:
   - swiftlint
   - xcodebuild -version
   - xcodebuild -project Binson.xcodeproj -scheme Binson-Package -sdk macosx -configuration Debug -enableCodeCoverage YES test | xcpretty

@@ -37,14 +37,23 @@ extension Value {
     public init(_ value: Int64) {
         self = .int(value)
     }
+    public init(_ value: Int32) {
+        self = .int(Int64(value))
+    }
+    public init(_ value: Int16) {
+        self = .int(Int64(value))
+    }
+    public init(_ value: Int8) {
+        self = .int(Int64(value))
+    }
+    public init<I: BinaryInteger>(_ value: I) {
+        self = .int(Int64(value))
+    }
     public init(_ value: Float) {
         self = .double(Double(value))
     }
     public init(_ value: Double) {
         self = .double(value)
-    }
-    public init<I: BinaryInteger>(_ value: I) {
-        self = .int(Int64(value))
     }
     public init(_ value: String) {
         self = .string(value)
@@ -103,7 +112,7 @@ extension Value: Hashable {
         case .int(let value): return value.hashValue
         case .double(let value): return value.hashValue
         case .string(let string): return string.hashValue
-        case .bytes(let bytes): return bytes.reduce(5381) { ($0 << 5) &+ $0 &+ Int($1) }
+        case .bytes(let bytes): return bytes.reduce(5381) { ($0 << 5) &+ $0 &+ Int($1) } // djb2
         case .array(let array): return array.count
         case .object(let object): return object.hashValue
         }
@@ -162,8 +171,8 @@ extension Value: ExpressibleByFloatLiteral {
 }
 
 extension Value: ExpressibleByIntegerLiteral {
-    public init(integerLiteral value: Int64) {
-        self = .int(value)
+    public init(integerLiteral value: Int) {
+        self = .int(Int64(value))
     }
 }
 
@@ -270,124 +279,7 @@ extension Value {
     }
 }
 
-func packBytes(_ value: UInt64, parts: Int) -> Data {
-    precondition(parts > 0)
-    
-    let bytesw = stride(from: (8 * (parts - 1)), through: 0, by: -8).map { shift in
-        return UInt8(truncatingIfNeeded: value >> UInt64(shift))
-    }
-    
-    return Data(bytesw)
-}
-
-func packNegative(_ value: Int64) -> Data {
-    return Data()
-}
-
-/// Packs an unsigned integer into an array of bytes.
-///
-/// - returns: A Binson byte representation.
-func packPositive(_ value: UInt64) -> Data {
-    if value <=  Constant.twoto7 {
-        return Data([Mark.integer1Byte, Byte(truncatingIfNeeded: value)])
-        
-    } else if value <= Constant.twoto15 {
-        return Data([Mark.integer2Byte]) + packBytes(value, parts: 2).reversed()
-        
-    } else if value <= Constant.twoto31 {
-        return Data([Mark.integer4Byte]) + packBytes(value, parts: 4).reversed()
-        
-    } else {
-        return Data([Mark.integer8Byte]) + packBytes(value, parts: 8).reversed()
-    }
-}
-
-/// Packs an integer into a byte array. Depending on size it will require
-/// 1 to 8 bytes (8 to 64 bits)/// Packs an unsigned integer into an array of bytes.
-///
-/// - returns: A Binson byte representation.
-func packNumber(_ i: Int64) -> Data {
-    if i >= 0 { return packPositive(UInt64(i))
-    } else { return packNegative(i) }
-}
-
-/// Packs a Value into an array of bytes.
-///
-/// - parameter value: The Value to encode
-/// - returns: A Binson byte representation
-///
 extension Value {
-    public var data: Data {
-        return self.pack()
-    }
-    
-    public var hex: String {
-        return self.pack().hex
-    }
-    
-    public var json: Any {
-        return self.toJson()
-    }
-    
-    public func pack() -> Data {
-        switch self {
-        
-        case .bool(let value):
-            return Data([value ? Mark.trueByte : Mark.falseByte])
-            
-        case .int(let value):
-            return packNumber(value)
-            
-        case .double(let value):
-            let integerValue = value.bitPattern
-            return Data([Mark.doubleByte]) + packBytes(integerValue, parts: 8)
-            
-        case .string(let string):
-            let utf8 = string.utf8
-            let count = UInt32(utf8.count)
-            // precondition(count <= 0xffff_ffff)
-            
-            let prefix: Data
-            if count <= UInt32(Int8.max) {
-                prefix = Data([Mark.string1Byte, Byte(count)])
-            } else if count <= UInt32(Int16.max) {
-                prefix = Data([Mark.string2Byte]) + packBytes(UInt64(count), parts: 2).reversed()
-            } else {
-                prefix = Data([Mark.string4Byte]) + packBytes(UInt64(count), parts: 4).reversed()
-            }
-            
-            return prefix + utf8
-            
-        case .bytes(let bytes):
-            let count = UInt32(bytes.count)
-            // precondition(count <= 0xffff_ffff)
-            
-            let prefix: Data
-            if count <= UInt32(Int8.max) {
-                prefix = Data([Mark.bytes1Byte, Byte(count)])
-            } else if count <= UInt32(Int16.max) {
-                prefix = Data([Mark.bytes2Byte]) + packBytes(UInt64(count), parts: 2).reversed()
-            } else {
-                prefix = Data([Mark.bytes4Byte]) + packBytes(UInt64(count), parts: 4).reversed()
-            }
-            
-            return prefix + bytes
-            
-        case .array(let array):
-            let prefix = Data([Mark.beginArrayByte])
-            let payload = array.flatMap { $0.pack() }
-            let suffix = Data([Mark.endArrayByte])
-            
-            return prefix + payload + suffix
-            
-        case let .object(binson):
-            return binson.pack()
-            
-        default: return Data([0x00])
-            
-        }
-    }
-    
     public func toJson() -> Any {
         switch self {
         case let .bool(value):

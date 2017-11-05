@@ -117,7 +117,6 @@ public class Builder {
     /// - parameter data: The input data to unpack.
     /// - returns: One byte data and the remainder to unpack
     private class func unpackByte(_ data: Data) throws -> (value: Byte, remainder: Data) {
-        
         guard data.count >= 1 else {
             throw BinsonError.insufficientData
         }
@@ -277,9 +276,8 @@ public class Builder {
     /// Unpacks data into a Binson Value and returns the remaining data for further scanning.
     ///
     /// - parameter data: The input data to unpack.
-    ///
     /// - returns: A Value + remainder.
-    private class func unpackValue(_ data: Data)
+    class func unpackValue(_ data: Data)
         throws -> (value: Value, remainder: Data) {
         
         guard !data.isEmpty else {
@@ -325,7 +323,7 @@ public class Builder {
         // Int 8
         case Mark.integer1Byte:
             let (number, rest) = try unpackInteger(data, count: 1)
-            let integer = Int16(bitPattern: UInt16(truncatingIfNeeded: number))
+            let integer = Int8(bitPattern: UInt8(truncatingIfNeeded: number))
             return (.int(Int64(integer)), rest)
             
         // Int 16

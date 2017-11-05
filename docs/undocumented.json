@@ -1,0 +1,502 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Array+Extension.swift",
+      "line": 10,
+      "symbol": "Array.init(hex:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Array+Extension.swift",
+      "line": 58,
+      "symbol": "Array.toHexString(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": null,
+      "symbol": "Binson",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": null,
+      "symbol": "Binson",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": null,
+      "symbol": "Binson",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": null,
+      "symbol": "Mark",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 8,
+      "symbol": "Binson",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 11,
+      "symbol": "Binson.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 14,
+      "symbol": "Binson.init(values:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 18,
+      "symbol": "Binson.append(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 23,
+      "symbol": "Binson.append(values:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 37,
+      "symbol": "Binson.value(key:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 41,
+      "symbol": "Binson.values()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 45,
+      "symbol": "Binson.pack()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 56,
+      "symbol": "Binson.data",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 60,
+      "symbol": "Binson.hex",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 64,
+      "symbol": "Binson.json",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 73,
+      "symbol": "Binson.jsonParams()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 89,
+      "symbol": "+(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 93,
+      "symbol": "+(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 97,
+      "symbol": "BinsonError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 98,
+      "symbol": "BinsonError.invalidArgument",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 99,
+      "symbol": "BinsonError.insufficientData",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 100,
+      "symbol": "BinsonError.invalidData",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 101,
+      "symbol": "BinsonError.notFound",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Binson.swift",
+      "line": 104,
+      "symbol": "Mark",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Builder.swift",
+      "line": 11,
+      "symbol": "Builder",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Data+Extension.swift",
+      "line": 7,
+      "symbol": "Data.bytes",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Data+Extension.swift",
+      "line": 11,
+      "symbol": "Data.hex",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Data+Extension.swift",
+      "line": 15,
+      "symbol": "Data.string",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Data+Extension.swift",
+      "line": 19,
+      "symbol": "Data.toHexString(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Data+Extension.swift",
+      "line": 23,
+      "symbol": "Data.toString()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Data+Extension.swift",
+      "line": 27,
+      "symbol": "Data.init(input:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/String+Extension.swift",
+      "line": 16,
+      "symbol": "String.init(base64:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value+Pack.swift",
+      "line": 62,
+      "symbol": "Value.data",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value+Pack.swift",
+      "line": 66,
+      "symbol": "Value.hex",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value+Pack.swift",
+      "line": 70,
+      "symbol": "Value.json",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value+Pack.swift",
+      "line": 74,
+      "symbol": "Value.pack()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 6,
+      "symbol": "Constant",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 19,
+      "symbol": "Value.nil",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 20,
+      "symbol": "Value.bool",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 21,
+      "symbol": "Value.int",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 22,
+      "symbol": "Value.double",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 23,
+      "symbol": "Value.string",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 24,
+      "symbol": "Value.bytes",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 25,
+      "symbol": "Value.array",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 26,
+      "symbol": "Value.object",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 31,
+      "symbol": "Value.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 34,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 37,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 40,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 43,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 46,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 49,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 52,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 55,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 58,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 61,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 64,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 67,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 70,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 73,
+      "symbol": "Value.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 198,
+      "symbol": "Value.count",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 207,
+      "symbol": "Value.integerValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 216,
+      "symbol": "Value.arrayValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 225,
+      "symbol": "Value.boolValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 234,
+      "symbol": "Value.doubleValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 243,
+      "symbol": "Value.stringValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 252,
+      "symbol": "Value.bytesValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 261,
+      "symbol": "Value.objectValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/kenper/work/current/binson-swift/Sources/Value.swift",
+      "line": 283,
+      "symbol": "Value.toJson()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/kenper/work/current/binson-swift"
+}

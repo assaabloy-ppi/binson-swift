@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Binson  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+
+    <a title="Binson  Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="index.html">
+          Binson Docs
+        </a>
+         (39% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/assaabloy-ppi/binson-swift.git">
+            <img class="header-icon" src="img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="index.html">Binson Reference</a>
+      <img class="carat" src="img/carat.png" />
+      Binson  Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Binson.html">Binson</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Builder.html">Builder</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/BinsonError.html">BinsonError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums.html#/s:6Binson8ConstantO">Constant</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/Mark.html">Mark</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/Value.html">Value</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Data.html">Data</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/String.html">String</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Functions.html#/s:6Binson1poiA2ACAC_ACtF">+(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Functions.html#/s:6Binson1poiA2ACAC_SS_AA5ValueOttF">+(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Functions.html#/s:6Binson2peoiyA2ACz_SS_AA5ValueOttF">+=(_:_:)</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            
+            <h1 id='binson-swift' class='heading'>Binson Swift</h1>
+
+<p><a href="https://travis-ci.org/assaabloy-ppi/binson-swift"><img src="https://travis-ci.org/assaabloy-ppi/binson-swift.svg?branch=master" alt="Build Status"></a>
+<a href="https://codebeat.co/projects/github-com-assaabloy-ppi-binson-swift-master"><img src="https://codebeat.co/badges/82efe8db-c3e8-4817-b263-032199150179" alt="Codebeat Quality"></a>
+<a href="https://codecov.io/gh/assaabloy-ppi/binson-swift"><img src="https://codecov.io/gh/assaabloy-ppi/binson-swift/branch/master/graph/badge.svg" alt="Code Coverage"></a></p>
+
+<p>A Binson implementation in the Swift language. To be used for iOS, MacOS and Linux projects.
+Read more about <a href="http://binson.org">Binson</a> &hellip;</p>
+<h2 id='binson' class='heading'>Binson</h2>
+
+<p>Binson is an exceptionally simple binary data serialization format. It is similar in scope to JSON,
+but it is faster, more compact, and significantly easier to understand.</p>
+
+<p>For example Binson has full support for double precision floating point numbers (including NaN, inf).
+There is a one-to-one mapping between a Binson object and its serialized bytes. Useful for cryptographic
+signatures, hash codes and equals operations.</p>
+<h2 id='serialization-format' class='heading'>Serialization Format</h2>
+
+<p>The bytes of a serialized Binson object follow this [ABNF] syntax.</p>
+<pre class="highlight plaintext"><code>object     = begin *field end
+field      = string value
+value      = boolean / integer / double / string / bytes / array / object
+array      = beginArray *value endArray
+string     = stringLen utf
+bytes      = bytesLen raw
+boolean    = true / false
+
+begin      = %x40
+end        = %x41
+beginArray = %x42
+endArray   = %x43
+true       = %x44
+false      = %x45
+double     = %x46 float64
+integer    = %x10 int8 / %x11 int16 / %x12 int32 / %x13 int64
+stringLen  = %x14 int8 / %x15 int16 / %x16 int32
+bytesLen   = %x18 int8 / %x19 int16 / %x1a int32
+
+float64    = 8OCTET ; double precision floation point number [IEEE-754]
+int8       = 1OCTET ;  8-bit signed two's complement integer
+int16      = 2OCTET ; 16-bit signed two's complement integer
+int32      = 4OCTET ; 32-bit signed two's complement integer
+int64      = 8OCTET ; 64-bit signed two's complement integer
+utf        = *OCTET ; stringLen number of [UTF-8] bytes
+raw        = *OCTET ; any sequence of bytesLen bytes
+</code></pre>
+<h2 id='howto-use' class='heading'>Howto use</h2>
+
+<p>Binson is Open Source and managed in Github. Download or clone using this link:
+<a href="https://github.com/assaabloy-ppi/binson-swift.git">github.com/assaabloy-ppi/binson-swift</a></p>
+
+<p>You can also use various Package managers, e.g. Cocoapods</p>
+<h3 id='podfile' class='heading'>Podfile</h3>
+<pre class="highlight plaintext"><code>platform :ios, '10.3'
+
+target 'YourProject' do
+  use_frameworks!
+  pod 'Binson', :git =&gt; 'https://github.com/assaabloy-ppi/binson-swift.git'
+
+  target 'YourProjet-tests' do
+    inherit! :search_paths
+  end
+end
+</code></pre>
+<h3 id='pod-install' class='heading'>Pod install</h3>
+<pre class="highlight shell"><code><span class="gp">% </span>pod install
+</code></pre>
+<h2 id='examples' class='heading'>Examples</h2>
+<h2 id='create' class='heading'>Create</h2>
+
+<p>The append function returns self, so that you can chain append commands.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">binson</span> <span class="o">=</span> <span class="kt">Binson</span><span class="p">()</span>
+    <span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"c"</span><span class="p">,</span> <span class="s">"u"</span><span class="p">)</span>
+    <span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"i"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"z"</span><span class="p">,</span> <span class="o">.</span><span class="nf">object</span><span class="p">(</span><span class="kt">Binson</span><span class="p">()))</span>
+    <span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"t"</span><span class="p">,</span> <span class="o">.</span><span class="nf">bytes</span><span class="p">([</span><span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">]))</span>
+</code></pre>
+
+<p>You are also allowed to use the <code>+=</code>operator to build the Binson object. But note that the declaration require a var declaration.</p>
+<pre class="highlight swift"><code><span class="k">var</span> <span class="nv">binson</span> <span class="o">=</span> <span class="kt">Binson</span><span class="p">()</span>
+<span class="n">binson</span> <span class="o">+=</span> <span class="p">(</span><span class="s">"c"</span><span class="p">,</span> <span class="s">"u"</span><span class="p">)</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">binson</span><span class="o">.</span><span class="n">hex</span><span class="p">)</span>
+<span class="s">"0x4014016314017541"</span>
+</code></pre>
+<h2 id='useful-binson-object-properties' class='heading'>Useful Binson object properties</h2>
+
+<p>All Binson objects and Value types support the properties .hex, .json and .data. Data is used for binary serialization e.g. for communication with devices.</p>
+<h3 id='binson-hex' class='heading'>binson.hex</h3>
+<pre class="highlight swift"><code><span class="nf">print</span><span class="p">(</span><span class="n">binson</span><span class="o">.</span><span class="n">hex</span><span class="p">)</span>
+<span class="s">"0x4014016314017514016910011401741802020214017a404141"</span>
+</code></pre>
+<h3 id='binson-json' class='heading'>binson.json</h3>
+<pre class="highlight swift"><code><span class="nf">print</span><span class="p">(</span><span class="n">binson</span><span class="o">.</span><span class="n">json</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="s">"i"</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s">"t"</span> <span class="p">:</span> <span class="s">"0x0202"</span><span class="p">,</span>
+  <span class="s">"c"</span> <span class="p">:</span> <span class="s">"u"</span><span class="p">,</span>
+  <span class="s">"z"</span> <span class="p">:</span> <span class="p">{</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='binson-data' class='heading'>binson.data</h3>
+<pre class="highlight swift"><code><span class="nf">print</span><span class="p">(</span><span class="n">binson</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="kt">Data</span><span class="p">(</span><span class="mi">25</span> <span class="n">bytes</span><span class="p">)</span>
+</code></pre>
+<h2 id='unpack' class='heading'>Unpack</h2>
+<h3 id='from-serialized-data' class='heading'>from serialized Data</h3>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">binson_data</span> <span class="o">=</span> <span class="kt">Data</span><span class="p">([</span><span class="mh">0x40</span><span class="p">,</span> <span class="mh">0x14</span><span class="p">,</span> <span class="mh">0x01</span><span class="p">,</span> <span class="mh">0x7a</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">,</span> <span class="mh">0x41</span><span class="p">,</span> <span class="mh">0x41</span><span class="p">])</span>
+<span class="k">if</span> <span class="k">let</span> <span class="nv">binson</span> <span class="o">=</span> <span class="kt">Builder</span><span class="o">.</span><span class="nf">unpack</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="n">binson_data</span><span class="p">)</span> <span class="p">{}</span>
+</code></pre>
+<h3 id='from-a-hexstring' class='heading'>from a Hexstring</h3>
+<pre class="highlight swift"><code><span class="k">if</span> <span class="k">let</span> <span class="nv">binson</span> <span class="o">=</span> <span class="kt">Builder</span><span class="o">.</span><span class="nf">unpack</span><span class="p">(</span><span class="nv">hex</span><span class="p">:</span> <span class="s">"0x4014016314017541"</span><span class="p">)</span> <span class="p">{}</span>
+</code></pre>
+<h3 id='from-a-json-string' class='heading'>from a JSON string</h3>
+<pre class="highlight swift"><code><span class="k">if</span> <span class="k">let</span> <span class="nv">binson</span> <span class="o">=</span> <span class="kt">Builder</span><span class="o">.</span><span class="nf">unpack</span><span class="p">(</span><span class="nv">jsonstring</span><span class="p">:</span> <span class="n">json</span><span class="p">)</span> <span class="p">{}</span>
+</code></pre>
+<h2 id='subscripts' class='heading'>Subscripts</h2>
+
+<p>You are allowed to access properties inside a Binson object using the subscript approach.</p>
+
+<p>Instead of</p>
+<pre class="highlight swift"><code><span class="k">if</span> <span class="k">let</span> <span class="nv">i2</span> <span class="o">=</span> <span class="n">binson</span><span class="o">.</span><span class="nf">value</span><span class="p">(</span><span class="nv">key</span><span class="p">:</span> <span class="s">"d"</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">i2</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>using subscripts allow for cleaner code</p>
+<pre class="highlight swift"><code><span class="k">if</span> <span class="k">let</span> <span class="nv">i</span><span class="p">:</span> <span class="kt">Int64</span> <span class="o">=</span> <span class="n">binson</span><span class="p">[</span><span class="s">"d"</span><span class="p">]</span><span class="o">.</span><span class="n">integerValue</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+
+          </div>
+        </section>
+
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2017 <a class="link" href="http://www.assaabloy.net/" target="_blank" rel="external">Kenneth Pernyer</a>. All rights reserved. (Last updated: 2017-11-05)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

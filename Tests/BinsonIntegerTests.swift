@@ -8,6 +8,21 @@
 import XCTest
 import Binson
 
+/*
+ Example 129:   4014016911810041
+ Example 128:   4014016911800041
+ Example 1:   40140169 1001 41
+ Example 0:   40140169100041
+ Example -1:   4014016910ff41
+ Example -128:   40140169108041
+ Example -129:   40140169 117fff 41
+ Example -32768:   4014016911008041
+ Example -32769:   4014016912ff7fffff41
+ Example -2147483648:   40140169120000008041
+ Example -2147483649:   40140169 13ffffff7fffffffff 41
+ Example -9223372036854775808:   4014016913000000000000008041
+ */
+
 class BinsonIntegerTests: XCTestCase {
     static let twoto7  = Int64(Int8.max)
     static let twoto15 = Int64(Int16.max)
@@ -69,6 +84,23 @@ class BinsonIntegerTests: XCTestCase {
     }
     
     func testNegIntegerValues() {
+        /*
+        Example 0:
+        40140169 1000 41
+        Example -1:
+        40140169 10ff 41
+        Example -128:
+        40140169 1080 41
+        Example -129:
+        40140169 117fff 41
+        Example -32768:
+        40140169 110080 41
+        Example -32769:
+        40140169 12ff7fffff 41
+        Example -2147483648:
+        40140169 1200000080 41
+        */
+        
         let v0: Value = Value(Int8(-0))
         XCTAssertEqual(v0.hex, "1000")
         
@@ -78,8 +110,8 @@ class BinsonIntegerTests: XCTestCase {
         let v1max: Value = Value(Int8.min)
         XCTAssertEqual(v1max.hex, "1080")
         
-        let v1max_plus: Value = Value(Int16(Int8.min)-11)
-        XCTAssertEqual(v1max_plus.hex, "1175ff")
+        let v1max_plus: Value = Value(Int16(Int8.min)-1)
+        XCTAssertEqual(v1max_plus.hex, "117fff")
         
         let v2max: Value = Value(Int16.min)
         XCTAssertEqual(v2max.hex, "110080")

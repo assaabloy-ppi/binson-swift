@@ -7,7 +7,7 @@ public typealias Byte = UInt8
 
 extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte {
 
-    public init?(hex: String) {
+    init?(hex: String) {
         self = [Element]()
         self.reserveCapacity(hex.unicodeScalars.lazy.underestimatedCount)
 
@@ -55,7 +55,7 @@ extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte
 
 extension Array where Iterator.Element == Byte {
 
-    public func toHexString(_ separator: String = "") -> String {
+    func toHexString(_ separator: String = "") -> String {
         return self.lazy.reduce("") {
             var str = String($1, radix: 16)
             if str.count == 1 {

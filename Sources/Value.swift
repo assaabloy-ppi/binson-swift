@@ -3,7 +3,7 @@
 
 import Foundation
 
-public enum Constant {
+enum Constant {
     static let onebyte: Byte = 0x00
     static let twobytes: Byte = 0x01
     static let fourbytes: Byte = 0x02
@@ -28,49 +28,49 @@ public enum Value {
 
 /// Initializers for Convenience
 extension Value {
-    public init() {
+    init() {
         self = .nil
     }
-    public init(_ value: Bool) {
+    init(_ value: Bool) {
         self = .bool(value)
     }
-    public init(_ value: Int64) {
+    init(_ value: Int64) {
         self = .int(value)
     }
-    public init(_ value: Int32) {
+    init(_ value: Int32) {
         self = .int(Int64(value))
     }
-    public init(_ value: Int16) {
+    init(_ value: Int16) {
         self = .int(Int64(value))
     }
-    public init(_ value: Int8) {
+    init(_ value: Int8) {
         self = .int(Int64(value))
     }
-    public init<I: BinaryInteger>(_ value: I) {
+    init<I: BinaryInteger>(_ value: I) {
         self = .int(Int64(value))
     }
-    public init(_ value: Float) {
+    init(_ value: Float) {
         self = .double(Double(value))
     }
-    public init(_ value: Double) {
+    init(_ value: Double) {
         self = .double(value)
     }
-    public init(_ value: String) {
+    init(_ value: String) {
         self = .string(value)
     }
-    public init(_ value: [Value]) {
+    init(_ value: [Value]) {
         self = .array(value)
     }
-    public init(_ value: Value) {
+    init(_ value: Value) {
         self = value
     }
-    public init(_ value: [Byte]) {
+    init(_ value: [Byte]) {
         self = .bytes(value)
     }
-    public init(_ value: Binson) {
+    init(_ value: Binson) {
         self = .object(value)
     }
-    public init(_ value: Any) {
+    init(_ value: Any) {
         self = fromJson(jsonObject: value)
     }
 }
@@ -195,7 +195,7 @@ extension Value: ExpressibleByExtendedGraphemeClusterLiteral {
 }
 
 extension Value {
-    public var count: Int? {
+    var count: Int? {
         switch self {
         case .array(let array):
             return array.count
@@ -204,7 +204,7 @@ extension Value {
         }
     }
     
-    public var integerValue: Int64? {
+    var integerValue: Int64? {
         switch self {
         case .int(let value):
             return value
@@ -213,7 +213,7 @@ extension Value {
         }
     }
     
-    public var arrayValue: [Value]? {
+    var arrayValue: [Value]? {
         switch self {
         case .array(let array):
             return array
@@ -231,7 +231,7 @@ extension Value {
         }
     }
     
-    public var doubleValue: Double? {
+    var doubleValue: Double? {
         switch self {
         case .double(let value):
             return value
@@ -240,7 +240,7 @@ extension Value {
         }
     }
     
-    public var stringValue: String? {
+    var stringValue: String? {
         switch self {
         case .string(let string):
             return string
@@ -249,7 +249,7 @@ extension Value {
         }
     }
     
-    public var bytesValue: [Byte]? {
+    var bytesValue: [Byte]? {
         switch self {
         case .bytes(let bytes):
             return bytes
@@ -258,7 +258,7 @@ extension Value {
         }
     }
     
-    public var objectValue: Binson? {
+    var objectValue: Binson? {
         switch self {
         case .object(let object):
             return object
@@ -267,7 +267,7 @@ extension Value {
         }
     }
     
-    public subscript(key: String) -> Value {
+    subscript(key: String) -> Value {
         get {
             switch self {
             case .object(let binson):
@@ -280,7 +280,7 @@ extension Value {
 }
 
 extension Value {
-    public func toJson() -> Any {
+    func toJson() -> Any {
         switch self {
         case let .bool(value):
             return value

@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import Binson
+@testable import Binson
 
 /*
  Example 129:   4014016911810041

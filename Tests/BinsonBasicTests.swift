@@ -5,7 +5,7 @@
 //  Copyright © 2017 Assa Abloy. All rights reserved.
 
 import XCTest
-import Binson
+@testable import Binson
 
 class BinsonBasicTests: XCTestCase {
     

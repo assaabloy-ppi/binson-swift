@@ -4,7 +4,7 @@
 //  Created by Kenneth Pernyer on 2017-06-08.
 
 import XCTest
-import Binson
+@testable import Binson
 
 import os.log
 let log = OSLog(subsystem: "binson.aa.st", category: "Test")

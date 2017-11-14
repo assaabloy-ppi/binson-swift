@@ -4,27 +4,27 @@
 import Foundation
 
 extension Data {
-    public var bytes: [Byte] {
+    var bytes: [Byte] {
         return Array(self)
     }
 
-    public var hex: String {
+    var hex: String {
         return self.bytes.toHexString()
     }
     
-    public var string: String {
+    var string: String {
         return self.toString() ?? ""
     }
     
-    public func toHexString(_ separator: String = "") -> String {
+    func toHexString(_ separator: String = "") -> String {
         return self.bytes.toHexString(separator)
     }
     
-    public func toString() -> String? {
+    func toString() -> String? {
         return String(data: self, encoding: .utf8)
     }
     
-    public init(input: InputStream) {
+    init(input: InputStream) {
         self.init()
         input.open()
         defer {

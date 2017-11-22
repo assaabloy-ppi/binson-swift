@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		"Binson::binson::ProductTarget" /* binson */ = {
+		Binson::binson::ProductTarget /* binson */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = OBJ_68 /* Build configuration list for PBXAggregateTarget "binson" */;
 			buildPhases = (
@@ -28,7 +28,7 @@
 		OBJ_42 /* BuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* BuilderTests.swift */; };
 		OBJ_44 /* OperatorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* OperatorsTests.swift */; };
 		OBJ_45 /* WhiteBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* WhiteBoxTests.swift */; };
-		OBJ_47 /* Binson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Binson::Binson::Product" /* Binson.framework */; };
+		OBJ_47 /* Binson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = Binson::Binson::Product /* Binson.framework */; };
 		OBJ_54 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_8 /* Array+Extension.swift */; };
 		OBJ_55 /* Binson.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Binson.swift */; };
 		OBJ_56 /* Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Builder.swift */; };
@@ -64,8 +64,8 @@
 		5BFE5C631F9A4C860053884E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5BFE5C641F9A4C860053884E /* Binson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Binson.h; sourceTree = "<group>"; };
 		5BFE5C651F9A4C8F0053884E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		"Binson::Binson-test::Product" /* Binson-test.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = "Binson-test.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		"Binson::Binson::Product" /* Binson.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Binson.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		Binson::Binson-test::Product /* Binson-test.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = "Binson-test.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		Binson::Binson::Product /* Binson.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Binson.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Builder.swift; sourceTree = "<group>"; };
 		OBJ_11 /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		OBJ_14 /* Value.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Value.swift; sourceTree = "<group>"; };
@@ -115,8 +115,8 @@
 		OBJ_26 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				"Binson::Binson-test::Product" /* Binson-test.xctest */,
-				"Binson::Binson::Product" /* Binson.framework */,
+				Binson::Binson-test::Product /* Binson-test.xctest */,
+				Binson::Binson::Product /* Binson.framework */,
 			);
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -154,7 +154,7 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		"Binson::Binson" /* Binson */ = {
+		Binson::Binson /* Binson */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = OBJ_50 /* Build configuration list for PBXNativeTarget "Binson" */;
 			buildPhases = (
@@ -167,10 +167,10 @@
 			);
 			name = Binson;
 			productName = Binson;
-			productReference = "Binson::Binson::Product" /* Binson.framework */;
+			productReference = Binson::Binson::Product /* Binson.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		"Binson::Binson-test" /* Binson-test */ = {
+		Binson::Binson-test /* Binson-test */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = OBJ_36 /* Build configuration list for PBXNativeTarget "Binson-test" */;
 			buildPhases = (
@@ -184,7 +184,7 @@
 			);
 			name = "Binson-test";
 			productName = Binson_test;
-			productReference = "Binson::Binson-test::Product" /* Binson-test.xctest */;
+			productReference = Binson::Binson-test::Product /* Binson-test.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -208,9 +208,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				"Binson::Binson-test" /* Binson-test */,
-				"Binson::Binson" /* Binson */,
-				"Binson::binson::ProductTarget" /* binson */,
+				Binson::Binson-test /* Binson-test */,
+				Binson::Binson /* Binson */,
+				Binson::binson::ProductTarget /* binson */,
 			);
 		};
 /* End PBXProject section */
@@ -247,12 +247,12 @@
 /* Begin PBXTargetDependency section */
 		OBJ_48 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = "Binson::Binson" /* Binson */;
+			target = Binson::Binson /* Binson */;
 			targetProxy = 5B5683F91F9A2F83001C4989 /* PBXContainerItemProxy */;
 		};
 		OBJ_71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = "Binson::Binson" /* Binson */;
+			target = Binson::Binson /* Binson */;
 			targetProxy = 5B5683FB1F9A2F86001C4989 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -261,6 +261,7 @@
 		OBJ_3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_CODE_COVERAGE = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -344,6 +345,7 @@
 		OBJ_4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_CODE_COVERAGE = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;

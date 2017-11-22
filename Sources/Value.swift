@@ -195,7 +195,7 @@ extension Value: ExpressibleByExtendedGraphemeClusterLiteral {
 }
 
 extension Value {
-    var count: Int? {
+    public var count: Int? {
         switch self {
         case .array(let array):
             return array.count
@@ -204,7 +204,7 @@ extension Value {
         }
     }
     
-    var integerValue: Int64? {
+    public var integerValue: Int64? {
         switch self {
         case .int(let value):
             return value
@@ -213,7 +213,7 @@ extension Value {
         }
     }
     
-    var arrayValue: [Value]? {
+    public var arrayValue: [Value]? {
         switch self {
         case .array(let array):
             return array
@@ -231,7 +231,7 @@ extension Value {
         }
     }
     
-    var doubleValue: Double? {
+    public var doubleValue: Double? {
         switch self {
         case .double(let value):
             return value
@@ -240,7 +240,7 @@ extension Value {
         }
     }
     
-    var stringValue: String? {
+    public var stringValue: String? {
         switch self {
         case .string(let string):
             return string
@@ -249,7 +249,7 @@ extension Value {
         }
     }
     
-    var bytesValue: [Byte]? {
+    public var bytesValue: [Byte]? {
         switch self {
         case .bytes(let bytes):
             return bytes
@@ -258,7 +258,7 @@ extension Value {
         }
     }
     
-    var objectValue: Binson? {
+    public var objectValue: Binson? {
         switch self {
         case .object(let object):
             return object
@@ -267,7 +267,7 @@ extension Value {
         }
     }
     
-    subscript(key: String) -> Value {
+    public subscript(key: String) -> Value {
         get {
             switch self {
             case .object(let binson):
@@ -280,7 +280,7 @@ extension Value {
 }
 
 extension Value {
-    func toJson() -> Any {
+    public func toJson() -> Any {
         switch self {
         case let .bool(value):
             return value
@@ -303,7 +303,7 @@ extension Value {
     }
 }
 
-func fromJson(jsonObject: Any) -> Value {
+public func fromJson(jsonObject: Any) -> Value {
     switch jsonObject {
     case let value as Bool:
         return Value(value)

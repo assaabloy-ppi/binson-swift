@@ -12,7 +12,9 @@ XCODE_SCHEME  = Binson-Package
 XCODE_FLAGS   =
 XCODE_CMD     = $(XCODE) -project $(XCODE_PROJECT) $(XCODE_FLAGS)
 
-all: lint xcodebuild-ios xcodebuild-osx
+CODECOV       = slather
+
+all: lint xcodebuild-osx
 
 test: build
 	$(SWIFT) test $(SWIFT_FLAGS)
@@ -61,4 +63,4 @@ describe: list dependencies
 
 coverage:
 	$(XCODE_CMD) -scheme $(XCODE_SCHEME) $(OSX_FLAGS) -configuration Debug -enableCodeCoverage YES test
-	slather coverage --scheme $(XCODE_SCHEME) --show $(XCODE_PROJECT)
+	$(CODECOV) coverage -s --scheme $(XCODE_SCHEME) --show $(XCODE_PROJECT)

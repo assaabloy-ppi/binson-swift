@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		Binson::binson::ProductTarget /* binson */ = {
+		"Binson::binson::ProductTarget" /* binson */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = OBJ_68 /* Build configuration list for PBXAggregateTarget "binson" */;
 			buildPhases = (
@@ -23,12 +23,14 @@
 /* Begin PBXBuildFile section */
 		5B45A6171FA9BB710092108D /* Value+Pack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B45A6161FA9BB710092108D /* Value+Pack.swift */; };
 		5B45A6191FA9C18E0092108D /* BinsonIntegerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B45A6181FA9C18E0092108D /* BinsonIntegerTests.swift */; };
+		BF67E00120615905001A45E5 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF67E00020615905001A45E5 /* Codable.swift */; };
+		BFF277D520CE8BC800EDA248 /* CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF277D420CE8BC800EDA248 /* CodableTests.swift */; };
 		OBJ_40 /* BinsonBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* BinsonBasicTests.swift */; };
 		OBJ_41 /* BinsonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* BinsonTests.swift */; };
 		OBJ_42 /* BuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* BuilderTests.swift */; };
 		OBJ_44 /* OperatorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* OperatorsTests.swift */; };
 		OBJ_45 /* WhiteBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* WhiteBoxTests.swift */; };
-		OBJ_47 /* Binson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = Binson::Binson::Product /* Binson.framework */; };
+		OBJ_47 /* Binson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Binson::Binson::Product" /* Binson.framework */; };
 		OBJ_54 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_8 /* Array+Extension.swift */; };
 		OBJ_55 /* Binson.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Binson.swift */; };
 		OBJ_56 /* Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Builder.swift */; };
@@ -64,8 +66,10 @@
 		5BFE5C631F9A4C860053884E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5BFE5C641F9A4C860053884E /* Binson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Binson.h; sourceTree = "<group>"; };
 		5BFE5C651F9A4C8F0053884E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		Binson::Binson-test::Product /* Binson-test.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = "Binson-test.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		Binson::Binson::Product /* Binson.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Binson.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF67E00020615905001A45E5 /* Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codable.swift; sourceTree = "<group>"; };
+		BFF277D420CE8BC800EDA248 /* CodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableTests.swift; sourceTree = "<group>"; };
+		"Binson::Binson-test::Product" /* Binson-test.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = "Binson-test.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Binson::Binson::Product" /* Binson.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Binson.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Builder.swift; sourceTree = "<group>"; };
 		OBJ_11 /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		OBJ_14 /* Value.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Value.swift; sourceTree = "<group>"; };
@@ -101,13 +105,14 @@
 		OBJ_15 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				5BFE5C651F9A4C8F0053884E /* Info.plist */,
 				OBJ_16 /* BinsonBasicTests.swift */,
+				5B45A6181FA9C18E0092108D /* BinsonIntegerTests.swift */,
 				OBJ_17 /* BinsonTests.swift */,
 				OBJ_18 /* BuilderTests.swift */,
+				BFF277D420CE8BC800EDA248 /* CodableTests.swift */,
+				5BFE5C651F9A4C8F0053884E /* Info.plist */,
 				OBJ_20 /* OperatorsTests.swift */,
 				OBJ_21 /* WhiteBoxTests.swift */,
-				5B45A6181FA9C18E0092108D /* BinsonIntegerTests.swift */,
 			);
 			path = Tests;
 			sourceTree = SOURCE_ROOT;
@@ -115,8 +120,8 @@
 		OBJ_26 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				Binson::Binson-test::Product /* Binson-test.xctest */,
-				Binson::Binson::Product /* Binson.framework */,
+				"Binson::Binson-test::Product" /* Binson-test.xctest */,
+				"Binson::Binson::Product" /* Binson.framework */,
 			);
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -139,12 +144,13 @@
 		OBJ_7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				5BFE5C641F9A4C860053884E /* Binson.h */,
-				5BFE5C631F9A4C860053884E /* Info.plist */,
 				OBJ_8 /* Array+Extension.swift */,
+				5BFE5C641F9A4C860053884E /* Binson.h */,
 				OBJ_9 /* Binson.swift */,
 				OBJ_10 /* Builder.swift */,
+				BF67E00020615905001A45E5 /* Codable.swift */,
 				OBJ_11 /* Data+Extension.swift */,
+				5BFE5C631F9A4C860053884E /* Info.plist */,
 				OBJ_14 /* Value.swift */,
 				5B45A6161FA9BB710092108D /* Value+Pack.swift */,
 			);
@@ -154,7 +160,7 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		Binson::Binson /* Binson */ = {
+		"Binson::Binson" /* Binson */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = OBJ_50 /* Build configuration list for PBXNativeTarget "Binson" */;
 			buildPhases = (
@@ -167,10 +173,10 @@
 			);
 			name = Binson;
 			productName = Binson;
-			productReference = Binson::Binson::Product /* Binson.framework */;
+			productReference = "Binson::Binson::Product" /* Binson.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		Binson::Binson-test /* Binson-test */ = {
+		"Binson::Binson-test" /* Binson-test */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = OBJ_36 /* Build configuration list for PBXNativeTarget "Binson-test" */;
 			buildPhases = (
@@ -184,7 +190,7 @@
 			);
 			name = "Binson-test";
 			productName = Binson_test;
-			productReference = Binson::Binson-test::Product /* Binson-test.xctest */;
+			productReference = "Binson::Binson-test::Product" /* Binson-test.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -208,9 +214,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				Binson::Binson-test /* Binson-test */,
-				Binson::Binson /* Binson */,
-				Binson::binson::ProductTarget /* binson */,
+				"Binson::Binson-test" /* Binson-test */,
+				"Binson::Binson" /* Binson */,
+				"Binson::binson::ProductTarget" /* binson */,
 			);
 		};
 /* End PBXProject section */
@@ -221,6 +227,7 @@
 			buildActionMask = 0;
 			files = (
 				5B45A6191FA9C18E0092108D /* BinsonIntegerTests.swift in Sources */,
+				BFF277D520CE8BC800EDA248 /* CodableTests.swift in Sources */,
 				OBJ_40 /* BinsonBasicTests.swift in Sources */,
 				OBJ_41 /* BinsonTests.swift in Sources */,
 				OBJ_42 /* BuilderTests.swift in Sources */,
@@ -237,6 +244,7 @@
 				OBJ_55 /* Binson.swift in Sources */,
 				OBJ_56 /* Builder.swift in Sources */,
 				5B45A6171FA9BB710092108D /* Value+Pack.swift in Sources */,
+				BF67E00120615905001A45E5 /* Codable.swift in Sources */,
 				OBJ_57 /* Data+Extension.swift in Sources */,
 				OBJ_60 /* Value.swift in Sources */,
 			);
@@ -247,12 +255,12 @@
 /* Begin PBXTargetDependency section */
 		OBJ_48 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = Binson::Binson /* Binson */;
+			target = "Binson::Binson" /* Binson */;
 			targetProxy = 5B5683F91F9A2F83001C4989 /* PBXContainerItemProxy */;
 		};
 		OBJ_71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = Binson::Binson /* Binson */;
+			target = "Binson::Binson" /* Binson */;
 			targetProxy = 5B5683FB1F9A2F86001C4989 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */

@@ -3,15 +3,13 @@
 //
 //  Support to go back and forth between Hex String and ByteArray
 
-public typealias Byte = UInt8
-
-extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte {
+extension Array where Element: BinaryInteger, Element.IntegerLiteralType == UInt8 {
 
     init?(hex: String) {
         self = [Element]()
         self.reserveCapacity(hex.unicodeScalars.lazy.underestimatedCount)
 
-        var buffer: Byte?
+        var buffer: UInt8?
         var skip = hex.hasPrefix("0x") ? 2 : 0
 
         for char in hex.unicodeScalars.lazy {
@@ -24,8 +22,8 @@ extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte
                 return nil
             }
 
-            let v: Byte
-            let c: Byte = Byte(char.value)
+            let v: UInt8
+            let c: UInt8 = UInt8(char.value)
 
             switch c {
             case let c where c <= 57:
@@ -53,7 +51,7 @@ extension Array where Element: BinaryInteger, Element.IntegerLiteralType == Byte
     }
 }
 
-extension Array where Iterator.Element == Byte {
+extension Array where Iterator.Element == UInt8 {
 
     func toHexString(_ separator: String = "") -> String {
         return self.lazy.reduce("") {

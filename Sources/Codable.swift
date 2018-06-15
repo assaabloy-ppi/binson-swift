@@ -10,36 +10,31 @@ import Foundation
 
 /// `BinsonEncoder` facilitates the encoding of `Encodable` values into Binson.
 open class BinsonEncoder {
-    
-    /// Contextual user-provided information for use during encoding.
-    open var userInfo: [CodingUserInfoKey : Any] = [:]
-    
-    // MARK: - Constructing a Binson Encoder
-    /// Initializes `self` with default strategies.
+    /*
+    public enum TypeConversionHandling {
+        case fail
+        case warn
+        case silent
+    }
+*/
+    open var userInfo: [CodingUserInfoKey: Any] = [:]
+
     public init() {}
     
     // MARK: - Encoding Values
-    /// Encodes the given top-level value and returns its JSON representation.
+    /// Encodes the given top-level value and returns a Binson object.
     ///
     /// - parameter value: The value to encode.
-    /// - returns: A new `Data` value containing the encoded JSON data.
+    /// - returns: A new `Binson` object containing the encoded Binson data.
     /// - throws: `EncodingError.invalidValue` if a non-conforming floating-point value is encountered during encoding, and the encoding strategy is `.throw`.
     /// - throws: An error if any value throws an error during encoding.
-    open func encode<T : Encodable>(_ value: T) throws -> BinsonDictionary {
+    open func encode<T : Encodable>(_ value: T) throws -> Binson {
         let encoder = _BinsonEncoder(userInfo: userInfo)
         
         guard let topLevel = try encoder.box_(value) else {
             throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [], debugDescription: "Top-level \(T.self) did not encode any values."))
         }
-/*
-        if topLevel. {
-            throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [], debugDescription: "Top-level \(T.self) encoded as null Binson fragment."))
-        } else if topLevel is NSNumber {
-            throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [], debugDescription: "Top-level \(T.self) encoded as number Binson fragment."))
-        } else if topLevel is NSString {
-            throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [], debugDescription: "Top-level \(T.self) encoded as string Binson fragment."))
-        }
-  */
+
         guard case let .object(object) = topLevel else {
             throw EncodingError.invalidValue(topLevel, EncodingError.Context(codingPath: [], debugDescription: "Top-level \(T.self) must be of object type."))
         }
@@ -47,141 +42,27 @@ open class BinsonEncoder {
     }
 }
 
-open class BinsonArray {
-    var array = Array<BinsonValue>()
-
-    public subscript(index: Int) -> BinsonValue {
-        get { return array[index] }
-        set(newValue) { array[index] = newValue }
-    }
-
-    var count: Int {
-        return array.count
-    }
-
-    func append(_ value: BinsonValue) {
-        array.append(value)
-    }
-
-    func insert(_ value: BinsonValue, at index: Int) {
-        array.insert(value, at: index)
-    }
-}
-
-open class BinsonDictionary {
-    var dict = Dictionary<String, BinsonValue>()
-
-    public subscript(key: String) -> BinsonValue? {
-        get { return dict[key] }
-        set(newValue) { dict[key] = newValue }
-    }
-}
-
-extension BinsonDictionary: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        return dict.debugDescription
-    }
-}
-
-extension BinsonArray: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        return array.debugDescription
-    }
-}
-
-public enum BinsonValue {
-    case bool(Bool)
-    case int8(Int8)
-    case int16(Int16)
-    case int32(Int32)
-    case int64(Int64)
-    case double(Double)
-    case string(String)
-    case bytes(Data)
-    case array(BinsonArray)
-    case object(BinsonDictionary)
-
-    init(_ bool: Bool) {
-        self = .bool(bool)
-    }
-
-    init(_ int8: Int8) {
-        self = .int8(int8)
-    }
-
-    init(_ int16: Int16) {
-        self = .int16(int16)
-    }
-
-    init(_ int32: Int32) {
-        self = .int32(int32)
-    }
-
-    init(_ int64: Int64) {
-        self = .int64(int64)
-    }
-
-    init(_ double: Double) {
-        self = .double(double)
-    }
-
-    init(_ string: String) {
-        self = .string(string)
-    }
-
-    init(_ bytes: Data) {
-        self = .bytes(bytes)
-    }
-
-    init(_ array: BinsonArray) {
-        self = .array(array)
-    }
-
-    init(_ object: BinsonDictionary) {
-        self = .object(object)
-    }
-
-}
-
 // MARK: - _BinsonEncoder
 fileprivate class _BinsonEncoder : Encoder {
-    // MARK: Properties
-    /// The encoder's storage.
     fileprivate var storage: _BinsonEncodingStorage
-    
-    /// Contextual user-provided information for use during encoding.
-    private(set) var userInfo: [CodingUserInfoKey : Any] = [:]
-    
-    /// The path to the current point in encoding.
+
     public var codingPath: [CodingKey]
-    
-    // MARK: - Initialization
-    /// Initializes `self` with the given top-level encoder options.
+
+    private(set) var userInfo: [CodingUserInfoKey : Any] = [:]
+
     fileprivate init(userInfo: [CodingUserInfoKey : Any], codingPath: [CodingKey] = []) {
         self.userInfo = userInfo
         self.storage = _BinsonEncodingStorage()
         self.codingPath = codingPath
     }
     
-    /// Returns whether a new element can be encoded at this coding path.
-    ///
-    /// `true` if an element has not yet been encoded at this coding path; `false` otherwise.
     fileprivate var canEncodeNewValue: Bool {
-        // Every time a new value gets encoded, the key it's encoded for is pushed onto the coding path (even if it's a nil key from an unkeyed container).
-        // At the same time, every time a container is requested, a new value gets pushed onto the storage stack.
-        // If there are more values on the storage stack than on the coding path, it means the value is requesting more than one container, which violates the precondition.
-        //
-        // This means that anytime something that can request a new container goes onto the stack, we MUST push a key onto the coding path.
-        // Things which will not request containers do not need to have the coding path extended for them (but it doesn't matter if it is, because they will not reach here).
         return self.storage.count == self.codingPath.count
     }
     
-    // MARK: - Encoder Methods
     public func container<Key>(keyedBy: Key.Type) -> KeyedEncodingContainer<Key> {
-        // If an existing keyed container was already requested, return that one.
-        let topContainer: BinsonDictionary
+        let topContainer: Binson
         if self.canEncodeNewValue {
-            // We haven't yet pushed a container at this level; do so here.
             topContainer = self.storage.pushKeyedContainer()
         } else {
             guard let last = storage.containers.last, case let .object(object) = last else {
@@ -196,10 +77,8 @@ fileprivate class _BinsonEncoder : Encoder {
     }
     
     public func unkeyedContainer() -> UnkeyedEncodingContainer {
-        // If an existing unkeyed container was already requested, return that one.
         let topContainer: BinsonArray
         if self.canEncodeNewValue {
-            // We haven't yet pushed a container at this level; do so here.
             topContainer = self.storage.pushUnkeyedContainer()
         } else {
             guard let last = storage.containers.last, case let .array(array) = last else {
@@ -216,24 +95,17 @@ fileprivate class _BinsonEncoder : Encoder {
     }
 }
 
-
-// MARK: - Encoding Storage and Containers
 fileprivate struct _BinsonEncodingStorage {
-    // MARK: Properties
-    /// The container stack.
     private(set) fileprivate var containers: [BinsonValue] = []
     
-    // MARK: - Initialization
-    /// Initializes `self` with no containers.
     fileprivate init() {}
     
-    // MARK: - Modifying the Stack
     fileprivate var count: Int {
         return self.containers.count
     }
     
-    fileprivate mutating func pushKeyedContainer() -> BinsonDictionary {
-        let dict = BinsonDictionary()
+    fileprivate mutating func pushKeyedContainer() -> Binson {
+        let dict = Binson()
         self.containers.append(BinsonValue(dict))
         return dict
     }
@@ -254,23 +126,18 @@ fileprivate struct _BinsonEncodingStorage {
     }
 }
 
-// MARK: - Encoding Containers
 fileprivate struct _BinsonKeyedEncodingContainer<K : CodingKey> : KeyedEncodingContainerProtocol {
     typealias Key = K
     
-    // MARK: Properties
-    /// A reference to the encoder we're writing to.
     private let encoder: _BinsonEncoder
     
-    /// A reference to the container we're writing to.
-    private let container: BinsonDictionary
+    private let container: Binson
     
-    /// The path of coding keys taken to get to this point in encoding.
     private(set) public var codingPath: [CodingKey]
     
     // MARK: - Initialization
     /// Initializes `self` with the given references.
-    fileprivate init(referencing encoder: _BinsonEncoder, codingPath: [CodingKey], wrapping container: BinsonDictionary) {
+    fileprivate init(referencing encoder: _BinsonEncoder, codingPath: [CodingKey], wrapping container: Binson) {
         self.encoder = encoder
         self.codingPath = codingPath
         self.container = container
@@ -319,12 +186,12 @@ fileprivate struct _BinsonKeyedEncodingContainer<K : CodingKey> : KeyedEncodingC
     }
     
     public mutating func encode(_ value: Float, forKey key: Key) throws {
-        // Since the float may be invalid and throw, the coding path needs to contain this key.
+        // Since the double may be invalid and throw, the coding path needs to contain this key.
         self.encoder.codingPath.append(key)
         defer { self.encoder.codingPath.removeLast() }
         self.container[key.stringValue] = try self.encoder.box(value)
     }
-    
+
     public mutating func encode(_ value: Double, forKey key: Key) throws {
         // Since the double may be invalid and throw, the coding path needs to contain this key.
         self.encoder.codingPath.append(key)
@@ -339,7 +206,7 @@ fileprivate struct _BinsonKeyedEncodingContainer<K : CodingKey> : KeyedEncodingC
     }
     
     public mutating func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type, forKey key: Key) -> KeyedEncodingContainer<NestedKey> {
-        let dictionary = BinsonDictionary()
+        let dictionary = Binson()
         self.container[key.stringValue] = BinsonValue(dictionary)
         
         self.codingPath.append(key)
@@ -359,39 +226,31 @@ fileprivate struct _BinsonKeyedEncodingContainer<K : CodingKey> : KeyedEncodingC
     }
     
     public mutating func superEncoder() -> Encoder {
-        return _BinsonReferencingEncoder(referencing: self.encoder, key: _BinsonKey.super, wrapping: self.container)
+        return _BinsonReferencingEncoder(referencing: self.encoder, key: _BinsonKey.super, wrapping: BinsonValue(self.container))
     }
     
     public mutating func superEncoder(forKey key: Key) -> Encoder {
-        return _BinsonReferencingEncoder(referencing: self.encoder, key: key, wrapping: self.container)
+        return _BinsonReferencingEncoder(referencing: self.encoder, key: key, wrapping: BinsonValue(self.container))
     }
 }
 
 fileprivate struct _BinsonUnkeyedEncodingContainer : UnkeyedEncodingContainer {
-    // MARK: Properties
-    /// A reference to the encoder we're writing to.
     private let encoder: _BinsonEncoder
     
-    /// A reference to the container we're writing to.
     private let container: BinsonArray
     
-    /// The path of coding keys taken to get to this point in encoding.
     private(set) public var codingPath: [CodingKey]
     
-    /// The number of elements encoded into the container.
     public var count: Int {
         return self.container.count
     }
     
-    // MARK: - Initialization
-    /// Initializes `self` with the given references.
     fileprivate init(referencing encoder: _BinsonEncoder, codingPath: [CodingKey], wrapping container: BinsonArray) {
         self.encoder = encoder
         self.codingPath = codingPath
         self.container = container
     }
     
-    // MARK: - UnkeyedEncodingContainer Methods
     public mutating func encodeNil() throws {
         let debugDescription = "Unable to encode nil in Binson!"
         throw EncodingError.invalidValue(NSNull(), EncodingError.Context(codingPath: codingPath, debugDescription: debugDescription))
@@ -415,7 +274,7 @@ fileprivate struct _BinsonUnkeyedEncodingContainer : UnkeyedEncodingContainer {
         defer { self.encoder.codingPath.removeLast() }
         self.container.append(try self.encoder.box(value))
     }
-    
+
     public mutating func encode(_ value: Double) throws {
         // Since the double may be invalid and throw, the coding path needs to contain this key.
         self.encoder.codingPath.append(_BinsonKey(index: self.count))
@@ -433,7 +292,7 @@ fileprivate struct _BinsonUnkeyedEncodingContainer : UnkeyedEncodingContainer {
         self.codingPath.append(_BinsonKey(index: self.count))
         defer { self.codingPath.removeLast() }
         
-        let dictionary = BinsonDictionary()
+        let dictionary = Binson()
         self.container.append(BinsonValue(dictionary))
         
         let container = _BinsonKeyedEncodingContainer<NestedKey>(referencing: self.encoder, codingPath: self.codingPath, wrapping: dictionary)
@@ -450,12 +309,11 @@ fileprivate struct _BinsonUnkeyedEncodingContainer : UnkeyedEncodingContainer {
     }
     
     public mutating func superEncoder() -> Encoder {
-        return _BinsonReferencingEncoder(referencing: self.encoder, at: self.container.count, wrapping: self.container)
+        return _BinsonReferencingEncoder(referencing: self.encoder, key: _BinsonKey(index: self.container.count), wrapping: BinsonValue(self.container))
     }
 }
 
 extension _BinsonEncoder : SingleValueEncodingContainer {
-    // MARK: - SingleValueEncodingContainer Methods
     fileprivate func assertCanEncodeNewValue() {
         precondition(self.canEncodeNewValue, "Attempt to encode value through single value container when previously value already encoded.")
     }
@@ -469,12 +327,12 @@ extension _BinsonEncoder : SingleValueEncodingContainer {
         assertCanEncodeNewValue()
         self.storage.push(container: self.box(value))
     }
-    
+
     public func encode(_ value: Int) throws {
         assertCanEncodeNewValue()
         self.storage.push(container: self.box(value))
     }
-    
+
     public func encode(_ value: Int8) throws {
         assertCanEncodeNewValue()
         self.storage.push(container: self.box(value))
@@ -494,7 +352,7 @@ extension _BinsonEncoder : SingleValueEncodingContainer {
         assertCanEncodeNewValue()
         self.storage.push(container: self.box(value))
     }
-    
+
     public func encode(_ value: UInt) throws {
         assertCanEncodeNewValue()
         self.storage.push(container: self.box(value))
@@ -519,7 +377,7 @@ extension _BinsonEncoder : SingleValueEncodingContainer {
         assertCanEncodeNewValue()
         self.storage.push(container: self.box(value))
     }
-    
+
     public func encode(_ value: String) throws {
         assertCanEncodeNewValue()
         self.storage.push(container: self.box(value))
@@ -529,7 +387,7 @@ extension _BinsonEncoder : SingleValueEncodingContainer {
         assertCanEncodeNewValue()
         try self.storage.push(container: self.box(value))
     }
-    
+
     public func encode(_ value: Double) throws {
         assertCanEncodeNewValue()
         try self.storage.push(container: self.box(value))
@@ -545,41 +403,28 @@ extension _BinsonEncoder : SingleValueEncodingContainer {
 extension _BinsonEncoder {
     /// Returns the given value boxed in a container appropriate for pushing onto the container stack.
     fileprivate func box(_ value: Bool)   -> BinsonValue { return BinsonValue(value) }
-    fileprivate func box(_ value: Int)    -> BinsonValue {
-        if Int.bitWidth == 32 {
-            return BinsonValue(Int32(value))
-        } else {
-            return BinsonValue(Int64(value))
-        }
-    }
-    fileprivate func box(_ value: Int8)   -> BinsonValue { return BinsonValue(value) }
-    fileprivate func box(_ value: Int16)  -> BinsonValue { return BinsonValue(value) }
-    fileprivate func box(_ value: Int32)  -> BinsonValue { return BinsonValue(value) }
-    fileprivate func box(_ value: Int64)  -> BinsonValue { return BinsonValue(value) }
-    fileprivate func box(_ value: UInt)    -> BinsonValue {
-        if UInt.bitWidth == 32 {
-            return BinsonValue(Int32(bitPattern: UInt32(value)))
-        } else {
-            return BinsonValue(Int64(bitPattern: UInt64(value)))
-        }
-    }
-    fileprivate func box(_ value: UInt8)   -> BinsonValue { return BinsonValue(Int8(bitPattern: value)) }
-    fileprivate func box(_ value: UInt16)  -> BinsonValue { return BinsonValue(Int16(bitPattern: value)) }
-    fileprivate func box(_ value: UInt32)  -> BinsonValue { return BinsonValue(Int32(bitPattern: value)) }
-    fileprivate func box(_ value: UInt64)  -> BinsonValue { return BinsonValue(Int64(bitPattern: value)) }
+    fileprivate func box(_ value: Int) -> BinsonValue { return BinsonValue(value) }
+    fileprivate func box(_ value: Int8) -> BinsonValue { return BinsonValue(value) }
+    fileprivate func box(_ value: Int16) -> BinsonValue { return BinsonValue(value) }
+    fileprivate func box(_ value: Int32) -> BinsonValue { return BinsonValue(value) }
+    fileprivate func box(_ value: Int64) -> BinsonValue { return BinsonValue(value) }
+    fileprivate func box(_ value: UInt) -> BinsonValue { return BinsonValue(Int64(bitPattern: UInt64(value))) }
+    fileprivate func box(_ value: UInt8) -> BinsonValue { return BinsonValue(Int64(bitPattern: UInt64(value))) }
+    fileprivate func box(_ value: UInt16) -> BinsonValue { return BinsonValue(Int64(bitPattern: UInt64(value))) }
+    fileprivate func box(_ value: UInt32) -> BinsonValue { return BinsonValue(Int64(bitPattern: UInt64(value))) }
+    fileprivate func box(_ value: UInt64) -> BinsonValue { return BinsonValue(Int64(bitPattern: value)) }
     fileprivate func box(_ value: String) -> BinsonValue { return BinsonValue(value) }
     fileprivate func box(_ double: Double) throws -> BinsonValue { return BinsonValue(double) }
     
     fileprivate func box(_ data: Data) throws -> BinsonValue { return BinsonValue(data) }
 
     fileprivate func box<T : Encodable>(_ value: T) throws -> BinsonValue {
-        return try self.box_(value) ?? BinsonValue(BinsonDictionary())
+        return try self.box_(value) ?? BinsonValue(Binson())
     }
     
     // This method is called "box_" instead of "box" to disambiguate it from the overloads. Because the return type here is different from all of the "box" overloads (and is more general), any "box" calls in here would call back into "box" recursively instead of calling the appropriate overload, which is not what we want.
     fileprivate func box_<T : Encodable>(_ value: T) throws -> BinsonValue? {
         if T.self == Data.self || T.self == NSData.self {
-            // Respect Data encoding strategy
             return try self.box((value as! Data))
         } else if T.self == URL.self || T.self == NSURL.self {
             // Encode URLs as single strings.
@@ -607,71 +452,49 @@ extension _BinsonEncoder {
     }
 }
 
-// MARK: - _BinsonReferencingEncoder
-/// _BinsonReferencingEncoder is a special subclass of _BinsonEncoder which has its own storage, but references the contents of a different encoder.
-/// It's used in superEncoder(), which returns a new encoder for encoding a superclass -- the lifetime of the encoder should not escape the scope it's created in, but it doesn't necessarily know when it's done being used (to write to the original container).
 fileprivate class _BinsonReferencingEncoder : _BinsonEncoder {
-    // MARK: Reference types.
-    /// The type of container we're referencing.
-    private enum Reference {
-        /// Referencing a specific index in an array container.
-        case array(BinsonArray, Int)
-        
-        /// Referencing a specific key in a dictionary container.
-        case dictionary(BinsonDictionary, String)
-    }
-    
-    // MARK: - Properties
-    /// The encoder we're referencing.
     fileprivate let encoder: _BinsonEncoder
+
+    private let key: CodingKey
+    private let reference: BinsonValue
     
-    /// The container reference itself.
-    private let reference: Reference
-    
-    // MARK: - Initialization
-    /// Initializes `self` by referencing the given array container in the given encoder.
-    fileprivate init(referencing encoder: _BinsonEncoder, at index: Int, wrapping array: BinsonArray) {
+    fileprivate init(referencing encoder: _BinsonEncoder, key: CodingKey, wrapping value: BinsonValue) {
+
+        switch value {
+        case .array(_), .object(_):
+            break
+        default:
+            preconditionFailure("Trying to reference non container type")
+        }
         self.encoder = encoder
-        self.reference = .array(array, index)
+        self.reference = value
+        self.key = key
         super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath)
 
-        self.codingPath.append(_BinsonKey(index: index))
-    }
-    
-    /// Initializes `self` by referencing the given dictionary container in the given encoder.
-    fileprivate init(referencing encoder: _BinsonEncoder,
-                     key: CodingKey, wrapping dictionary: BinsonDictionary) {
-        self.encoder = encoder
-        self.reference = .dictionary(dictionary, key.stringValue)
-        super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath)
-        
         self.codingPath.append(key)
     }
     
-    // MARK: - Coding Path Operations
     fileprivate override var canEncodeNewValue: Bool {
-        // With a regular encoder, the storage and coding path grow together.
-        // A referencing encoder, however, inherits its parents coding path, as well as the key it was created for.
-        // We have to take this into account.
         return self.storage.count == self.codingPath.count - self.encoder.codingPath.count - 1
     }
     
-    // MARK: - Deinitialization
-    // Finalizes `self` by writing the contents of our storage to the referenced encoder's storage.
     deinit {
         let value: BinsonValue
         switch self.storage.count {
-        case 0: value = BinsonValue(BinsonDictionary())
+        case 0: value = BinsonValue(Binson())
         case 1: value = self.storage.popContainer()
         default: fatalError("Referencing encoder deallocated with multiple containers on stack.")
         }
         
         switch self.reference {
-        case .array(let array, let index):
-            array.insert(value, at: index)
+        case .array(let array):
+            array.insert(value, at: key.intValue!)
             
-        case .dictionary(let dictionary, let key):
-            dictionary[key] = value
+        case .object(let object):
+            object[key.stringValue] = value
+
+        default:
+            fatalError("Non container type referenced")
         }
     }
 }
@@ -710,12 +533,13 @@ fileprivate struct _BinsonKey : CodingKey {
 // Shared ISO8601 Date Formatter
 //===----------------------------------------------------------------------===//
 // NOTE: This value is implicitly lazy and _must_ be lazy. We're compiled against the latest SDK (w/ ISO8601DateFormatter), but linked against whichever Foundation the user has. ISO8601DateFormatter might not exist, so we better not hit this code path on an older OS.
-@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
+/*@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
 fileprivate var _iso8601Formatter: ISO8601DateFormatter = {
     let formatter = ISO8601DateFormatter()
     formatter.formatOptions = .withInternetDateTime
     return formatter
 }()
+*/
 
 //===----------------------------------------------------------------------===//
 // Error Utilities

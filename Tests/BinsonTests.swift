@@ -9,6 +9,8 @@ import XCTest
 
 class BinsonTests: XCTestCase {
 
+    typealias Value = BinsonValue
+
     func testBasicBinson() {
         let binson = Binson()
         let str = binson.pack().toHexString("\\x")
@@ -78,7 +80,7 @@ class BinsonTests: XCTestCase {
         // bytesLen   = %x18 int8 / %x19 int16 / %x1a int32
 
         var binson = Binson()
-        binson += ("t", Value.bytes([0x02, 0x02]))
+        binson += ("t", Value([UInt8]([0x02, 0x02])))
 
         let str = binson.hex
         XCTAssertEqual(str, "401401741802020241")
@@ -103,7 +105,7 @@ class BinsonTests: XCTestCase {
      * {
      *   "c": "u",          // Conversation "u" (String)
      *   "i": 1,            // Converstation instance ID (Integer)
-     *   "t": {0x02,0x02},  // Lock-thing id (Byte array)
+     *   "t": {0x02,0x02},  // Lock-thing id (UInt8 array)
      *   "z": { }           // Parameters (Empty binson object)
      * }
      *
@@ -113,12 +115,12 @@ class BinsonTests: XCTestCase {
         var unlock = Binson()
         unlock += ("c", "u")
         unlock += ("i", 1)
-        unlock += ("t", Value.bytes([0x02, 0x02]))
+        unlock += ("t", Value([UInt8]([0x02, 0x02])))
         unlock += ("z", Value.object(Binson()))
 
         XCTAssertEqual(unlock.value(key: "c"), "u")
         XCTAssertEqual(unlock.value(key: "i"), 1)
-        XCTAssertEqual(unlock.value(key: "t"), Value.bytes([0x02, 0x02]))
+        XCTAssertEqual(unlock.value(key: "t"), Value([UInt8]([0x02, 0x02])))
     }
 
     func testPackUnlock() {
@@ -131,7 +133,7 @@ class BinsonTests: XCTestCase {
         var unlock = Binson()
         unlock += ("c", "u")
         unlock += ("i", 1)
-        unlock += ("t", Value.bytes([0x02, 0x02]))
+        unlock += ("t", Value([UInt8]([0x02, 0x02])))
         unlock += ("z", Value.object(Binson()))
 
         let actual_data = unlock.pack()

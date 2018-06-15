@@ -24,11 +24,8 @@ import XCTest
  */
 
 class BinsonIntegerTests: XCTestCase {
-    static let twoto7  = Int64(Int8.max)
-    static let twoto15 = Int64(Int16.max)
-    static let twoto31 = Int64(Int32.max)
-    static let twoto63 = Int64(Int64.max)
-    
+    typealias Value = BinsonValue
+
     let posx10: (low: Value, high: Value) = (1, 127)
     let posx11: (low: Value, high: Value) = (128, 32767)
     let posx12: (low: Value, high: Value) = (32768, 2147483647)

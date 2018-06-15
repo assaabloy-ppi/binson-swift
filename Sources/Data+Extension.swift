@@ -4,7 +4,7 @@
 import Foundation
 
 extension Data {
-    var bytes: [Byte] {
+    var bytes: [UInt8] {
         return Array(self)
     }
 
@@ -37,6 +37,6 @@ extension Data {
             let read = input.read(buffer, maxLength: bufferSize)
             self.append(buffer, count: read)
         }
-        buffer.deallocate(capacity: bufferSize)
+        buffer.deallocate()
     }
 }

@@ -14,7 +14,7 @@ public class Builder {
     /// - parameter data: The Hex string to unpack.
     /// - returns: Binson object.
     public class func unpack(hex: String) -> Binson? {
-        if let bytes = [Byte](hex: hex) {
+        if let bytes = [UInt8](hex: hex) {
             let raw = Data(bytes: bytes)
             return Builder.unpack(data: raw)
         } else {
@@ -54,15 +54,15 @@ public class Builder {
         }
     }
     
-    /// Unpack from JSON params
+    /// Unpack from JSON object
     /// - parameter data: The input JSON Dictionary to unpack
     /// - returns: Binson object
-    public class func unpack(jsonparams: [String: Any]) -> Binson? {
-        var values = [String: Value]()
+    public class func unpack(jsonObject: [String: Any]) throws -> Binson {
+        var values = [String: BinsonValue]()
         
-        for key in jsonparams.keys {
-            let any = jsonparams[key]!
-            values[key] = Value(any)
+        for key in jsonObject.keys {
+            let any = jsonObject[key]!
+            values[key] = try BinsonValue.fromAny(any)
         }
         return Binson(values: values)
     }
@@ -70,20 +70,21 @@ public class Builder {
     /// Unpack from JSON string
     /// - parameter data: The input JSON string to unpack
     /// - returns: Binson object
-    public class func unpack(jsondata: Data) -> Binson? {
-        if  let json = try? JSONSerialization.jsonObject(with: jsondata),
-            let params = json as? [String: Any] {
-            return unpack(jsonparams: params)
-        } else {
-            return nil
+    public class func unpack(jsondata: Data) throws -> Binson {
+        let json = try JSONSerialization.jsonObject(with: jsondata)
+
+        guard let object = json as? [String: Any] else {
+            throw BinsonError.invalidData
         }
+
+        return try unpack(jsonObject: object)
     }
     
     /// Unpack from JSON data
     /// - parameter data: The input JSON data to unpack
     /// - returns: Binson object
-    public class func unpack(jsonstring: String) -> Binson? {
-        return unpack(jsondata: Data(jsonstring.utf8))
+    public class func unpack(jsonString: String) throws -> Binson {
+        return try unpack(jsondata: Data(jsonString.utf8))
     }
     
     //------------ Helpers
@@ -96,16 +97,16 @@ public class Builder {
         var data = data
         
         while !data.isEmpty {
-            var name: String
-            var value: Value
-            (name, value, data) = try unpackPair(data)
+            var first: String?
+            var second: BinsonValue?
+            (first, second, data) = try unpackPair(data)
             
             /// Special ending MARK for a Binson object
-            if name == "Mark.endByte" {
+            guard let name = first, let value = second else {
                 break
-            } else {
-                binson += (name, value)
             }
+
+            binson += (name, value)
         }
         
         /// Return the Binson and if nested remaining data is non-empty
@@ -116,7 +117,7 @@ public class Builder {
     ///
     /// - parameter data: The input data to unpack.
     /// - returns: One byte data and the remainder to unpack
-    private class func unpackByte(_ data: Data) throws -> (value: Byte, remainder: Data) {
+    private class func unpackByte(_ data: Data) throws -> (value: UInt8, remainder: Data) {
         guard data.count >= 1 else {
             throw BinsonError.insufficientData
         }
@@ -154,7 +155,7 @@ public class Builder {
     /// - parameter length: The length of the string.
     ///
     /// - returns: A string representation of `size` bytes of data.
-    private class func unpackString(_ data: Data, value: Byte) throws -> (value: String, remainder: Data) {
+    private class func unpackString(_ data: Data, value: UInt8) throws -> (value: String, remainder: Data) {
         
         let count: Int = { () -> Int in
             switch value {
@@ -185,7 +186,7 @@ public class Builder {
     }
     
     /// Parse bytes to form an array of Binson Values.
-    private class func unpackBytes(_ data: Data, value: Byte) throws -> (value: [Byte], remainder: Data) {
+    private class func unpackBytes(_ data: Data, value: UInt8) throws -> (value: [UInt8], remainder: Data) {
         
         let n = { () -> Int in
             switch value {
@@ -212,10 +213,10 @@ public class Builder {
             throw BinsonError.insufficientData
         }
         
-        var values = [Byte]()
+        var values = [UInt8]()
         var rest2 = rest
         
-        var byte: Byte
+        var byte: UInt8
         
         for _ in 0 ..< length {
             (byte, rest2) = try unpackByte(rest2)
@@ -229,14 +230,19 @@ public class Builder {
     ///
     /// - parameter data: The input data to unpack.
     /// - returns: An array of Values + remainder.
-    private class func unpackArray(_ data: Data) throws -> (value: [Value], remainder: Data) {
-        var values = [Value]()
+    private class func unpackArray(_ data: Data) throws -> (value: [BinsonValue], remainder: Data) {
+        var values = [BinsonValue]()
         var rest = data
 
         while rest.first != Mark.endArrayByte {
             let (tempValue, tempRest) = try unpackValue(rest)
             rest = tempRest
-            values.append(tempValue)
+
+            guard let value = tempValue else {
+                // End marker should not appear here
+                throw BinsonError.invalidData
+            }
+            values.append(value)
         }
         
         rest = rest.subdata(in: 1 ..< rest.count)
@@ -248,15 +254,15 @@ public class Builder {
     ///
     /// - parameter data: The input data to unpack.
     /// - returns: A Key, a Value + remainder.
-    private class func unpackPair(_ data: Data) throws -> (name: String, value: Value, remainder: Data) {
+    private class func unpackPair(_ data: Data) throws -> (name: String?, value: BinsonValue?, remainder: Data) {
         
-        guard let (name, rest) = try? unpackValue(data) else {
+        guard let (first, rest) = try? unpackValue(data) else {
             throw BinsonError.invalidData
         }
         
-        guard name != Value.nil else {
-            // We found the end MARK and value will be Value.nil
-            return ("Mark.endByte", Value.nil, rest)
+        guard let name = first else {
+            // We found the end MARK and value will be nil
+            return (nil, nil, rest)
         }
 
         guard let key: String = name.stringValue else {
@@ -278,7 +284,7 @@ public class Builder {
     /// - parameter data: The input data to unpack.
     /// - returns: A Value + remainder.
     class func unpackValue(_ data: Data)
-        throws -> (value: Value, remainder: Data) {
+        throws -> (value: BinsonValue?, remainder: Data) {
         
         guard !data.isEmpty else {
             throw BinsonError.insufficientData
@@ -291,63 +297,63 @@ public class Builder {
             
         case Mark.beginByte:
             let (binson, remainder) = try unpackBinsonObject(data)
-            return (Value.object(binson), remainder)
+            return (BinsonValue(binson), remainder)
         
         case Mark.endByte:
-            return (Value.nil, data)
+            return (nil, data)
             
         // False
         case Mark.falseByte:
-            return (Value.bool(false), data)
+            return (BinsonValue(false), data)
             
         // True
         case Mark.trueByte:
-            return (Value.bool(true), data)
+            return (BinsonValue(true), data)
             
         // String
         case Mark.string1Byte ... Mark.string4Byte:
             let (string, remainder) = try unpackString(data, value: value)
-            return (Value.string(string), remainder)
+            return (BinsonValue(string), remainder)
             
         // Bytes
         case Mark.bytes1Byte ... Mark.bytes4Byte:
             let (bytes, rest) = try unpackBytes(data, value: value)
-            return (Value.bytes(bytes), rest)
+            return (BinsonValue(bytes), rest)
 
         // Double
         case Mark.doubleByte:
             let (intValue, remainder) = try unpackInteger(data, count: 8)
             let double = Double(bitPattern: intValue)
-            return (.double(double), remainder)
+            return (BinsonValue(double), remainder)
             
         // Int 8
         case Mark.integer1Byte:
             let (number, rest) = try unpackInteger(data, count: 1)
             let integer = Int8(bitPattern: UInt8(truncatingIfNeeded: number))
-            return (.int(Int64(integer)), rest)
+            return (BinsonValue(integer), rest)
             
         // Int 16
         case Mark.integer2Byte:
             let (number, rest) = try unpackInteger(data, count: 2)
             let integer = Int16(bitPattern: UInt16(truncatingIfNeeded: number))
-            return (.int(Int64(integer)), rest)
+            return (BinsonValue(integer), rest)
             
         // Int 32
         case Mark.integer4Byte:
             let (number, rest) = try unpackInteger(data, count: 4)
             let integer = Int32(bitPattern: UInt32(truncatingIfNeeded: number))
-            return (.int(Int64(integer)), rest)
+            return (BinsonValue(integer), rest)
             
         // Int 64
         case Mark.integer8Byte:
             let (number, rest) = try unpackInteger(data, count: 8)
             let integer = Int64(bitPattern: number)
-            return (.int(integer), rest)
+            return (BinsonValue(integer), rest)
             
         // Array
         case Mark.beginArrayByte:
             let (array, rest) = try unpackArray(data)
-            return (.array(array), rest)
+            return (BinsonValue(array), rest)
             
         default:
             throw BinsonError.invalidData

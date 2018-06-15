@@ -25,6 +25,10 @@ public class Binson {
         return self
     }
 
+    public func append(binson other: Binson) -> Binson {
+        return append(values: other.dict)
+    }
+
     public subscript(key: String) -> BinsonValue? {
         get { return dict[key] }
         set { dict[key] = newValue }
@@ -32,10 +36,6 @@ public class Binson {
 
     public func value(key: String) -> BinsonValue? {
         return dict[key]
-    }
-
-    public var values: [String: BinsonValue] {
-        return dict
     }
 
     public func pack() -> Data {
@@ -76,13 +76,14 @@ public class Binson {
     }
 }
 
+
 /// Mark: - Operators
 public func += (lhs: inout Binson, rhs: (String, BinsonValue)) {
     _ = lhs.append(rhs.0, rhs.1)
 }
 
 public func + (lhs: Binson, rhs: Binson) -> Binson {
-    return lhs.append(values: rhs.values)
+    return lhs.append(binson: rhs)
 }
 
 public func + (lhs: Binson, rhs: (String, BinsonValue)) -> Binson {
@@ -147,66 +148,3 @@ extension Binson: Hashable {
     }
 }
 
-public class BinsonArray {
-    private var array = [BinsonValue]()
-
-    public init() {
-    }
-
-    public init(_ values: [BinsonValue]) {
-        array = values
-    }
-
-    public subscript(index: Int) -> BinsonValue {
-        get { return array[index] }
-        set { array[index] = newValue }
-    }
-
-    public var count: Int {
-        return array.count
-    }
-
-    public func append(_ value: BinsonValue) {
-        array.append(value)
-    }
-
-    public func insert(_ value: BinsonValue, at index: Int) {
-        array.insert(value, at: index)
-    }
-
-    public var values: [BinsonValue] {
-        return array
-    }
-
-    public func pack() -> Data {
-        let prefix = Data([Mark.beginArrayByte])
-        let payload = array.flatMap { $0.pack() }
-        let suffix = Data([Mark.endArrayByte])
-
-        return prefix + payload + suffix
-    }
-}
-
-extension BinsonArray: Hashable {
-    public var hashValue: Int {
-        return array.count
-    }
-}
-
-extension BinsonArray: Equatable {
-    public static func == (lhs: BinsonArray, rhs: BinsonArray) -> Bool {
-        return lhs.array == rhs.array
-    }
-}
-
-extension BinsonArray: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        return array.debugDescription
-    }
-}
-
-extension BinsonArray: CustomStringConvertible {
-    public var description: String {
-        return array.description
-    }
-}

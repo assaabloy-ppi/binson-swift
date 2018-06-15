@@ -25,6 +25,7 @@
 		5B45A6191FA9C18E0092108D /* BinsonIntegerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B45A6181FA9C18E0092108D /* BinsonIntegerTests.swift */; };
 		BF67E00120615905001A45E5 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF67E00020615905001A45E5 /* Codable.swift */; };
 		BFF277D520CE8BC800EDA248 /* CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF277D420CE8BC800EDA248 /* CodableTests.swift */; };
+		BFF277D720D3EB0500EDA248 /* BinsonArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF277D620D3EB0500EDA248 /* BinsonArray.swift */; };
 		OBJ_40 /* BinsonBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* BinsonBasicTests.swift */; };
 		OBJ_41 /* BinsonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* BinsonTests.swift */; };
 		OBJ_42 /* BuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* BuilderTests.swift */; };
@@ -68,6 +69,7 @@
 		5BFE5C651F9A4C8F0053884E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BF67E00020615905001A45E5 /* Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codable.swift; sourceTree = "<group>"; };
 		BFF277D420CE8BC800EDA248 /* CodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableTests.swift; sourceTree = "<group>"; };
+		BFF277D620D3EB0500EDA248 /* BinsonArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinsonArray.swift; sourceTree = "<group>"; };
 		"Binson::Binson-test::Product" /* Binson-test.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = "Binson-test.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Binson::Binson::Product" /* Binson.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Binson.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Builder.swift; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				OBJ_8 /* Array+Extension.swift */,
 				5BFE5C641F9A4C860053884E /* Binson.h */,
 				OBJ_9 /* Binson.swift */,
+				BFF277D620D3EB0500EDA248 /* BinsonArray.swift */,
 				OBJ_10 /* Builder.swift */,
 				BF67E00020615905001A45E5 /* Codable.swift */,
 				OBJ_11 /* Data+Extension.swift */,
@@ -199,7 +202,7 @@
 		OBJ_1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "Assa Abloy Shared Technologies";
 			};
 			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "Binson" */;
@@ -244,6 +247,7 @@
 				OBJ_55 /* Binson.swift in Sources */,
 				OBJ_56 /* Builder.swift in Sources */,
 				5B45A6171FA9BB710092108D /* Value+Pack.swift in Sources */,
+				BFF277D720D3EB0500EDA248 /* BinsonArray.swift in Sources */,
 				BF67E00120615905001A45E5 /* Codable.swift in Sources */,
 				OBJ_57 /* Data+Extension.swift in Sources */,
 				OBJ_60 /* Value.swift in Sources */,
@@ -275,11 +279,13 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
@@ -359,11 +365,13 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;

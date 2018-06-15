@@ -118,9 +118,9 @@ extension BinsonValue {
         return nil
     }
     
-    public var arrayValue: [BinsonValue]? {
+    public var arrayValue: BinsonArray? {
         if case .array(let array) = self {
-            return array.values
+            return array
         }
         return nil
     }
@@ -191,7 +191,7 @@ extension BinsonValue {
         case let .bytes(data):
             return "0x" + data.toHexString()
         case let .array(array):
-            return array.values.map { $0.toAny() }
+            return array.map { $0.toAny() }
         case let .object(object):
             return object.jsonObject
         }

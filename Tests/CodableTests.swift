@@ -15,59 +15,124 @@ import XCTest
 
 class BinsonEncoderTests: XCTestCase {
 
+    var encoder: BinsonEncoder!
 
+    override func setUp() {
+        encoder = BinsonEncoder()
+    }
 
-    func testBasicTypes() {
-
-        class TestObject: Encodable {
-            class NestedTestObject: Encodable {
-                var int8: Int8 = 10
-                var data: Data = Data(bytes: [0x10, 0x20, 0x30])
-            }
-
-            var bool: Bool = true
-            var int8: Int8 = 1
-            var int16: Int16 = 2
-            var int32: Int32 = 3
-            var int64: Int64 = 4
-            var double: Double = 3.14
-            var object: NestedTestObject = NestedTestObject()
-            var array: [Int32] = [0x234, 0x453453, 0x234235]
-            var data: Data = Data(bytes: [0x50, 0x60, 0x70, 0x80])
+    func testEmptyEncodable() {
+        class TestObj: Encodable {
         }
 
-        let testObject = TestObject()
-
-        let encoder = BinsonEncoder()
         do {
-            let binson = try encoder.encode(testObject)
-            print(binson)
-            // TODO: Check result
-
+            let bn = try encoder.encode(TestObj())
+            XCTAssertEqual(bn.hex, "4041")
         } catch {
             XCTFail()
         }
     }
 
-    func testUnsupportedTypes() {
-
-        class TestObject: Encodable {
-            var uint8: UInt8 = 5
+    func testBasicEncodable() {
+        class TestObj: Encodable {
+            let c = "u"
         }
 
-        let testObject = TestObject()
-
-        let encoder = BinsonEncoder()
         do {
-            let binsonDict = try encoder.encode(testObject)
-            print(binsonDict)
-
-            // TODO: Check result
-
+            let bn = try encoder.encode(TestObj())
+            XCTAssertEqual(bn.hex, "4014016314017541")
         } catch {
             XCTFail()
         }
+    }
 
+    func testArrayEncodable() {
+        class TestObj: Encodable {
+            let co = ["co", "u"]
+        }
 
+        do {
+            let bn = try encoder.encode(TestObj())
+            XCTAssertEqual(bn.hex, "401402636f421402636f1401754341")
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testIntegerEncodable() {
+        class TestObj: Encodable {
+            let i = 1
+        }
+
+        do {
+            let bn = try encoder.encode(TestObj())
+            XCTAssertEqual(bn.hex, "40140169100141")
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testNegIntegerEncodable() {
+        class TestObj: Encodable {
+            let i = -1
+        }
+
+        do {
+            let bn = try encoder.encode(TestObj())
+            XCTAssertEqual(bn.hex, "4014016910ff41")
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testNestedEncodable() {
+        class TestObj: Encodable {
+            class NestedTestObj: Encodable {
+                let i = "Happy birthday"
+                let r = false
+            }
+            let i = 230
+            let e = 23.0992
+            let b = true
+            let t = Data([0x02, 0x02, 0x04])
+            let array = ["co", "u"]
+            let z = NestedTestObj()
+        }
+
+        do {
+            let bn = try encoder.encode(TestObj())
+
+            XCTAssertEqual(bn["b"], true)
+            XCTAssertEqual(bn["i"], 230)
+            XCTAssertEqual(bn["array"], [ "co", "u" ])
+            XCTAssertEqual(bn["e"], 23.0992)
+            XCTAssertEqual(bn["t"], BinsonValue([UInt8]([0x02, 0x02, 0x04])))
+
+            XCTAssertNotEqual(bn["d"], 23.09)
+            XCTAssertNotEqual(bn["e"], 23.09922)
+            XCTAssertNotEqual(bn["e"], [ "co", "u" ])
+
+            if let binson = bn["z"]?.objectValue {
+                XCTAssertEqual(binson.value(key: "i"), "Happy birthday")
+                XCTAssertEqual(binson.value(key: "r"), false)
+            } else {
+                XCTFail("Binson encode failed")
+            }
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testEncodeNil() {
+        class TestObj: Encodable {
+            let c: Int? = nil
+        }
+
+        do {
+            let bn = try encoder.encode(TestObj())
+            XCTAssertEqual(bn.hex, "4041")
+        } catch {
+            XCTFail()
+        }
     }
 }

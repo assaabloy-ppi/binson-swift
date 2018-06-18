@@ -3,7 +3,6 @@
 //  Binson-test
 //
 //  Created by Fredrik Littmarck on 2018-06-11.
-//  Copyright © 2018 Assa Abloy Shared Technologies. All rights reserved.
 //
 
 import Foundation
@@ -134,5 +133,152 @@ class BinsonEncoderTests: XCTestCase {
         } catch {
             XCTFail()
         }
+    }
+
+    func testEncodeDate() {
+        class TestObj: Encodable {
+            var date: Date = Date(timeIntervalSinceReferenceDate: 551019904.34397399)
+        }
+        do {
+            let bn = try encoder.encode(TestObj())
+            XCTAssertEqual(bn["date"], 551019904.34397399)
+        } catch {
+            XCTFail()
+        }
+    }
+}
+
+class BinsonDecoderTests: XCTestCase {
+    var decoder: BinsonDecoder!
+
+    override func setUp() {
+        decoder = BinsonDecoder()
+    }
+
+    func testEmptyDecodable() {
+        class TestObj: Decodable {
+        }
+
+        do {
+            _ = try decoder.decode(TestObj.self, from: Binson())
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testBasicDecodable() {
+        class TestObj: Decodable {
+            var u: String
+        }
+        do {
+            let obj = try decoder.decode(TestObj.self, from: Binson(values: ["u": "c"]))
+            XCTAssertEqual(obj.u, "c")
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testArrayDecodable() {
+        class TestObj: Decodable {
+            var co: [String]
+        }
+
+        do {
+            let obj = try decoder.decode(TestObj.self, from: Binson(values: ["co": ["c", "e", "f"]]))
+            XCTAssertEqual(obj.co, ["c", "e", "f"])
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testIntegerDecodable() {
+        class TestObj: Decodable {
+            var i: Int
+        }
+
+        do {
+            let obj = try decoder.decode(TestObj.self, from: Binson(values: ["i": 298]))
+            XCTAssertEqual(obj.i, 298)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testNegIntegerDecodable() {
+        class TestObj: Decodable {
+            var i: Int
+        }
+
+        do {
+            let obj = try decoder.decode(TestObj.self, from: Binson(values: ["i": -23298]))
+            XCTAssertEqual(obj.i, -23298)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testDecodeNil() {
+        class TestObj: Decodable {
+            enum TestObjKeys: String, CodingKey {
+                case co = "co"
+            }
+
+            required init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: TestObjKeys.self)
+                if try container.decodeNil(forKey: .co) {
+                    XCTFail()
+                }
+            }
+        }
+
+        do {
+            _ = try decoder.decode(TestObj.self, from: Binson(values: ["co": 56]))
+        } catch {
+            XCTFail()
+        }
+    }
+
+   func testNestedDecodable() {
+        class TestObj: Decodable {
+            class NestedTestObj: Decodable {
+                var i: String
+                var r: Bool
+            }
+            var i: Int
+            var e: Double
+            var b: Bool
+            var t: Data
+            var array: [String]
+            var z: NestedTestObj
+        }
+
+        let bn = Binson(values:
+            ["b": true,
+             "i": 230,
+             "array": ["co", "u"],
+             "e": 23.0992,
+             "t": BinsonValue(Data([0x02, 0x02, 0x04])),
+             "z": BinsonValue(Binson(values:
+                ["i": "Happy birthday",
+                 "r": false]))
+             ])
+
+        do {
+            let obj = try decoder.decode(TestObj.self, from: bn)
+
+            XCTAssertEqual(obj.b, true)
+            XCTAssertEqual(obj.i, 230)
+            XCTAssertEqual(obj.array, [ "co", "u" ])
+            XCTAssertEqual(obj.e, 23.0992)
+            XCTAssertEqual(obj.t, Data([0x02, 0x02, 0x04]))
+
+            let obj2 = obj.z
+            XCTAssertEqual(obj2.i, "Happy birthday")
+            XCTAssertEqual(obj2.r, false)
+        } catch {
+            XCTFail()
+        }
+
+
     }
 }

@@ -74,6 +74,14 @@ public class Binson {
     public var count: Int {
         return dict.count
     }
+
+    public var keys: Dictionary<String, BinsonValue>.Keys {
+        return dict.keys
+    }
+
+    public var values: Dictionary<String, BinsonValue>.Values {
+        return dict.values
+    }
 }
 
 

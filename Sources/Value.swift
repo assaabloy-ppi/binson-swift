@@ -221,4 +221,23 @@ extension BinsonValue {
             throw BinsonError.invalidData
         }
     }
+
+    public var underlyingType: Any.Type {
+        switch self {
+        case .bool(_):
+            return Bool.self
+        case .int(_):
+            return Int64.self
+        case .double(_):
+            return Double.self
+        case .string(_):
+            return String.self
+        case .bytes(_):
+            return Data.self
+        case .array(_):
+            return BinsonArray.self
+        case .object(_):
+            return Binson.self
+        }
+    }
 }

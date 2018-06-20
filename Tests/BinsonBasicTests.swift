@@ -274,14 +274,4 @@ class BinsonBasicTests: XCTestCase {
         XCTAssertEqual(a["sant"], 4711)
         XCTAssertEqual(a["ung"], 32.0)
     }
-/*
-    func testCompareDoubleInt() {
-        let a: Value = 4711
-        let b: Value = 4711.0000
-
-        XCTAssertEqual(a, b)
-        XCTAssertEqual(a, a)
-        XCTAssertEqual(b, a)
-        XCTAssertEqual(b, b)
-    }*/
 }

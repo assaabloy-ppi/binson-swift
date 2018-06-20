@@ -15,8 +15,7 @@ public enum BinsonValue: Hashable {
 }
 
 /// Initializers for Convenience
-extension BinsonValue {
-
+public extension BinsonValue {
     init(_ bool: Bool) { self = .bool(bool) }
     init(_ int: Int) { self = .int(Int64(int)) }
     init(_ int: Int8) { self = .int(Int64(int)) }

@@ -6,6 +6,8 @@
 //  Copyright © 2018 Assa Abloy Shared Technologies. All rights reserved.
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 
 /// `BinsonEncoder` facilitates the encoding of `Encodable` values into Binson.
@@ -21,7 +23,7 @@ open class BinsonEncoder {
     /// - parameter value: The value to encode.
     /// - returns: A new `Binson` object containing the encoded Binson data.
     /// - throws: An error if any value throws an error during encoding.
-    open func encode<T : Encodable>(_ value: T) throws -> Binson {
+    open func encode<T: Encodable>(_ value: T) throws -> Binson {
         let encoder = _BinsonEncoder(userInfo: userInfo)
         
         guard let topLevel = try encoder.box_(value) else {
@@ -36,7 +38,7 @@ open class BinsonEncoder {
 }
 
 // MARK: - _BinsonEncoder
-fileprivate class _BinsonEncoder : Encoder {
+private class _BinsonEncoder: Encoder {
     fileprivate var storage: _BinsonEncodingStorage
 
     public var codingPath: [CodingKey]
@@ -88,7 +90,7 @@ fileprivate class _BinsonEncoder : Encoder {
     }
 }
 
-fileprivate struct _BinsonEncodingStorage {
+private struct _BinsonEncodingStorage {
     private(set) fileprivate var containers: [BinsonValue] = []
     
     fileprivate init() {}
@@ -119,7 +121,7 @@ fileprivate struct _BinsonEncodingStorage {
     }
 }
 
-fileprivate struct _BinsonKeyedEncodingContainer<K : CodingKey> : KeyedEncodingContainerProtocol {
+private struct _BinsonKeyedEncodingContainer<K: CodingKey>: KeyedEncodingContainerProtocol {
     typealias Key = K
     
     private let encoder: _BinsonEncoder
@@ -192,7 +194,7 @@ fileprivate struct _BinsonKeyedEncodingContainer<K : CodingKey> : KeyedEncodingC
         self.container[key.stringValue] = try self.encoder.box(value)
     }
     
-    public mutating func encode<T : Encodable>(_ value: T, forKey key: Key) throws {
+    public mutating func encode<T: Encodable>(_ value: T, forKey key: Key) throws {
         self.encoder.codingPath.append(key)
         defer { self.encoder.codingPath.removeLast() }
         self.container[key.stringValue] = try self.encoder.box(value)
@@ -227,7 +229,7 @@ fileprivate struct _BinsonKeyedEncodingContainer<K : CodingKey> : KeyedEncodingC
     }
 }
 
-fileprivate struct _BinsonUnkeyedEncodingContainer : UnkeyedEncodingContainer {
+private struct _BinsonUnkeyedEncodingContainer: UnkeyedEncodingContainer {
     private let encoder: _BinsonEncoder
     
     private let container: BinsonArray
@@ -275,7 +277,7 @@ fileprivate struct _BinsonUnkeyedEncodingContainer : UnkeyedEncodingContainer {
         self.container.append(try self.encoder.box(value))
     }
     
-    public mutating func encode<T : Encodable>(_ value: T) throws {
+    public mutating func encode<T: Encodable>(_ value: T) throws {
         self.encoder.codingPath.append(_BinsonKey(index: self.count))
         defer { self.encoder.codingPath.removeLast() }
         self.container.append(try self.encoder.box(value))
@@ -306,7 +308,7 @@ fileprivate struct _BinsonUnkeyedEncodingContainer : UnkeyedEncodingContainer {
     }
 }
 
-extension _BinsonEncoder : SingleValueEncodingContainer {
+extension _BinsonEncoder: SingleValueEncodingContainer {
     fileprivate func assertCanEncodeNewValue() {
         precondition(self.canEncodeNewValue, "Attempt to encode value through single value container when previously value already encoded.")
     }
@@ -386,7 +388,7 @@ extension _BinsonEncoder : SingleValueEncodingContainer {
         try self.storage.push(container: self.box(value))
     }
     
-    public func encode<T : Encodable>(_ value: T) throws {
+    public func encode<T: Encodable>(_ value: T) throws {
         assertCanEncodeNewValue()
         try self.storage.push(container: self.box(value))
     }
@@ -409,11 +411,11 @@ extension _BinsonEncoder {
     fileprivate func box(_ double: Double) throws -> BinsonValue { return BinsonValue(double) }
     fileprivate func box(_ data: Data) throws -> BinsonValue { return BinsonValue(data) }
 
-    fileprivate func box<T : Encodable>(_ value: T) throws -> BinsonValue {
+    fileprivate func box<T: Encodable>(_ value: T) throws -> BinsonValue {
         return try self.box_(value) ?? BinsonValue(Binson())
     }
     
-    fileprivate func box_<T : Encodable>(_ value: T) throws -> BinsonValue? {
+    fileprivate func box_<T: Encodable>(_ value: T) throws -> BinsonValue? {
         if T.self == Data.self || T.self == NSData.self {
             return try self.box((value as! Data))
         } else if T.self == URL.self || T.self == NSURL.self {
@@ -441,7 +443,7 @@ extension _BinsonEncoder {
     }
 }
 
-fileprivate class _BinsonReferencingEncoder : _BinsonEncoder {
+private class _BinsonReferencingEncoder: _BinsonEncoder {
     fileprivate let encoder: _BinsonEncoder
 
     private let key: CodingKey
@@ -507,7 +509,7 @@ open class BinsonDecoder {
     /// - parameter binson: The Binson object to decode from.
     /// - returns: A value of the requested type.
     /// - throws: An error if any value throws an error during decoding.
-    open func decode<T : Decodable>(_ type: T.Type, from binson: Binson) throws -> T {
+    open func decode<T: Decodable>(_ type: T.Type, from binson: Binson) throws -> T {
 
         let top = BinsonValue(binson)
         let decoder = _BinsonDecoder(referencing: top, userInfo: self.userInfo)
@@ -520,7 +522,7 @@ open class BinsonDecoder {
 }
 
 // MARK: - _BinsonDecoder
-fileprivate class _BinsonDecoder : Decoder {
+private class _BinsonDecoder: Decoder {
     // MARK: Properties
     /// The decoder's storage.
     fileprivate var storage: _BinsonDecodingStorage
@@ -568,10 +570,10 @@ fileprivate class _BinsonDecoder : Decoder {
 }
 
 // MARK: - Decoding Storage
-fileprivate struct _BinsonDecodingStorage {
+private struct _BinsonDecodingStorage {
     // MARK: Properties
     /// The container stack.
-    /// Elements may be any one of the Binson types (NSNull, NSNumber, String, Array, [String : Any]).
+    /// Elements may be any one of the Binson types (NSNull, NSNumber, String, Array, [String: Any]).
     private(set) fileprivate var containers: [BinsonValue] = []
 
     // MARK: - Initialization
@@ -599,7 +601,7 @@ fileprivate struct _BinsonDecodingStorage {
 }
 
 // MARK: Decoding Containers
-fileprivate struct _BinsonKeyedDecodingContainer<K : CodingKey> : KeyedDecodingContainerProtocol {
+private struct _BinsonKeyedDecodingContainer<K: CodingKey>: KeyedDecodingContainerProtocol {
     typealias Key = K
 
     // MARK: Properties
@@ -852,7 +854,7 @@ fileprivate struct _BinsonKeyedDecodingContainer<K : CodingKey> : KeyedDecodingC
         return value
     }
 
-    public func decode<T : Decodable>(_ type: T.Type, forKey key: Key) throws -> T {
+    public func decode<T: Decodable>(_ type: T.Type, forKey key: Key) throws -> T {
         guard let entry = self.container[key.stringValue] else {
             throw DecodingError.keyNotFound(key, DecodingError.Context(codingPath: self.decoder.codingPath, debugDescription: "No value associated with key \(_errorDescription(of: key))."))
         }
@@ -923,7 +925,7 @@ fileprivate struct _BinsonKeyedDecodingContainer<K : CodingKey> : KeyedDecodingC
     }
 }
 
-fileprivate struct _BinsonUnkeyedDecodingContainer : UnkeyedDecodingContainer {
+private struct _BinsonUnkeyedDecodingContainer: UnkeyedDecodingContainer {
     private let decoder: _BinsonDecoder
 
     private let container: BinsonArray
@@ -1182,7 +1184,7 @@ fileprivate struct _BinsonUnkeyedDecodingContainer : UnkeyedDecodingContainer {
         return decoded
     }
 
-    public mutating func decode<T : Decodable>(_ type: T.Type) throws -> T {
+    public mutating func decode<T: Decodable>(_ type: T.Type) throws -> T {
         guard !self.isAtEnd else {
             throw DecodingError.valueNotFound(type, DecodingError.Context(codingPath: self.decoder.codingPath + [_BinsonKey(index: self.currentIndex)], debugDescription: "Unkeyed container is at end."))
         }
@@ -1255,7 +1257,7 @@ fileprivate struct _BinsonUnkeyedDecodingContainer : UnkeyedDecodingContainer {
     }
 }
 
-extension _BinsonDecoder : SingleValueDecodingContainer {
+extension _BinsonDecoder: SingleValueDecodingContainer {
     // MARK: SingleValueDecodingContainer Methods
     public func decodeNil() -> Bool {
         return false
@@ -1317,7 +1319,7 @@ extension _BinsonDecoder : SingleValueDecodingContainer {
         return try self.unbox(self.storage.topContainer, as: String.self)!
     }
 
-    public func decode<T : Decodable>(_ type: T.Type) throws -> T {
+    public func decode<T: Decodable>(_ type: T.Type) throws -> T {
         return try self.unbox(self.storage.topContainer, as: type)!
     }
 }
@@ -1465,7 +1467,7 @@ extension _BinsonDecoder {
         return data
     }
 
-    fileprivate func unbox<T : Decodable>(_ value: BinsonValue, as type: T.Type) throws -> T? {
+    fileprivate func unbox<T: Decodable>(_ value: BinsonValue, as type: T.Type) throws -> T? {
         if type == Data.self || type == NSData.self {
             return try self.unbox(value, as: Data.self) as? T
         } else if type == URL.self || type == NSURL.self {
@@ -1489,7 +1491,7 @@ extension _BinsonDecoder {
 //===----------------------------------------------------------------------===//
 // Shared Key Types
 //===----------------------------------------------------------------------===//
-fileprivate struct _BinsonKey : CodingKey {
+private struct _BinsonKey: CodingKey {
     public var stringValue: String
     public var intValue: Int?
     

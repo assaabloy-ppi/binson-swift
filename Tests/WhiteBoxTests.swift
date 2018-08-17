@@ -21,53 +21,53 @@ class WhiteBoxTests: XCTestCase {
     let negx13: (low: Int64, high: Int64) = (-2147483649, -9223372036854775808)
     
     func testNumbers() {
-        let p_127: Data = Value.packNumber(127)
-        let p_128: Data = Value.packNumber(128)
-        let p_big: Data = Value.packNumber(32767)
+        let p127: Data = Value.packNumber(127)
+        let p128: Data = Value.packNumber(128)
+        let pBig: Data = Value.packNumber(32767)
 
-        let n_128: Data = Value.packNumber(-128)
-        let n_129: Data = Value.packNumber(-129)
-        let n_sma: Data = Value.packNumber(-32768)
+        let n128: Data = Value.packNumber(-128)
+        let n129: Data = Value.packNumber(-129)
+        let nSma: Data = Value.packNumber(-32768)
         
         do {
-            let (p, _) = try Builder.unpackValue(p_127)
+            let (p, _) = try Builder.unpackValue(p127)
             XCTAssertEqual(127, p?.integerValue)
         } catch { XCTFail("Could not unpack number") }
         
         do {
-            let (p, _) = try Builder.unpackValue(p_128)
+            let (p, _) = try Builder.unpackValue(p128)
             XCTAssertEqual(128, p?.integerValue)
         } catch { XCTFail("Could not unpack number") }
         
         do {
-            let (p, _) = try Builder.unpackValue(p_big)
+            let (p, _) = try Builder.unpackValue(pBig)
             XCTAssertEqual(32767, p?.integerValue)
         } catch { XCTFail("Could not unpack number") }
         
         do {
-            let (n, _) = try Builder.unpackValue(n_128)
+            let (n, _) = try Builder.unpackValue(n128)
             XCTAssertEqual(-128, n?.integerValue)
         } catch { XCTFail("Could not unpack number") }
         
         do {
-            let (n, _) = try Builder.unpackValue(n_129)
+            let (n, _) = try Builder.unpackValue(n129)
             XCTAssertEqual(-129, n?.integerValue)
         } catch { XCTFail("Could not unpack number") }
         
         do {
-            let (n, _) = try Builder.unpackValue(n_sma)
+            let (n, _) = try Builder.unpackValue(nSma)
             XCTAssertEqual(-32768, n?.integerValue)
         } catch { XCTFail("Could not unpack number") }
     }
 
     func testBackForthNumbers() {
         for i in [posx10, negx10, posx11, negx11, posx12, negx12, posx13, negx13] {
-            let v_low = Value.packNumber(i.low)
-            let v_high = Value.packNumber(i.high)
+            let vLow = Value.packNumber(i.low)
+            let vHigh = Value.packNumber(i.high)
             
             do {
-                let (low, _) = try Builder.unpackValue(v_low)
-                let (high, _) = try Builder.unpackValue(v_high)
+                let (low, _) = try Builder.unpackValue(vLow)
+                let (high, _) = try Builder.unpackValue(vHigh)
                 
                 XCTAssertEqual(i.low, low?.integerValue)
                 XCTAssertEqual(i.high, high?.integerValue)
@@ -88,43 +88,43 @@ class WhiteBoxTests: XCTestCase {
         XCTAssertEqual(negx13.high, Int64(Int64.min))
         
         for i in [posx10, negx10] {
-            let v_low = Value.packNumber(i.low)
-            let v_high = Value.packNumber(i.high)
+            let vLow = Value.packNumber(i.low)
+            let vHigh = Value.packNumber(i.high)
 
-            XCTAssertEqual(v_low.count, 2)
-            XCTAssertEqual(v_high.count, 2)
-            XCTAssertEqual(v_low[0], 0x10)
-            XCTAssertEqual(v_high[0], 0x10)
+            XCTAssertEqual(vLow.count, 2)
+            XCTAssertEqual(vHigh.count, 2)
+            XCTAssertEqual(vLow[0], 0x10)
+            XCTAssertEqual(vHigh[0], 0x10)
         }
         
         for i in [posx11, negx11] {
-            let v_low = Value.packNumber(i.low)
-            let v_high = Value.packNumber(i.high)
+            let vLow = Value.packNumber(i.low)
+            let vHigh = Value.packNumber(i.high)
             
-            XCTAssertEqual(v_low.count, 3)
-            XCTAssertEqual(v_high.count, 3)
-            XCTAssertEqual(v_low[0], 0x11)
-            XCTAssertEqual(v_high[0], 0x11)
+            XCTAssertEqual(vLow.count, 3)
+            XCTAssertEqual(vHigh.count, 3)
+            XCTAssertEqual(vLow[0], 0x11)
+            XCTAssertEqual(vHigh[0], 0x11)
         }
         
         for i in [posx12, negx12] {
-            let v_low = Value.packNumber(i.low)
-            let v_high = Value.packNumber(i.high)
+            let vLow = Value.packNumber(i.low)
+            let vHigh = Value.packNumber(i.high)
             
-            XCTAssertEqual(v_low.count, 5)
-            XCTAssertEqual(v_high.count, 5)
-            XCTAssertEqual(v_low[0], 0x12)
-            XCTAssertEqual(v_high[0], 0x12)
+            XCTAssertEqual(vLow.count, 5)
+            XCTAssertEqual(vHigh.count, 5)
+            XCTAssertEqual(vLow[0], 0x12)
+            XCTAssertEqual(vHigh[0], 0x12)
         }
         
         for i in [posx13, negx13] {
-            let v_low = Value.packNumber(i.low)
-            let v_high = Value.packNumber(i.high)
+            let vLow = Value.packNumber(i.low)
+            let vHigh = Value.packNumber(i.high)
             
-            XCTAssertEqual(v_low.count, 9)
-            XCTAssertEqual(v_high.count, 9)
-            XCTAssertEqual(v_low[0], 0x13)
-            XCTAssertEqual(v_high[0], 0x13)
+            XCTAssertEqual(vLow.count, 9)
+            XCTAssertEqual(vHigh.count, 9)
+            XCTAssertEqual(vLow[0], 0x13)
+            XCTAssertEqual(vHigh[0], 0x13)
         }
     }
     
@@ -141,25 +141,25 @@ class WhiteBoxTests: XCTestCase {
         let v1eemax = Value.packNumber(v1max)
         XCTAssertEqual(v1eemax.hex, "1080")
         
-        let v1max_plus = Int64(Int8.min) - 1
-        let v1eemax_plus = Value.packNumber(v1max_plus)
-        XCTAssertEqual(v1eemax_plus.hex, "117fff")
+        let v1maxPlus = Int64(Int8.min) - 1
+        let v1eemaxPlus = Value.packNumber(v1maxPlus)
+        XCTAssertEqual(v1eemaxPlus.hex, "117fff")
         
         let v2max = Int64(Int16.min)
         let v2eemax = Value.packNumber(v2max)
         XCTAssertEqual(v2eemax.hex, "110080")
         
-        let v2max_plus = Int64(Int16.min) - 1
-        let v2eemax_plus = Value.packNumber(v2max_plus)
-        XCTAssertEqual(v2eemax_plus.hex, "12ff7fffff")
+        let v2maxPlus = Int64(Int16.min) - 1
+        let v2eemaxPlus = Value.packNumber(v2maxPlus)
+        XCTAssertEqual(v2eemaxPlus.hex, "12ff7fffff")
         
         let v4max = Int64(Int32.min)
         let v4eemax = Value.packNumber(v4max)
         XCTAssertEqual(v4eemax.hex, "1200000080")
         
-        let v4max_plus = Int64(Int32.min) - 1
-        let v4eemax_plus = Value.packNumber(v4max_plus)
-        XCTAssertEqual(v4eemax_plus.hex, "13ffffff7fffffffff")
+        let v4maxPlus = Int64(Int32.min) - 1
+        let v4eemaxPlus = Value.packNumber(v4maxPlus)
+        XCTAssertEqual(v4eemaxPlus.hex, "13ffffff7fffffffff")
         
         let v8max = Int64.min
         let v8eemax = Value.packNumber(v8max)
@@ -185,11 +185,11 @@ class WhiteBoxTests: XCTestCase {
         XCTAssertEqual(v1ffmax.hex, "107f")
         XCTAssertEqual(v1eemax.hex, "107f")
 
-        let v1max_plus = Int64(Int8.max) + 1
-        let v1ffmax_plus = Value.packNumber(v1max_plus)
-        let v1eemax_plus = Value.packNumber(v1max_plus)
-        XCTAssertEqual(v1ffmax_plus.hex, "118000")
-        XCTAssertEqual(v1eemax_plus.hex, "118000")
+        let v1maxPlus = Int64(Int8.max) + 1
+        let v1ffmaxPlus = Value.packNumber(v1maxPlus)
+        let v1eemaxPlus = Value.packNumber(v1maxPlus)
+        XCTAssertEqual(v1ffmaxPlus.hex, "118000")
+        XCTAssertEqual(v1eemaxPlus.hex, "118000")
         
         let v2max = Int64(Int16.max)
         let v2ffmax = Value.packNumber(v2max)
@@ -197,11 +197,11 @@ class WhiteBoxTests: XCTestCase {
         XCTAssertEqual(v2ffmax.hex, "11ff7f")
         XCTAssertEqual(v2eemax.hex, "11ff7f")
         
-        let v2max_plus = Int64(Int16.max) + 1
-        let v2ffmax_plus = Value.packNumber(v2max_plus)
-        let v2eemax_plus = Value.packNumber(v2max_plus)
-        XCTAssertEqual(v2ffmax_plus.hex, "1200800000")
-        XCTAssertEqual(v2eemax_plus.hex, "1200800000")
+        let v2maxPlus = Int64(Int16.max) + 1
+        let v2ffmaxPlus = Value.packNumber(v2maxPlus)
+        let v2eemaxPlus = Value.packNumber(v2maxPlus)
+        XCTAssertEqual(v2ffmaxPlus.hex, "1200800000")
+        XCTAssertEqual(v2eemaxPlus.hex, "1200800000")
         
         let v4max = Int64(Int32.max)
         let v4ffmax = Value.packNumber(v4max)
@@ -209,11 +209,11 @@ class WhiteBoxTests: XCTestCase {
         XCTAssertEqual(v4ffmax.hex, "12ffffff7f")
         XCTAssertEqual(v4eemax.hex, "12ffffff7f")
         
-        let v4max_plus = Int64(Int32.max) + 1
-        let v4ffmax_plus = Value.packNumber(v4max_plus)
-        let v4eemax_plus = Value.packNumber(v4max_plus)
-        XCTAssertEqual(v4ffmax_plus.hex, "130000008000000000")
-        XCTAssertEqual(v4eemax_plus.hex, "130000008000000000")
+        let v4maxPlus = Int64(Int32.max) + 1
+        let v4ffmaxPlus = Value.packNumber(v4maxPlus)
+        let v4eemaxPlus = Value.packNumber(v4maxPlus)
+        XCTAssertEqual(v4ffmaxPlus.hex, "130000008000000000")
+        XCTAssertEqual(v4eemaxPlus.hex, "130000008000000000")
         
         let v8max = Int64.max
         let v8ffmax = Value.packNumber(v8max)

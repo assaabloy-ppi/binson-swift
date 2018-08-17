@@ -213,8 +213,8 @@ class BinsonBasicTests: XCTestCase {
     }
 
     func testPackUnlock() {
-        let expected_hex = "4014016314017514016910011401741802020214017a404141"
-        let expected_data = Data([0x40, 0x14, 0x01, 0x63, 0x14, 0x01, 0x75, 0x14,
+        let expectedHex = "4014016314017514016910011401741802020214017a404141"
+        let expectedData = Data([0x40, 0x14, 0x01, 0x63, 0x14, 0x01, 0x75, 0x14,
                                   0x01, 0x69, 0x10, 0x01, 0x14, 0x01, 0x74, 0x18,
                                   0x02, 0x02, 0x02, 0x14, 0x01, 0x7a, 0x40, 0x41,
                                   0x41])
@@ -225,11 +225,11 @@ class BinsonBasicTests: XCTestCase {
         unlock += ("t", Value([UInt8]([0x02, 0x02])))
         unlock += ("z", Value.object(Binson()))
 
-        let actual_data = unlock.pack()
-        let actual_hex = actual_data.hex
+        let actualData = unlock.pack()
+        let actualHex = actualData.hex
 
-        XCTAssertEqual(expected_hex, actual_hex)
-        XCTAssertEqual(expected_data, actual_data)
+        XCTAssertEqual(expectedHex, actualHex)
+        XCTAssertEqual(expectedData, actualData)
     }
 
     func testBinsonAppend() {

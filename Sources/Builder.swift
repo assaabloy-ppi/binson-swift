@@ -122,7 +122,7 @@ public class Builder {
             throw BinsonError.insufficientData
         }
         
-        return (data[0], data.subdata(in: 1 ..< data.count))
+        return (data[data.startIndex], data.suffix(from: data.startIndex.advanced(by: 1)))
     }
     
     /// Shift bytes to form an integer.
@@ -142,11 +142,11 @@ public class Builder {
         
         var value: UInt64 = 0
         for i in (0 ..< count).reversed() {
-            let byte = data[i]
+            let byte = data[data.startIndex.advanced(by: i)]
             value = value << 8 | UInt64(byte)
         }
         
-        return (value, data.subdata(in: count ..< data.count))
+        return (value, data.suffix(from: data.startIndex.advanced(by: count)))
     }
     
     /// Parse bytes to build a string.
@@ -177,12 +177,12 @@ public class Builder {
         }
         
         let endIndex: Int = count+Int(size)-1
-        let subdata = rest.subdata(in: 0 ..< endIndex)
+        let subdata = rest[rest.startIndex..<rest.startIndex.advanced(by: endIndex)]
         guard let result = String(data: subdata, encoding: .utf8) else {
             throw BinsonError.invalidData
         }
 
-        return (result, rest.subdata(in: endIndex ..< rest.count))
+        return (result, rest.suffix(from: rest.startIndex.advanced(by: endIndex)))
     }
     
     /// Parse bytes to form an array of Binson Values.
@@ -223,7 +223,7 @@ public class Builder {
             values.append(byte)
         }
         
-        return (values, rest2.subdata(in: 0 ..< rest2.count))
+        return (values, rest2)
     }
     
     /// Parse bytes to form an array of Binson Values.
@@ -244,10 +244,8 @@ public class Builder {
             }
             values.append(value)
         }
-        
-        rest = rest.subdata(in: 1 ..< rest.count)
-        
-        return (values, rest)
+
+        return (values, rest.suffix(from: rest.startIndex.advanced(by: 1)))
     }
     
     /// Unpacks Key, Value Pair and returns the remaining data for further scanning.
@@ -291,7 +289,7 @@ public class Builder {
         }
         
         let value = data.first!
-        let data = data.subdata(in: 1 ..< data.endIndex)
+        let data = data.suffix(from: data.startIndex.advanced(by: 1))
         
         switch value {
             

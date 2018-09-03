@@ -18,7 +18,6 @@ env:
 notifications:
   email:
     recipients:
-      - kenneth@pernyer.se
       - dreadrik@gmail.com
     on_success: never
     on_failure: always

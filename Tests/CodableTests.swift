@@ -250,6 +250,8 @@ class BinsonDecoderTests: XCTestCase {
             var t: Data
             var array: [String]
             var z: NestedTestObj
+            var missing: Int?
+            var present: Int?
         }
 
         let bn = Binson(values:
@@ -260,7 +262,8 @@ class BinsonDecoderTests: XCTestCase {
              "t": BinsonValue(Data([0x02, 0x02, 0x04])),
              "z": BinsonValue(Binson(values:
                 ["i": "Happy birthday",
-                 "r": false]))
+                 "r": false])),
+             "present": 24
              ])
 
         do {
@@ -271,6 +274,8 @@ class BinsonDecoderTests: XCTestCase {
             XCTAssertEqual(obj.array, [ "co", "u" ])
             XCTAssertEqual(obj.e, 23.0992)
             XCTAssertEqual(obj.t, Data([0x02, 0x02, 0x04]))
+            XCTAssertNil(obj.missing)
+            XCTAssertEqual(obj.present!, 24)
 
             let obj2 = obj.z
             XCTAssertEqual(obj2.i, "Happy birthday")

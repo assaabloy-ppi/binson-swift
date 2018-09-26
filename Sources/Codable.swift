@@ -13,7 +13,43 @@ import Foundation
 /// `BinsonEncoder` facilitates the encoding of `Encodable` values into Binson.
 open class BinsonEncoder {
 
+    /// The strategy to use for encoding `Date` values.
+    public enum DateEncodingStrategy {
+        /// Encode the `Date` as a UNIX timestamp (as a Binson double).
+        case secondsSince1970
+
+        /// Encode the `Date` as UNIX millisecond timestamp (as a Binson double). Default.
+        case millisecondsSince1970
+
+        /// Encode the `Date` as an ISO-8601-formatted string (in RFC 3339 format).
+        @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
+        case iso8601
+
+        /// Encode the `Date` as a string formatted by the given formatter.
+        case formatted(DateFormatter)
+
+        /// Encode the `Date` as a custom value encoded by the given closure.
+        ///
+        /// If the closure fails to encode a value into the given encoder, the encoder will encode an empty automatic container in its place.
+        case custom((Date, Encoder) throws -> Void)
+    }
+
+    /// The strategy to use in encoding dates. Defaults to `.millisecondsSince1970`.
+    open var dateEncodingStrategy: DateEncodingStrategy = .millisecondsSince1970
+
     open var userInfo: [CodingUserInfoKey: Any] = [:]
+
+    /// Options set on the top-level encoder to pass down the encoding hierarchy.
+    fileprivate struct _Options {
+        let dateEncodingStrategy: DateEncodingStrategy
+        let userInfo: [CodingUserInfoKey : Any]
+    }
+
+    /// The options set on the top-level encoder.
+    fileprivate var options: _Options {
+        return _Options(dateEncodingStrategy: dateEncodingStrategy,
+                        userInfo: userInfo)
+    }
 
     public init() {}
     
@@ -24,7 +60,7 @@ open class BinsonEncoder {
     /// - returns: A new `Binson` object containing the encoded Binson data.
     /// - throws: An error if any value throws an error during encoding.
     open func encode<T: Encodable>(_ value: T) throws -> Binson {
-        let encoder = _BinsonEncoder(userInfo: userInfo)
+        let encoder = _BinsonEncoder(options: self.options)
         
         guard let topLevel = try encoder.box_(value) else {
             throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [], debugDescription: "Top-level \(T.self) did not encode any values."))
@@ -43,10 +79,14 @@ private class _BinsonEncoder: Encoder {
 
     public var codingPath: [CodingKey]
 
-    private(set) var userInfo: [CodingUserInfoKey: Any]
+    fileprivate let options: BinsonEncoder._Options
 
-    fileprivate init(userInfo: [CodingUserInfoKey: Any], codingPath: [CodingKey] = []) {
-        self.userInfo = userInfo
+    public var userInfo: [CodingUserInfoKey : Any] {
+        return self.options.userInfo
+    }
+
+    fileprivate init(options: BinsonEncoder._Options, codingPath: [CodingKey] = []) {
+        self.options = options
         self.storage = _BinsonEncodingStorage()
         self.codingPath = codingPath
     }
@@ -411,14 +451,59 @@ extension _BinsonEncoder {
     fileprivate func box(_ double: Double) throws -> BinsonValue { return BinsonValue(double) }
     fileprivate func box(_ data: Data) throws -> BinsonValue { return BinsonValue(data) }
 
-    fileprivate func box<T: Encodable>(_ value: T) throws -> BinsonValue {
+    fileprivate func box(_ date: Date) throws -> BinsonValue {
+        switch self.options.dateEncodingStrategy {
+        case .secondsSince1970:
+            return BinsonValue(date.timeIntervalSince1970)
+
+        case .millisecondsSince1970:
+            return BinsonValue(1000.0 * date.timeIntervalSince1970)
+
+        case .iso8601:
+            if #available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {
+                return BinsonValue(_iso8601Formatter.string(from: date))
+            } else {
+                fatalError("ISO8601DateFormatter is unavailable on this platform.")
+            }
+
+        case .formatted(let formatter):
+            return BinsonValue(formatter.string(from: date))
+
+        case .custom(let closure):
+            let depth = self.storage.count
+            do {
+                try closure(date, self)
+            } catch {
+                // If the value pushed a container before throwing, pop it back off to restore state.
+                if self.storage.count > depth {
+                    let _ = self.storage.popContainer()
+                }
+
+                throw error
+            }
+
+            guard self.storage.count > depth else {
+                // The closure didn't encode anything. Return the default keyed container.
+                return BinsonValue(Binson())
+            }
+
+            // We can pop because the closure encoded something.
+            return self.storage.popContainer()
+        }
+    }
+
+    fileprivate func box(_ value: Encodable) throws -> BinsonValue {
         return try self.box_(value) ?? BinsonValue(Binson())
     }
     
-    fileprivate func box_<T: Encodable>(_ value: T) throws -> BinsonValue? {
-        if T.self == Data.self || T.self == NSData.self {
+    fileprivate func box_(_ value: Encodable) throws -> BinsonValue? {
+        let type = Swift.type(of: value)
+        if type == Date.self || type == NSDate.self {
+            // Respect Date encoding strategy
+            return try self.box((value as! Date))
+        } else if type == Data.self || type == NSData.self {
             return try self.box((value as! Data))
-        } else if T.self == URL.self || T.self == NSURL.self {
+        } else if type == URL.self || type == NSURL.self {
             // Encode URLs as single strings.
             return self.box((value as! URL).absoluteString)
         }
@@ -460,7 +545,7 @@ private class _BinsonReferencingEncoder: _BinsonEncoder {
         self.encoder = encoder
         self.reference = value
         self.key = key
-        super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath)
+        super.init(options: encoder.options, codingPath: encoder.codingPath)
 
         self.codingPath.append(key)
     }
@@ -491,13 +576,45 @@ private class _BinsonReferencingEncoder: _BinsonEncoder {
 }
 
 
-
-
 /// `BinsonDecoder` facilitates the decoding of Binson into semantic `Decodable` types.
 open class BinsonDecoder {
 
+    /// The strategy to use for decoding `Date` values.
+    public enum DateDecodingStrategy {
+        /// Decode the `Date` from a UNIX timestamp (in a Binson double).
+        case secondsSince1970
+
+        /// Decode the `Date` from a UNIX millisecond timestamp (in a Binson double). Default.
+        case millisecondsSince1970
+
+        /// Decode the `Date` from an ISO-8601-formatted string (in RFC 3339 format).
+        @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
+        case iso8601
+
+        /// Decode the `Date` form a string formatted by the given formatter.
+        case formatted(DateFormatter)
+
+        /// Decode the `Date` from a custom value decoded by the given closure.
+        case custom((Decoder) throws -> Date)
+    }
+
+    /// The strategy to use in encoding dates. Defaults to `.millisecondsSince1970`.
+    open var dateDecodingStrategy: DateDecodingStrategy = .millisecondsSince1970
+
     /// Contextual user-provided information for use during decoding.
     open var userInfo: [CodingUserInfoKey: Any] = [:]
+
+    /// Options set on the top-level encoder to pass down the decoding hierarchy.
+    fileprivate struct _Options {
+        let dateDecodingStrategy: DateDecodingStrategy
+        let userInfo: [CodingUserInfoKey : Any]
+    }
+
+    /// The options set on the top-level decoder.
+    fileprivate var options: _Options {
+        return _Options(dateDecodingStrategy: dateDecodingStrategy,
+                        userInfo: userInfo)
+    }
 
     // MARK: - Constructing a Binson Decoder
     public init() {}
@@ -512,7 +629,7 @@ open class BinsonDecoder {
     open func decode<T: Decodable>(_ type: T.Type, from binson: Binson) throws -> T {
 
         let top = BinsonValue(binson)
-        let decoder = _BinsonDecoder(referencing: top, userInfo: self.userInfo)
+        let decoder = _BinsonDecoder(referencing: top, options: self.options)
         guard let value = try decoder.unbox(top, as: type) else {
             throw DecodingError.valueNotFound(type, DecodingError.Context(codingPath: [], debugDescription: "The given data did not contain a top-level value."))
         }
@@ -527,19 +644,24 @@ private class _BinsonDecoder: Decoder {
     /// The decoder's storage.
     fileprivate var storage: _BinsonDecodingStorage
 
+    /// Options set on the top-level decoder.
+    fileprivate let options: BinsonDecoder._Options
+
     /// The path to the current point in encoding.
     fileprivate(set) public var codingPath: [CodingKey]
 
     /// Contextual user-provided information for use during encoding.
-    fileprivate(set) public var userInfo: [CodingUserInfoKey: Any]
+    public var userInfo: [CodingUserInfoKey : Any] {
+        return self.options.userInfo
+    }
 
     // MARK: - Initialization
     /// Initializes `self` with the given top-level container and options.
-    fileprivate init(referencing value: BinsonValue, at codingPath: [CodingKey] = [], userInfo: [CodingUserInfoKey: Any]) {
+    fileprivate init(referencing value: BinsonValue, at codingPath: [CodingKey] = [], options: BinsonDecoder._Options) {
         self.storage = _BinsonDecodingStorage()
         self.storage.push(container: value)
         self.codingPath = codingPath
-        self.userInfo = userInfo
+        self.options = options
     }
 
     // MARK: - Decoder Methods
@@ -909,7 +1031,7 @@ private struct _BinsonKeyedDecodingContainer<K: CodingKey>: KeyedDecodingContain
         defer { self.decoder.codingPath.removeLast() }
 
         if let value = self.container[key.stringValue] {
-            return _BinsonDecoder(referencing: value, at: self.decoder.codingPath, userInfo: self.decoder.userInfo)
+            return _BinsonDecoder(referencing: value, at: self.decoder.codingPath, options: self.decoder.options)
         }
         throw DecodingError.keyNotFound(key,
                                         DecodingError.Context(codingPath: self.codingPath,
@@ -1227,7 +1349,7 @@ private struct _BinsonUnkeyedDecodingContainer: UnkeyedDecodingContainer {
 
         let value = self.container[self.currentIndex]
         self.currentIndex += 1
-        return _BinsonDecoder(referencing: value, at: self.decoder.codingPath, userInfo: self.decoder.userInfo)
+        return _BinsonDecoder(referencing: value, at: self.decoder.codingPath, options: self.decoder.options)
     }
 }
 
@@ -1433,6 +1555,43 @@ extension _BinsonDecoder {
         return string
     }
 
+    fileprivate func unbox(_ value: BinsonValue, as type: Date.Type) throws -> Date? {
+        switch self.options.dateDecodingStrategy {
+        case .secondsSince1970:
+            let double = try self.unbox(value, as: Double.self)!
+            return Date(timeIntervalSince1970: double)
+
+        case .millisecondsSince1970:
+            let double = try self.unbox(value, as: Double.self)!
+            return Date(timeIntervalSince1970: double / 1000.0)
+
+        case .iso8601:
+            if #available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {
+                let string = try self.unbox(value, as: String.self)!
+                guard let date = _iso8601Formatter.date(from: string) else {
+                    throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
+                }
+
+                return date
+            } else {
+                fatalError("ISO8601DateFormatter is unavailable on this platform.")
+            }
+
+        case .formatted(let formatter):
+            let string = try self.unbox(value, as: String.self)!
+            guard let date = formatter.date(from: string) else {
+                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Date string does not match format expected by formatter."))
+            }
+
+            return date
+
+        case .custom(let closure):
+            self.storage.push(container: value)
+            defer { self.storage.popContainer() }
+            return try closure(self)
+        }
+    }
+
     fileprivate func unbox(_ value: BinsonValue, as type: Data.Type) throws -> Data? {
         guard case .bytes(let data) = value else {
             throw _BinsonDecoder.typeMismatchError(at: self.codingPath, expectation: type, reality: value)
@@ -1442,8 +1601,14 @@ extension _BinsonDecoder {
     }
 
     fileprivate func unbox<T: Decodable>(_ value: BinsonValue, as type: T.Type) throws -> T? {
-        if type == Data.self || type == NSData.self {
-            return try self.unbox(value, as: Data.self) as? T
+        return try unbox_(value, as: type) as? T
+    }
+
+    fileprivate func unbox_(_ value: BinsonValue, as type: Decodable.Type) throws -> Any? {
+        if type == Date.self || type == NSDate.self {
+            return try self.unbox(value, as: Date.self)
+        } else if type == Data.self || type == NSData.self {
+            return try self.unbox(value, as: Data.self)
         } else if type == URL.self || type == NSURL.self {
             guard let urlString = try self.unbox(value, as: String.self) else {
                 return nil
@@ -1453,7 +1618,7 @@ extension _BinsonDecoder {
                                                                         debugDescription: "Invalid URL string."))
             }
 
-            return (url as! T)
+            return url
         } else {
             self.storage.push(container: value)
             defer { self.storage.popContainer() }
@@ -1491,3 +1656,13 @@ private struct _BinsonKey: CodingKey {
     
     fileprivate static let `super` = _BinsonKey(stringValue: "super")!
 }
+
+//===----------------------------------------------------------------------===//
+// Shared ISO8601 Date Formatter
+//===----------------------------------------------------------------------===//
+@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
+fileprivate var _iso8601Formatter: ISO8601DateFormatter = {
+    let formatter = ISO8601DateFormatter()
+    formatter.formatOptions = .withInternetDateTime
+    return formatter
+}()

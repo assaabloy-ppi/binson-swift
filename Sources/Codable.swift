@@ -15,11 +15,11 @@ open class BinsonEncoder {
 
     /// The strategy to use for encoding `Date` values.
     public enum DateEncodingStrategy {
-        /// Encode the `Date` as a UNIX timestamp (as a Binson double).
-        case secondsSince1970
+        /// Encode the `Date` as a UNIX timestamp (as a Binson double). Default
+        case doubleSecondsSince1970
 
-        /// Encode the `Date` as UNIX millisecond timestamp (as a Binson double). Default.
-        case millisecondsSince1970
+        /// Encode the `Date` as UNIX millisecond timestamp (as a Binson integer).
+        case integerMillisecondsSince1970
 
         /// Encode the `Date` as an ISO-8601-formatted string (in RFC 3339 format).
         @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
@@ -34,8 +34,8 @@ open class BinsonEncoder {
         case custom((Date, Encoder) throws -> Void)
     }
 
-    /// The strategy to use in encoding dates. Defaults to `.millisecondsSince1970`.
-    open var dateEncodingStrategy: DateEncodingStrategy = .millisecondsSince1970
+    /// The strategy to use in encoding dates. Defaults to `.doubleSecondsSince1970`.
+    open var dateEncodingStrategy: DateEncodingStrategy = .doubleSecondsSince1970
 
     open var userInfo: [CodingUserInfoKey: Any] = [:]
 
@@ -453,11 +453,11 @@ extension _BinsonEncoder {
 
     fileprivate func box(_ date: Date) throws -> BinsonValue {
         switch self.options.dateEncodingStrategy {
-        case .secondsSince1970:
+        case .doubleSecondsSince1970:
             return BinsonValue(date.timeIntervalSince1970)
 
-        case .millisecondsSince1970:
-            return BinsonValue(1000.0 * date.timeIntervalSince1970)
+        case .integerMillisecondsSince1970:
+            return BinsonValue(Int64(1000.0 * date.timeIntervalSince1970))
 
         case .iso8601:
             if #available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {
@@ -581,11 +581,11 @@ open class BinsonDecoder {
 
     /// The strategy to use for decoding `Date` values.
     public enum DateDecodingStrategy {
-        /// Decode the `Date` from a UNIX timestamp (in a Binson double).
-        case secondsSince1970
+        /// Decode the `Date` from a UNIX millisecond timestamp (in a Binson double). Default
+        case doubleSecondsSince1970
 
-        /// Decode the `Date` from a UNIX millisecond timestamp (in a Binson double). Default.
-        case millisecondsSince1970
+        /// Decode the `Date` from a UNIX millisecond timestamp (in a Binson integer).
+        case integerMillisecondsSince1970
 
         /// Decode the `Date` from an ISO-8601-formatted string (in RFC 3339 format).
         @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
@@ -598,8 +598,8 @@ open class BinsonDecoder {
         case custom((Decoder) throws -> Date)
     }
 
-    /// The strategy to use in encoding dates. Defaults to `.millisecondsSince1970`.
-    open var dateDecodingStrategy: DateDecodingStrategy = .millisecondsSince1970
+    /// The strategy to use in encoding dates. Defaults to `.doubleSecondsSince1970`.
+    open var dateDecodingStrategy: DateDecodingStrategy = .doubleSecondsSince1970
 
     /// Contextual user-provided information for use during decoding.
     open var userInfo: [CodingUserInfoKey: Any] = [:]
@@ -1557,13 +1557,13 @@ extension _BinsonDecoder {
 
     fileprivate func unbox(_ value: BinsonValue, as type: Date.Type) throws -> Date? {
         switch self.options.dateDecodingStrategy {
-        case .secondsSince1970:
-            let double = try self.unbox(value, as: Double.self)!
-            return Date(timeIntervalSince1970: double)
+        case .doubleSecondsSince1970:
+            let doubleDate = try self.unbox(value, as: Double.self)!
+            return Date(timeIntervalSince1970: doubleDate)
 
-        case .millisecondsSince1970:
-            let double = try self.unbox(value, as: Double.self)!
-            return Date(timeIntervalSince1970: double / 1000.0)
+        case .integerMillisecondsSince1970:
+            let intDate = try self.unbox(value, as: Int64.self)!
+            return Date(timeIntervalSince1970: TimeInterval(intDate) / 1000.0)
 
         case .iso8601:
             if #available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {

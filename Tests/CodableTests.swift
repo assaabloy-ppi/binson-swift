@@ -141,13 +141,16 @@ class BinsonEncoderTests: XCTestCase {
 
     func testEncodeDoubleDate() {
         let dateTestObj = DateTestObj(date: Date(timeIntervalSince1970: 551019904.34397399))
-        encoder.dateEncodingStrategy = .secondsSince1970
-        var bn = try! encoder.encode(dateTestObj)
+        encoder.dateEncodingStrategy = .doubleSecondsSince1970
+        let bn = try! encoder.encode(dateTestObj)
         XCTAssertEqual(bn["date"], 551019904.34397399)
+    }
 
-        encoder.dateEncodingStrategy = .millisecondsSince1970
-        bn = try! encoder.encode(dateTestObj)
-        XCTAssertEqual(bn["date"], 551019904343.97399)
+    func testEncodeIntegerDate() {
+        let dateTestObj = DateTestObj(date: Date(timeIntervalSince1970: 551019904.34397399))
+        encoder.dateEncodingStrategy = .integerMillisecondsSince1970
+        let bn = try! encoder.encode(dateTestObj)
+        XCTAssertEqual(bn["date"], 551019904343)
     }
 
     func testEncodeISODate() {
@@ -322,21 +325,20 @@ class BinsonDecoderTests: XCTestCase {
 
     func testDecodeDoubleDate() {
         let bn = Binson(values: ["date": 50000.0])
-
-        // Should work
-        decoder.dateDecodingStrategy = .secondsSince1970
-        var testObj = try! decoder.decode(DateTestObj.self, from: bn)
+        decoder.dateDecodingStrategy = .doubleSecondsSince1970
+        let testObj = try! decoder.decode(DateTestObj.self, from: bn)
         XCTAssertEqual(testObj.date.timeIntervalSince1970, 50000.0)
+    }
 
-        decoder.dateDecodingStrategy = .millisecondsSince1970
-        testObj = try! decoder.decode(DateTestObj.self, from: bn)
+    func testDecodeIntegerDate() {
+        let bn = Binson(values: ["date": 50000])
+        decoder.dateDecodingStrategy = .integerMillisecondsSince1970
+        let testObj = try! decoder.decode(DateTestObj.self, from: bn)
         XCTAssertEqual(testObj.date.timeIntervalSince1970, 50.0)
     }
 
     func testDecodeISODate() {
         let bn = Binson(values: ["date": "2018-09-26T19:11:47Z"])
-
-        // Should work
         decoder.dateDecodingStrategy = .iso8601
         let testObj = try! decoder.decode(DateTestObj.self, from: bn)
         XCTAssertEqual(testObj.date.timeIntervalSince1970, 1537989107.0)
@@ -345,7 +347,6 @@ class BinsonDecoderTests: XCTestCase {
     func testDecodeFormattedDate() {
         let bn = Binson(values: ["date": "09/26/2018"])
 
-        // Should work
         let formatter = DateFormatter()
         formatter.dateFormat = "MM/dd/yyyy"
         formatter.timeZone = TimeZone(abbreviation: "UTC")

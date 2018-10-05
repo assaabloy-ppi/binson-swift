@@ -69,6 +69,14 @@ class BinsonBasicTests: XCTestCase {
         XCTAssertEqual(str, "4014016910ff41")
     }
 
+    func testDoubleBinson() {
+        var binson = Binson()
+        binson += ("d", 25.5)
+
+        let str = binson.hex
+        XCTAssertEqual(str, "4014016446403980000000000041")
+    }
+
     func testBinson2JSON() {
         var a = Binson()
         a += ("i", "Happy birthday")

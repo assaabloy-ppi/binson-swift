@@ -177,6 +177,16 @@ class BuilderTests: XCTestCase {
         }
     }
 
+    func testUnpackDouble() {
+        let inputData = Data(bytes: [UInt8](hex: "4014016446403980000000000041")!)
+
+        if let binson = Builder.unpack(data: inputData) {
+            XCTAssertEqual(binson.value(key: "d")?.doubleValue, 25.5)
+        } else {
+            XCTFail("Unpack double failed")
+        }
+    }
+
     func testUnpackUnlock() {
         let expected = "4014016314017514016910011401741802020214017a404141"
 

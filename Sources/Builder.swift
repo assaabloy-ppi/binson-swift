@@ -172,17 +172,18 @@ public class Builder {
             throw BinsonError.invalidData
         }
 
-        guard rest.count >= Int(size) else {
+        let length = Int(size)
+
+        guard rest.count >= length else {
             throw BinsonError.insufficientData
         }
         
-        let endIndex: Int = count+Int(size)-1
-        let subdata = rest[rest.startIndex..<rest.startIndex.advanced(by: endIndex)]
+        let subdata = rest[rest.startIndex..<rest.startIndex.advanced(by: length)]
         guard let result = String(data: subdata, encoding: .utf8) else {
             throw BinsonError.invalidData
         }
 
-        return (result, rest.suffix(from: rest.startIndex.advanced(by: endIndex)))
+        return (result, rest.suffix(from: rest.startIndex.advanced(by: length)))
     }
     
     /// Parse bytes to form an array of Binson Values.
@@ -212,18 +213,11 @@ public class Builder {
         guard rest.count >= length else {
             throw BinsonError.insufficientData
         }
-        
-        var values = [UInt8]()
-        var rest2 = rest
-        
-        var byte: UInt8
-        
-        for _ in 0 ..< length {
-            (byte, rest2) = try unpackByte(rest2)
-            values.append(byte)
-        }
-        
-        return (values, rest2)
+
+        let subdata = rest.subdata(in: rest.startIndex..<rest.startIndex.advanced(by: length))
+        let values = [UInt8](subdata)
+
+        return (values, rest.suffix(from: rest.startIndex.advanced(by: length)))
     }
     
     /// Parse bytes to form an array of Binson Values.
@@ -321,7 +315,7 @@ public class Builder {
         // Double
         case Mark.doubleByte:
             let (intValue, remainder) = try unpackInteger(data, count: 8)
-            let double = Double(bitPattern: intValue)
+            let double = Double(bitPattern: intValue.bigEndian)
             return (BinsonValue(double), remainder)
             
         // Int 8

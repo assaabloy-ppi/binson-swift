@@ -92,7 +92,7 @@ class BinsonBasicTests: XCTestCase {
         bn += ("z", Value.object(a))
 
         let object = bn.jsonObject
-        guard let bn2 = try? Builder.unpack(jsonObject: object) else {
+        guard let bn2 = try? Binson.unpack(jsonObject: object) else {
             XCTFail("Exception thrown")
             return
         }
@@ -115,7 +115,7 @@ class BinsonBasicTests: XCTestCase {
         }
 
         let string = bn.json
-        let bn3 = try! Builder.unpack(jsonString: string)
+        let bn3 = try! Binson.unpack(jsonString: string)
 
         XCTAssertEqual(bn3["b"], true)
         XCTAssertEqual(bn3["i"], 230)
@@ -159,10 +159,9 @@ class BinsonBasicTests: XCTestCase {
   }
 }
 """
-        guard let _ = try? Builder.unpack(jsonString: json) else {
-            XCTFail()
-            return
-        }
+        XCTAssertNoThrow(
+            try Binson.unpack(jsonString: json)
+        )
     }
 
     func testIntegerLongBinson() {

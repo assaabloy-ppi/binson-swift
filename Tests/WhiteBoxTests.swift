@@ -30,32 +30,32 @@ class WhiteBoxTests: XCTestCase {
         let nSma: Data = Value.packNumber(-32768)
         
         do {
-            let (p, _) = try Builder.unpackValue(p127)
+            let (p, _) = try Binson.unpackValue(p127)
             XCTAssertEqual(127, p?.integerValue)
         } catch { XCTFail("Could not unpack number") }
         
         do {
-            let (p, _) = try Builder.unpackValue(p128)
+            let (p, _) = try Binson.unpackValue(p128)
             XCTAssertEqual(128, p?.integerValue)
         } catch { XCTFail("Could not unpack number") }
         
         do {
-            let (p, _) = try Builder.unpackValue(pBig)
+            let (p, _) = try Binson.unpackValue(pBig)
             XCTAssertEqual(32767, p?.integerValue)
         } catch { XCTFail("Could not unpack number") }
         
         do {
-            let (n, _) = try Builder.unpackValue(n128)
+            let (n, _) = try Binson.unpackValue(n128)
             XCTAssertEqual(-128, n?.integerValue)
         } catch { XCTFail("Could not unpack number") }
         
         do {
-            let (n, _) = try Builder.unpackValue(n129)
+            let (n, _) = try Binson.unpackValue(n129)
             XCTAssertEqual(-129, n?.integerValue)
         } catch { XCTFail("Could not unpack number") }
         
         do {
-            let (n, _) = try Builder.unpackValue(nSma)
+            let (n, _) = try Binson.unpackValue(nSma)
             XCTAssertEqual(-32768, n?.integerValue)
         } catch { XCTFail("Could not unpack number") }
     }
@@ -66,8 +66,8 @@ class WhiteBoxTests: XCTestCase {
             let vHigh = Value.packNumber(i.high)
             
             do {
-                let (low, _) = try Builder.unpackValue(vLow)
-                let (high, _) = try Builder.unpackValue(vHigh)
+                let (low, _) = try Binson.unpackValue(vLow)
+                let (high, _) = try Binson.unpackValue(vHigh)
                 
                 XCTAssertEqual(i.low, low?.integerValue)
                 XCTAssertEqual(i.high, high?.integerValue)

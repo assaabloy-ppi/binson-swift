@@ -23,14 +23,14 @@ extension BinsonValue {
         switch self {
             
         case .bool(let value):
-            return Data([value ? Mark.trueByte : Mark.falseByte])
+            return Data([value ? Binson.Mark.trueByte : Binson.Mark.falseByte])
             
         case .int(let value):
             return BinsonValue.packNumber(value)
             
         case .double(let value):
             let integerValue = value.bitPattern
-            return Data([Mark.doubleByte]) + BinsonValue.packBytes(integerValue, parts: 8)
+            return Data([Binson.Mark.doubleByte]) + BinsonValue.packBytes(integerValue, parts: 8)
             
         case .string(let string):
             let utf8 = string.utf8
@@ -38,11 +38,11 @@ extension BinsonValue {
             
             let prefix: Data
             if count <= UInt32(Int8.max) {
-                prefix = Data([Mark.string1Byte, UInt8(count)])
+                prefix = Data([Binson.Mark.string1Byte, UInt8(count)])
             } else if count <= UInt32(Int16.max) {
-                prefix = Data([Mark.string2Byte]) + BinsonValue.packBytes(UInt64(count), parts: 2).reversed()
+                prefix = Data([Binson.Mark.string2Byte]) + BinsonValue.packBytes(UInt64(count), parts: 2).reversed()
             } else {
-                prefix = Data([Mark.string4Byte]) + BinsonValue.packBytes(UInt64(count), parts: 4).reversed()
+                prefix = Data([Binson.Mark.string4Byte]) + BinsonValue.packBytes(UInt64(count), parts: 4).reversed()
             }
             
             return prefix + utf8
@@ -52,11 +52,11 @@ extension BinsonValue {
             
             let prefix: Data
             if count <= UInt32(Int8.max) {
-                prefix = Data([Mark.bytes1Byte, UInt8(count)])
+                prefix = Data([Binson.Mark.bytes1Byte, UInt8(count)])
             } else if count <= UInt32(Int16.max) {
-                prefix = Data([Mark.bytes2Byte]) + BinsonValue.packBytes(UInt64(count), parts: 2).reversed()
+                prefix = Data([Binson.Mark.bytes2Byte]) + BinsonValue.packBytes(UInt64(count), parts: 2).reversed()
             } else {
-                prefix = Data([Mark.bytes4Byte]) + BinsonValue.packBytes(UInt64(count), parts: 4).reversed()
+                prefix = Data([Binson.Mark.bytes4Byte]) + BinsonValue.packBytes(UInt64(count), parts: 4).reversed()
             }
             
             return prefix + data
@@ -85,18 +85,18 @@ extension BinsonValue {
     public static func packNumber(_ i: Int64) -> Data {
         switch i {
         case Int64(Int8.min) ... Int64(Int8.max):
-            let bytes = [Mark.integer1Byte,
+            let bytes = [Binson.Mark.integer1Byte,
                          UInt8(i & 0x000000FF)]
             return Data(bytes)
 
         case Int64(Int16.min) ... Int64(Int16.max):
-            let bytes = [Mark.integer2Byte,
+            let bytes = [Binson.Mark.integer2Byte,
                          UInt8(i  & 0x000000FF),
                          UInt8((i & 0x0000FF00) >> 8)]
             return Data(bytes)
 
         case Int64(Int32.min) ... Int64(Int32.max):
-            let bytes = [Mark.integer4Byte,
+            let bytes = [Binson.Mark.integer4Byte,
                          UInt8(i  & 0x000000FF),
                          UInt8((i & 0x0000FF00) >> 8),
                          UInt8((i & 0x00FF0000) >> 16),
@@ -104,7 +104,7 @@ extension BinsonValue {
             return Data(bytes)
 
         default:
-            let bytes = [Mark.integer8Byte,
+            let bytes = [Binson.Mark.integer8Byte,
                          UInt8(i & 0x00000000000000FF),
                          UInt8(truncatingIfNeeded: i >> UInt64(8)),
                          UInt8(truncatingIfNeeded: i >> UInt64(16)),

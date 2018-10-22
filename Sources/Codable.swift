@@ -350,7 +350,7 @@ private struct _BinsonUnkeyedEncodingContainer: UnkeyedEncodingContainer {
 
 extension _BinsonEncoder: SingleValueEncodingContainer {
     fileprivate func assertCanEncodeNewValue() {
-        precondition(self.canEncodeNewValue, "Attempt to encode value through single value container when previously value already encoded.")
+        precondition(self.canEncodeNewValue, "Attempt to encode value through single value container when value previously already encoded.")
     }
     
     public func encodeNil() throws {

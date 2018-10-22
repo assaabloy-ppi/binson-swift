@@ -1,59 +1,12 @@
-//  Builder.swift
+//  Binson+Unpack.swift
 //  Binson
 //
 //  Created by Kenneth Pernyer on 2017-05-12
 
 import Foundation
 
-import os.log
-let log = OSLog(subsystem: "binson.aa.st", category: "Builder")
+public extension Binson {
 
-public class Builder {
-
-    /// Unpack from Hex
-    /// - parameter data: The Hex string to unpack.
-    /// - returns: Binson object.
-    public class func unpack(hex: String) -> Binson? {
-        if let bytes = [UInt8](hex: hex) {
-            let raw = Data(bytes: bytes)
-            return Builder.unpack(data: raw)
-        } else {
-            return nil
-        }
-    }
-
-    /// Unpack from InputStream
-    /// - parameter data: The byte input stream to unpack.
-    /// - returns: Binson object.
-    public class func unpack(stream: InputStream) -> Binson? {
-        let raw = Data(input: stream)
-        return Builder.unpack(data: raw)
-    }
-
-    /// Unpack from Data
-    /// - parameter data: The input data to unpack
-    /// - returns: Binson object
-    public class func unpack(data: Data) -> Binson? {
-        
-        guard let (byte, rest) = try? unpackByte(data), byte == Mark.beginByte else {
-            os_log("Failed to unpack, no starting MARK", log: log, type: .error)
-            return nil
-        }
-        
-        do {
-            let (binson, rest2) = try unpackBinsonObject(rest)
-            
-            if !rest2.isEmpty {
-                os_log("Not handling trailing garbage", log: log)
-                // Not really an Error, is it?
-            }
-            return binson
-        } catch {
-            os_log("Failed to unpack Binson object: %{public}s", log: log, type: .error, error as CVarArg)
-            return nil
-        }
-    }
-    
     /// Unpack from JSON object
     /// - parameter data: The input JSON Dictionary to unpack
     /// - returns: Binson object
@@ -88,31 +41,25 @@ public class Builder {
     }
     
     //------------ Helpers
-    
-    /// Unpack from Data expecting a full Binson object
-    /// - parameter data: The input data to unpack
-    /// - returns: Binson object and possibly a non-empty trailing remainder
-    private class func unpackBinsonObject(_ data: Data) throws -> (value: Binson, remainder: Data) {
-        var binson = Binson()
-        var data = data
-        
-        while !data.isEmpty {
-            var first: String?
-            var second: BinsonValue?
-            (first, second, data) = try unpackPair(data)
-            
-            /// Special ending MARK for a Binson object
-            guard let name = first, let value = second else {
-                break
-            }
 
-            binson += (name, value)
+    /// Unpack from Data
+    /// - parameter data: The input data to unpack
+    /// - returns: Binson object
+    internal class func unpackBinson(data: Data) throws -> [String: BinsonValue] {
+
+        let (byte, rest) = try unpackByte(data)
+        guard byte == Mark.beginByte else {
+            throw BinsonError.invalidData
         }
-        
-        /// Return the Binson and if nested remaining data is non-empty
-        return (binson, data)
+
+        let (values, rest2) = try unpackPairs(rest)
+        if !rest2.isEmpty {
+            throw BinsonError.trailingGarbage
+        }
+
+        return values
     }
-    
+
     /// Parse one byte
     ///
     /// - parameter data: The input data to unpack.
@@ -132,9 +79,7 @@ public class Builder {
     ///
     /// - returns: An integer representation of `size` bytes of data.
     private class func unpackInteger(_ data: Data, count: Int) throws -> (value: UInt64, remainder: Data) {
-        guard count > 0 else {
-            throw BinsonError.invalidArgument
-        }
+        assert(count > 0)
         
         guard data.count >= count else {
             throw BinsonError.insufficientData
@@ -241,7 +186,38 @@ public class Builder {
 
         return (values, rest.suffix(from: rest.startIndex.advanced(by: 1)))
     }
-    
+
+    /// Unpacks a series of Key, Value Pairs and returns the remaining data for further scanning.
+    ///
+    /// - parameter data: The input data to unpack.
+    /// - returns: A key value dictionary and the remaining data.
+    private class func unpackPairs(_ data: Data) throws -> (pairs: [String: BinsonValue], remainder: Data) {
+        var data = data
+        var pairs = [String: BinsonValue]()
+        var prevName: String?
+
+        while !data.isEmpty {
+            var first: String?
+            var second: BinsonValue?
+            (first, second, data) = try unpackPair(data)
+
+            /// Special ending MARK for a Binson object
+            guard let name = first, let value = second else {
+                break
+            }
+
+            // Field names must unique and sorted in ascending order
+            if let prev = prevName, name <= prev {
+                throw BinsonError.invalidFieldName
+            }
+
+            pairs[name] = value
+            prevName = name
+        }
+
+        return (pairs, data)
+    }
+
     /// Unpacks Key, Value Pair and returns the remaining data for further scanning.
     ///
     /// - parameter data: The input data to unpack.
@@ -288,7 +264,8 @@ public class Builder {
         switch value {
             
         case Mark.beginByte:
-            let (binson, remainder) = try unpackBinsonObject(data)
+            let (values, remainder) = try unpackPairs(data)
+            let binson = Binson(values: values)
             return (BinsonValue(binson), remainder)
         
         case Mark.endByte:

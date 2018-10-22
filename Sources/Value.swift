@@ -215,7 +215,7 @@ extension BinsonValue {
         case let array as [Any]:
             return BinsonValue(try array.map { try fromAny($0)})
         case let object as [String: Any]:
-            return BinsonValue(try Builder.unpack(jsonObject: object))
+            return BinsonValue(try Binson.unpack(jsonObject: object))
         default:
             throw BinsonError.invalidData
         }

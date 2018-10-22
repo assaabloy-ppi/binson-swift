@@ -30,9 +30,9 @@ public class BinsonArray {
     }
 
     public func pack() -> Data {
-        let prefix = Data([Mark.beginArrayByte])
+        let prefix = Data([Binson.Mark.beginArrayByte])
         let payload = array.flatMap { $0.pack() }
-        let suffix = Data([Mark.endArrayByte])
+        let suffix = Data([Binson.Mark.endArrayByte])
 
         return prefix + payload + suffix
     }

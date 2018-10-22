@@ -36,6 +36,36 @@ public class Binson {
         try self.init(data: raw)
     }
 
+    /// Unpack from JSON object
+    /// - parameter data: The input JSON Dictionary to unpack
+    public convenience init(jsonObject: [String: Any]) throws {
+        var values = [String: BinsonValue]()
+
+        for key in jsonObject.keys {
+            let any = jsonObject[key]!
+            values[key] = try BinsonValue.fromAny(any)
+        }
+        self.init(values: values)
+    }
+
+    /// Unpack from JSON data
+    /// - parameter data: The input JSON string to unpack
+    public convenience init(jsonData: Data) throws {
+        let json = try JSONSerialization.jsonObject(with: jsonData)
+
+        guard let object = json as? [String: Any] else {
+            throw BinsonError.invalidData
+        }
+
+        try self.init(jsonObject: object)
+    }
+
+    /// Unpack from JSON string
+    /// - parameter data: The input JSON data to unpack
+    public convenience init(jsonString: String) throws {
+        try self.init(jsonData: Data(jsonString.utf8))
+    }
+
     public init(values: [String: BinsonValue]) {
         dict = values
     }
@@ -88,7 +118,11 @@ public class Binson {
             preconditionFailure("Not a valid JSON object")
         }
 
-        let data = try! JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted)
+        var options: JSONSerialization.WritingOptions = [.prettyPrinted]
+        if #available(macOS 10.13, iOS 11.0, tvOS 11.0, watchOS 4.0, *) {
+            options.insert(.sortedKeys)
+        }
+        let data = try! JSONSerialization.data(withJSONObject: obj, options: options)
         return data.toString()!
     }
 

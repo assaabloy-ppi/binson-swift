@@ -5,41 +5,7 @@
 
 import Foundation
 
-public extension Binson {
-
-    /// Unpack from JSON object
-    /// - parameter data: The input JSON Dictionary to unpack
-    /// - returns: Binson object
-    public class func unpack(jsonObject: [String: Any]) throws -> Binson {
-        var values = [String: BinsonValue]()
-        
-        for key in jsonObject.keys {
-            let any = jsonObject[key]!
-            values[key] = try BinsonValue.fromAny(any)
-        }
-        return Binson(values: values)
-    }
-    
-    /// Unpack from JSON string
-    /// - parameter data: The input JSON string to unpack
-    /// - returns: Binson object
-    public class func unpack(jsondata: Data) throws -> Binson {
-        let json = try JSONSerialization.jsonObject(with: jsondata)
-
-        guard let object = json as? [String: Any] else {
-            throw BinsonError.invalidData
-        }
-
-        return try unpack(jsonObject: object)
-    }
-    
-    /// Unpack from JSON data
-    /// - parameter data: The input JSON data to unpack
-    /// - returns: Binson object
-    public class func unpack(jsonString: String) throws -> Binson {
-        return try unpack(jsondata: Data(jsonString.utf8))
-    }
-    
+internal extension Binson {
     //------------ Helpers
 
     /// Unpack from Data
@@ -80,7 +46,7 @@ public extension Binson {
     /// - returns: An integer representation of `size` bytes of data.
     private class func unpackInteger(_ data: Data, count: Int) throws -> (value: UInt64, remainder: Data) {
         assert(count > 0)
-        
+
         guard data.count >= count else {
             throw BinsonError.insufficientData
         }

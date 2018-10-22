@@ -301,7 +301,7 @@ class UnpackingTests: XCTestCase {
           }
         """
 
-        let bn = try! Binson.unpack(jsonString: json)
+        let bn = try! Binson(jsonString: json)
         XCTAssertEqual(bn["b"], true)
         XCTAssertEqual(bn["i"], 230)
         XCTAssertEqual(bn["array"], [ "co", "u" ])

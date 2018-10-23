@@ -59,15 +59,15 @@ open class BinsonEncoder {
     /// - parameter value: The value to encode.
     /// - returns: A new `Binson` object containing the encoded Binson data.
     /// - throws: An error if any value throws an error during encoding.
-    open func encode<T: Encodable>(_ value: T) throws -> Binson {
+    open func encode(_ value: Encodable) throws -> Binson {
         let encoder = _BinsonEncoder(options: self.options)
         
         guard let topLevel = try encoder.box_(value) else {
-            throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [], debugDescription: "Top-level \(T.self) did not encode any values."))
+            throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [], debugDescription: "Top-level \(value.self) did not encode any values."))
         }
 
         guard case let .object(object) = topLevel else {
-            throw EncodingError.invalidValue(topLevel, EncodingError.Context(codingPath: [], debugDescription: "Top-level \(T.self) must be of object type."))
+            throw EncodingError.invalidValue(topLevel, EncodingError.Context(codingPath: [], debugDescription: "Top-level \(value.self) must be of object type."))
         }
         return object
     }

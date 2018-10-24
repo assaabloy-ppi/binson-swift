@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Binson'
-  s.version          = '1.1'
+  s.version          = '2.0'
   s.summary          = 'Binson is a binary format for efficient IoT cases.'
 
   s.description      = <<-DESC
@@ -18,7 +18,8 @@ Pod::Spec.new do |s|
 
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.authors = { 'kpernyer'  => 'kenneth.pernyer@assaabloy.com',
-                'TheHawkis' => 'hakan.ohlsson@assaabloy.com' }
+                'TheHawkis' => 'hakan.ohlsson@assaabloy.com',
+                'Dreadrik' => 'dreadrik@gmail.com' }
 
   s.ios.deployment_target = '10.0'
   s.osx.deployment_target = '10.13'

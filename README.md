@@ -65,12 +65,7 @@ You can also use various Package managers, e.g. Cocoapods
 platform :ios, '11.0'
 
 target 'YourProject' do
-  use_frameworks!
   pod 'Binson', :git => 'https://github.com/assaabloy-ppi/binson-swift.git'
-
-  target 'YourProjet-tests' do
-    inherit! :search_paths
-  end
 end
 ```
 

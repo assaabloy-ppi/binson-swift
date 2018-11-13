@@ -8,7 +8,9 @@ import XCTest
 @testable import Binson
 
 class OperatorsTests: XCTestCase {
-    
+
+    typealias Value = BinsonValue
+
     func testSubscripts() {
         var a = Binson()
         a += ("i", 1)
@@ -38,7 +40,7 @@ class OperatorsTests: XCTestCase {
         b += ("o", "Abba")
         b += ("z", .object(a))
 
-        XCTAssertEqual(b["z"]["i"], 1)
+        XCTAssertEqual(b["z"]?["i"], 1)
     }
     
     func testBinsonPlus() {
@@ -55,7 +57,7 @@ class OperatorsTests: XCTestCase {
         let str = c.pack().hex
         XCTAssertEqual(str, "40140163140175140169100141")
         
-        let d = c + ("t", Value.bytes([0x02, 0x02]))
+        let d = c + ("t", Value([UInt8]([0x02, 0x02])))
         let str2 = d.pack().hex
         XCTAssertEqual(str2, "4014016314017514016910011401741802020241")
     }

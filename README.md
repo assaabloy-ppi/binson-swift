@@ -65,12 +65,7 @@ You can also use various Package managers, e.g. Cocoapods
 platform :ios, '11.0'
 
 target 'YourProject' do
-  use_frameworks!
   pod 'Binson', :git => 'https://github.com/assaabloy-ppi/binson-swift.git'
-
-  target 'YourProjet-tests' do
-    inherit! :search_paths
-  end
 end
 ```
 
@@ -91,7 +86,7 @@ let binson = Binson()
     .append("c", "u")
     .append("i", 1)
     .append("z", .object(Binson()))
-    .append("t", .bytes([0x02, 0x02]))
+    .append("t", .bytes(Data([0x02, 0x02])))
 ```
 You are also allowed to use the `+=`operator to build the Binson object. But note that the declaration require a var declaration.
 ```swift
@@ -101,6 +96,49 @@ binson += ("c", "u")
 print(binson.hex)
 "0x4014016314017541"
 ```
+
+Codable support
+---------------
+
+Binson supports the Decodable and Encodable protocols introduced in swift 4.0, through the use of BinsonDecoder and BinsonEncoder.
+This means that you can use the same modern serialization as with JSON. Some notes though:
+
+* The swift Date type is default serialized as a double representing seconds since unix epoch. This can be changed with the DateEncoding/Decoding/Strategy options on the encoder and decoder.
+* Since Binson doesn't handle nil values, optionals that are nil will be skipped.
+* Integer values will be encoded as the smallest possible Binson type that fits the value.
+
+```swift
+struct TestCodable: Codable {
+    struct NestedTestCodable: Codable {
+        var string = "Hello"
+        var double = 23.0992
+    }
+    var int = 230
+    var bool = true
+    var data = Data([0x02, 0x02, 0x04])
+    var array = ["co", "u"]
+    var nested = NestedTestCodable()
+    var opt: Int? // Will not be encoded when nil
+}
+let encoder = BinsonEncoder()
+let testObj = TestCodable()
+let binson = try? encoder.encode(testObj)
+print(binson?.json)
+{
+    "array" : [
+        "co",
+        "u"
+    ],
+    "bool" : true,
+    "data" : "0x020204",
+    "int" : 230,
+    "nested" : {
+        "double" : 23.0992,
+        "string" : "Hello"
+    }
+}
+```
+
 
 Useful Binson object properties
 -------------------------------
@@ -136,17 +174,17 @@ Unpack
 ### from serialized Data
 ```swift
 let binson_data = Data([0x40, 0x14, 0x01, 0x7a, 0x40, 0x41, 0x41])
-if let binson = Builder.unpack(data: binson_data) {}
+if let binson = try? Binson(data: binson_data) {}
 ```
 
 ### from a Hexstring
 ```swift
-if let binson = Builder.unpack(hex: "0x4014016314017541") {}
+if let binson = try? Binson(hex: "0x4014016314017541") {}
 ```
 
 ### from a JSON string
 ```swift
-if let binson = Builder.unpack(jsonstring: json) {}
+if let binson = try? Binson(jsonString: json) {}
 ```
 
 Subscripts

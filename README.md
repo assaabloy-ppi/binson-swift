@@ -97,6 +97,9 @@ print(binson.hex)
 "0x4014016314017541"
 ```
 
+Codable support
+---------------
+
 Binson supports the Decodable and Encodable protocols introduced in swift 4.0, through the use of BinsonDecoder and BinsonEncoder.
 This means that you can use the same modern serialization as with JSON. Some notes though:
 
@@ -120,7 +123,7 @@ struct TestCodable: Codable {
 let encoder = BinsonEncoder()
 let testObj = TestCodable()
 let binson = try? encoder.encode(testObj)
-print(binson.json)
+print(binson?.json)
 {
     "array" : [
         "co",

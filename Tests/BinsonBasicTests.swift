@@ -164,6 +164,31 @@ class BinsonBasicTests: XCTestCase {
         )
     }
 
+    func testJSON2BinsonNumberTypes() {
+        let json = """
+        {
+            "bool": true,
+            "int": 0,
+            "double": 0.0
+        }
+        """
+
+        guard let binson = try? Binson(jsonString: json) else {
+            XCTFail("Exception thrown")
+            return
+        }
+
+        XCTAssertEqual(binson["bool"]?.boolValue, true)
+        XCTAssertNil(binson["bool"]?.integerValue)
+        XCTAssertNil(binson["bool"]?.doubleValue)
+        XCTAssertEqual(binson["int"]?.integerValue, 0)
+        XCTAssertNil(binson["int"]?.boolValue)
+        XCTAssertNil(binson["int"]?.doubleValue)
+        XCTAssertEqual(binson["double"]?.doubleValue, 0.0)
+        XCTAssertNil(binson["double"]?.boolValue)
+        XCTAssertNil(binson["double"]?.integerValue)
+    }
+
     func testIntegerLongBinson() {
         var binson = Binson()
         binson += ("i", 230)

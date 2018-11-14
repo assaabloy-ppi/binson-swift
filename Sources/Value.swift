@@ -198,14 +198,22 @@ extension BinsonValue {
 
     public static func fromAny(_ any: Any) throws -> BinsonValue {
         switch any {
-        case let value as Bool:
-            return BinsonValue(value)
-        case let value as Int:
-            return BinsonValue(Int64(value))
-        case let value as Int64:
-            return BinsonValue(value)
-        case let value as Double:
-            return BinsonValue(value)
+
+        case let value as NSNumber:
+            switch CFGetTypeID(value as CFTypeRef) {
+            case CFBooleanGetTypeID():
+                return BinsonValue(value.boolValue)
+            case CFNumberGetTypeID():
+                switch CFNumberGetType(value) {
+                case .cgFloatType, .floatType, .float32Type, .float64Type, .doubleType:
+                    return BinsonValue(value.doubleValue)
+                default:
+                    return BinsonValue(value.int64Value)
+                }
+            default:
+                 throw BinsonError.invalidData
+            }
+
         case let value as String:
             if value.hasPrefix("0x"), let bytes = [UInt8](hex: value) {
                 return BinsonValue(bytes)

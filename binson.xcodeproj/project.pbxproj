@@ -62,7 +62,6 @@
 		5B45A6161FA9BB710092108D /* Value+Pack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Value+Pack.swift"; sourceTree = "<group>"; };
 		5B45A6181FA9C18E0092108D /* BinsonIntegerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinsonIntegerTests.swift; sourceTree = "<group>"; };
 		5BFE5C5D1F9A4C190053884E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		5BFE5C5E1F9A4C260053884E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		5BFE5C601F9A4C4C0053884E /* Release-Notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "Release-Notes.md"; sourceTree = "<group>"; };
 		5BFE5C611F9A4C5E0053884E /* Binson.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Binson.podspec; sourceTree = "<group>"; };
 		5BFE5C621F9A4C6E0053884E /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -138,7 +137,6 @@
 				5BFE5C621F9A4C6E0053884E /* LICENSE */,
 				5BFE5C611F9A4C5E0053884E /* Binson.podspec */,
 				5BFE5C601F9A4C4C0053884E /* Release-Notes.md */,
-				5BFE5C5E1F9A4C260053884E /* Makefile */,
 				5BFE5C5D1F9A4C190053884E /* README.md */,
 				OBJ_6 /* Package.swift */,
 				OBJ_7 /* Sources */,

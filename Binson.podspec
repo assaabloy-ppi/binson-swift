@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Binson'
-  s.version          = '2.0'
+  s.version          = '2.0.1'
   s.summary          = 'Binson is a binary format for efficient IoT cases.'
 
   s.description      = <<-DESC

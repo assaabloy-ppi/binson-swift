@@ -65,7 +65,7 @@ You can also use various Package managers, e.g. Cocoapods
 platform :ios, '11.0'
 
 target 'YourProject' do
-  pod 'Binson', :git => 'https://github.com/assaabloy-ppi/binson-swift.git'
+  pod 'Binson', :git => 'https://github.com/assaabloy-ppi/binson-swift.git', :tag => '2.0'
 end
 ```
 

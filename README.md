@@ -155,9 +155,9 @@ print(binson.hex)
 ```swift
 print(binson.json)
 {
+  "c" : "u",
   "i" : 1,
   "t" : "0x0202",
-  "c" : "u",
   "z" : {
   }
 }

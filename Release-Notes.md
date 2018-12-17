@@ -3,6 +3,13 @@ Releases
 
 Also see the [Release notes in Github](https://github.com/assaabloy-ppi/binson-swift/releases)
 
+Binson Swift 2.0.1, 2018-11-27
+----------------------------
+
+### Issues Resolved
+* Fixed issue where using the json initializer, json numbers 0 and 1 were treated as bools.
+
+
 Binson Swift 2.0, 2018-10-22
 ----------------------------
 

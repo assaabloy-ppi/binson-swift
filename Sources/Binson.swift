@@ -25,7 +25,7 @@ public class Binson {
         guard let bytes = [UInt8](hex: hex) else {
             throw BinsonError.invalidData
         }
-        let raw = Data(bytes: bytes)
+        let raw = Data(_: bytes)
         try self.init(data: raw)
     }
 
@@ -94,14 +94,14 @@ public class Binson {
     }
 
     public func pack() -> Data {
-        var raw = Data(bytes: [Mark.beginByte])
+        var raw = Data(_: [Mark.beginByte])
 
         for key in dict.keys.sorted() {
             raw += BinsonValue.string(key).pack()
             raw += dict[key]!.pack()
         }
 
-        return raw + Data(bytes: [Mark.endByte])
+        return raw + Data(_: [Mark.endByte])
     }
 
     public var data: Data {
@@ -170,8 +170,8 @@ extension Binson: Equatable {
 }
 
 extension Binson: Hashable {
-    public var hashValue: Int {
-        return dict.hashValue
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(dict)
     }
 }
 

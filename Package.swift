@@ -13,5 +13,5 @@ _ = Package(
             .testTarget(name: "Binson-test", dependencies: ["Binson"], path: "Tests")
     ],
 
-    swiftLanguageVersions: [4]
+    swiftLanguageVersions: [5]
   )

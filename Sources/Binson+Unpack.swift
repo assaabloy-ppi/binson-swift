@@ -11,7 +11,7 @@ internal extension Binson {
     /// Unpack from Data
     /// - parameter data: The input data to unpack
     /// - returns: Binson object
-    internal class func unpackBinson(data: Data) throws -> [String: BinsonValue] {
+    class func unpackBinson(data: Data) throws -> [String: BinsonValue] {
 
         let (byte, rest) = try unpackByte(data)
         guard byte == Mark.beginByte else {

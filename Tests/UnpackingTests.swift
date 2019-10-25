@@ -195,7 +195,7 @@ class UnpackingTests: XCTestCase {
     }
 
     func testUnpackDouble() {
-        let inputData = Data(bytes: [UInt8](hex: "4014016446403980000000000041")!)
+        let inputData = Data(_: [UInt8](hex: "4014016446403980000000000041")!)
 
         if let binson = try? Binson(data: inputData) {
             XCTAssertEqual(binson.value(key: "d")?.doubleValue, 25.5)

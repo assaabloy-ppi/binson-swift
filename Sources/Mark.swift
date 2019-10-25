@@ -9,7 +9,7 @@
 import Foundation
 
 public extension Binson {
-    public enum Mark {
+    enum Mark {
         static let beginByte: UInt8 = 0x40
         static let endByte: UInt8 = 0x41
         static let beginArrayByte: UInt8 = 0x42

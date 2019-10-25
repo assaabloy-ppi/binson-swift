@@ -25,7 +25,7 @@ public extension BinsonValue {
     init(_ double: Double) { self = .double(double) }
     init(_ string: String) { self = .string(string) }
     init(_ bytes: Data) { self = .bytes(bytes) }
-    init(_ value: [UInt8]) { self = .bytes(Data(bytes: value)) }
+    init(_ value: [UInt8]) { self = .bytes(Data(_: value)) }
     init(_ array: BinsonArray) { self = .array(array) }
     init(_ value: [BinsonValue]) { self = .array(BinsonArray(value)) }
     init(_ object: Binson) { self = .object(object) }

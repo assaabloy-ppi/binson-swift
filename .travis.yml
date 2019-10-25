@@ -1,6 +1,6 @@
 language: swift
 os: osx
-osx_image: xcode9.4
+osx_image: xcode11.2
 xcode_project: Binson.xcodeproj
 xcode_scheme: BinsonTests
 
@@ -9,11 +9,11 @@ script:
   - xcodebuild -version
   - xcodebuild -project Binson.xcodeproj -scheme Binson-Package -sdk macosx -configuration Debug -enableCodeCoverage YES test | xcpretty
   - bash <(curl -s https://codecov.io/bash) -J Binson -cF osx
-  - xcodebuild -project Binson.xcodeproj -scheme Binson-Package -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 6" -configuration Debug ONLY_ACTIVE_ARCH=YES -enableCodeCoverage YES test | xcpretty
+  - xcodebuild -project Binson.xcodeproj -scheme Binson-Package -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 8" -configuration Debug ONLY_ACTIVE_ARCH=YES -enableCodeCoverage YES test | xcpretty
   - bash <(curl -s https://codecov.io/bash) -J Binson -cF ios
 
 env:
-  - SWIFT_VERSION=4.1
+  - SWIFT_VERSION=5.0
 
 notifications:
   email:

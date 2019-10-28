@@ -82,8 +82,8 @@ extension BinsonArray: RangeReplaceableCollection {
 }
 
 extension BinsonArray: Hashable {
-    public var hashValue: Int {
-        return array.count
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(array)
     }
 }
 
